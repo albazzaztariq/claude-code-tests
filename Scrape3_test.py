@@ -10,10 +10,13 @@ import pdfplumber
 import camelot
 import tabula
 import pytest
+from google.cloud import vision
+import io
 
 # ================== CONFIGURATION ==================
 OLLAMA_URL = "http://localhost:11434/api/generate"
 OLLAMA_MODEL = "gemma2:2b"
+GOOGLE_VISION_API_KEY = "AIzaSyCe65GfV7FwFchPBqM0UjR1QlfsnRnroHA"
 BASE_DIR = Path(
     r"C:\Users\azt12\OneDrive\Documents\Wrestling Robe\Materials Science - Wickability\Studies for Analysis by LLM AI\Datafiles & Python Scripts"
 )
@@ -291,12 +294,83 @@ def extract_table_row_count(pdf_path: str, table_number: int) -> int:
     except Exception as e:
         print(f"    PDFPlumber ERROR: {e}")
 
+    # Try GOOGLE CLOUD VISION API
+    print(f"\n    Trying GOOGLE CLOUD VISION API...")
+    try:
+        vision_count = extract_table_with_vision_api(pdf_path, table_number)
+        if vision_count and vision_count > 0:
+            print(f"    Vision API: Found Table {table_number} with {vision_count} data rows")
+            if not best_count:
+                best_count = vision_count
+                best_method = "Google Vision API"
+        else:
+            print(f"    Vision API: Table {table_number} not found or no rows detected")
+    except Exception as e:
+        print(f"    Vision API ERROR: {e}")
+
     if best_count:
         print(f"\n    ✓ Best result: {best_count} rows from {best_method}")
         return best_count
     else:
         print(f"\n    ✗ Could not extract Table {table_number} from any method")
         return None
+
+def extract_table_with_vision_api(pdf_path: str, table_number: int) -> int:
+    """
+    Use Google Cloud Vision API to detect tables in PDF and extract row count.
+    Returns the number of data rows (excluding header) if found, None otherwise.
+    """
+    try:
+        # Set API key as environment variable for the client
+        os.environ['GOOGLE_API_KEY'] = GOOGLE_VISION_API_KEY
+
+        # Initialize Vision API client with API key
+        client = vision.ImageAnnotatorClient(
+            client_options={"api_key": GOOGLE_VISION_API_KEY}
+        )
+
+        # Read PDF file
+        with open(pdf_path, 'rb') as pdf_file:
+            content = pdf_file.read()
+
+        # Prepare the request
+        input_config = vision.InputConfig(
+            content=content,
+            mime_type='application/pdf'
+        )
+
+        # Use document_text_detection for better table structure recognition
+        feature = vision.Feature(type_=vision.Feature.Type.DOCUMENT_TEXT_DETECTION)
+        request = vision.AnnotateFileRequest(
+            input_config=input_config,
+            features=[feature]
+        )
+
+        # Make API call
+        response = client.batch_annotate_files(requests=[request])
+
+        # Parse response to find tables
+        tables_found = []
+        for file_response in response.responses:
+            for page_response in file_response.responses:
+                if page_response.full_text_annotation:
+                    # Look for table-like structures in blocks
+                    for page in page_response.full_text_annotation.pages:
+                        for block in page.blocks:
+                            # Check if block looks like a table (multiple paragraphs in grid layout)
+                            if len(block.paragraphs) > 3:  # Likely a table if many paragraphs
+                                # Count rows by analyzing paragraph positions
+                                row_count = len(block.paragraphs) - 1  # Exclude header
+                                tables_found.append(row_count)
+
+        # Return the specified table's row count
+        if table_number <= len(tables_found):
+            return tables_found[table_number - 1]
+        else:
+            return None
+
+    except Exception as e:
+        raise Exception(f"Vision API extraction failed: {str(e)}")
 
 def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
     """
