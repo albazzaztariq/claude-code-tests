@@ -302,7 +302,9 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
     print("    - Group 1a OR 1b + Group 3 (RARE)")
     
     explicit_count = None
-    sentences = re.split(r"[.!?]\n", search_text)
+    # Split on period/question/exclamation followed by space and capital letter
+    # This handles both "word. Next" and "word.\nNext" patterns
+    sentences = re.split(r'[.!?](?=\s+[A-Z])', search_text)
     print(f"    Split text into {len(sentences)} sentences")
     
     # Number word to digit mapping - EVERY NUMBER 1-50 (CASE-INSENSITIVE)
