@@ -346,7 +346,7 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
     sample_column_headers = [
         "sample no.", "sample no", "sample number",
         "s. no.", "s. no", "s.no.", "s.no",
-        "s. number", "s no.", "s no"
+        "s. number"
     ]
 
     # Try to find a table with sample number column header
@@ -362,9 +362,11 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
                 continue
 
             # Check if any column header matches our sample number patterns
-            header_row = df.iloc[0].astype(str).str.lower()
+            # Use STRICT matching: header must START with pattern or be exact match
+            header_row = df.iloc[0].astype(str).str.lower().str.strip()
             for col_idx, header in enumerate(header_row):
-                if any(sample_header in header for sample_header in sample_column_headers):
+                # Check if header starts with any of our patterns OR is exact match
+                if any(header.startswith(sample_header) or header == sample_header for sample_header in sample_column_headers):
                     rows = len(df) - 1  # Exclude header
                     print(f"\n    ✓✓✓ FOUND SAMPLE NUMBER COLUMN ✓✓✓")
                     print(f"    Table {idx + 1}, Column '{df.iloc[0, col_idx]}' matches sample number pattern")
