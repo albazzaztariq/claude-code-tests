@@ -338,7 +338,11 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
     print("\n    PRIORITY 0: Looking for tables with Sample Number columns...")
     print("    Searching for column headers: 'Sample No.', 'S. No', 'S. Number', 'Sample Number'")
 
-    sample_column_headers = ["sample no.", "s. no", "s. number", "sample number", "sample no", "s.no", "s.no."]
+    sample_column_headers = [
+        "sample no.", "sample no", "sample number",
+        "s. no.", "s. no", "s.no.", "s.no",
+        "s. number", "s no.", "s no"
+    ]
 
     # Try to find a table with sample number column header
     try:
@@ -610,6 +614,21 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
         ):
             has_number_before_group2_check = True
 
+        # SPECIAL PATTERN: "X different types of [Group2]" or "X types of [Group2]"
+        # Allows for common phrasing like "Nine different types of fabrics"
+        if re.search(
+            rf"\b({word_pattern_check})\s+(?:different\s+)?types?\s+of\s+(?:single\s+)?(?:jersey\s+)?(?:weft\s+)?(?:knitted\s+)?(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)\b",
+            sentence_lower
+        ):
+            has_number_before_group2_check = True
+
+        # SPECIAL PATTERN: digit + "different types of [Group2]" or "types of [Group2]"
+        if re.search(
+            r"(?<![0-9.])(\d+)(?![0-9.])\s+(?:different\s+)?types?\s+of\s+(?:single\s+)?(?:jersey\s+)?(?:weft\s+)?(?:knitted\s+)?(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)\b",
+            sentence_lower
+        ):
+            has_number_before_group2_check = True
+
         has_group1 = has_total_of or has_number_before_group2_check
 
         # CHECK GROUP 2: BOTH SINGULAR AND PLURAL - track which terms found
@@ -690,6 +709,7 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
         # Number must be IMMEDIATELY before Group 2 term (no words in between)
         digit_patterns = [
             r"total\s+of\s+(?<![0-9.])(\d+)(?![0-9.])\s+(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)",
+            r"(?<![0-9.])(\d+)(?![0-9.])\s+(?:different\s+)?types?\s+of\s+(?:single\s+)?(?:jersey\s+)?(?:weft\s+)?(?:knitted\s+)?(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)",
             r"(?<![0-9.])(\d+)(?![0-9.])\s+(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)",
             r"(?:tested|produced|used|analyzed|evaluated|studied|prepared|examined)\s+(?<![0-9.])(\d+)(?![0-9.])\s+(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)",
         ]
@@ -712,7 +732,9 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
         
         # ===== PRIORITY 2: WORD NUMBERS (one, two, three, etc.) - CASE-INSENSITIVE =====
         # Number word must be IMMEDIATELY before Group 2 term (no words in between)
+        # ALSO includes "X different types of [Group2]" and "X types of [Group2]" patterns
         word_patterns = [
+            rf"\b({word_pattern_check})\b\s+(?:different\s+)?types?\s+of\s+(?:single\s+)?(?:jersey\s+)?(?:weft\s+)?(?:knitted\s+)?(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)",
             rf"\b({word_pattern_check})\b\s+(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)",
             rf"\b({word_pattern_check})\b\s+(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)\s+of",
         ]
