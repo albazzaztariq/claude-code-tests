@@ -332,6 +332,49 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
     sentences = re.split(r'[.!?](?=\s+[A-Z])', search_text)
     print(f"    Split text into {len(sentences)} sentences")
     
+    # ==================================================================
+    # PRIORITY 0: SAMPLE NUMBER COLUMN - SOURCE OF TRUTH
+    # ==================================================================
+    print("\n    PRIORITY 0: Looking for tables with Sample Number columns...")
+    print("    Searching for column headers: 'Sample No.', 'S. No', 'S. Number', 'Sample Number'")
+
+    sample_column_headers = ["sample no.", "s. no", "s. number", "sample number", "sample no", "s.no", "s.no."]
+
+    # Try to find a table with sample number column header
+    try:
+        # Try CAMELOT
+        tables_lattice = camelot.read_pdf(pdf_path, pages="all", flavor="lattice")
+        tables_stream = camelot.read_pdf(pdf_path, pages="all", flavor="stream")
+        all_tables = list(tables_lattice) + list(tables_stream)
+
+        for idx, table in enumerate(all_tables):
+            df = table.df
+            if len(df) == 0:
+                continue
+
+            # Check if any column header matches our sample number patterns
+            header_row = df.iloc[0].astype(str).str.lower()
+            for col_idx, header in enumerate(header_row):
+                if any(sample_header in header for sample_header in sample_column_headers):
+                    rows = len(df) - 1  # Exclude header
+                    print(f"\n    ✓✓✓ FOUND SAMPLE NUMBER COLUMN ✓✓✓")
+                    print(f"    Table {idx + 1}, Column '{df.iloc[0, col_idx]}' matches sample number pattern")
+                    print(f"    Rows in this table: {rows}")
+                    print(f"    First column values:")
+                    for row_idx, val in enumerate(df.iloc[:, col_idx]):
+                        print(f"      Row {row_idx}: {val}")
+
+                    if rows > 0:
+                        print("\n    ═══════════════════════════════════════════════")
+                        print(f"    DECISION: SAMPLE NUMBER COLUMN = {rows}")
+                        print("    THIS IS THE SOURCE OF TRUTH - RETURNING NOW")
+                        print("    ═══════════════════════════════════════════════\n")
+                        return rows
+    except Exception as e:
+        print(f"    ERROR searching for sample number columns: {e}")
+
+    print("    Result: NO sample number column found")
+
     # Number word to digit mapping - EVERY NUMBER 1-50 (CASE-INSENSITIVE)
     # Include both lowercase and capitalized versions
     word_to_num = {
