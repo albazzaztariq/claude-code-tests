@@ -585,7 +585,16 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
         
         print(f"\n     Sentence {i}: VALID COMBINATION - {combination_type}")
         print(f"     Text: '{sentence.strip()[:250]}'")
-        print(f"     Has Group 1 (total of): {has_group1}")
+
+        # Show what triggered Group 1
+        if has_total_of:
+            # Find where "total of" appears
+            total_of_pos = sentence_lower.find("total of")
+            context = sentence_lower[max(0, total_of_pos-20):min(len(sentence_lower), total_of_pos+80)]
+            print(f"     Has Group 1 (total of): True - Found at: '...{context}...'")
+        else:
+            print(f"     Has Group 1 (total of): False")
+
         group2_terms = ", ".join(group2_found) if group2_found else "none"
         print(f"     Has Group 2: {has_group2}. Terms present: {group2_terms}")
         group3_terms = ", ".join(group3_found) if group3_found else "none"
