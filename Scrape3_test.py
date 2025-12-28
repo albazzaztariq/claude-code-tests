@@ -430,13 +430,16 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
         sentence_lower = sentence.lower()
 
         # Check if sentence has a Group 2 term AND "table"
-        has_group2 = any(word in sentence_lower for word in group2_words)
+        group2_found_here = [word for word in group2_words if word in sentence_lower]
+        has_group2 = len(group2_found_here) > 0
         table_match = re.search(r"table\s+(\d+)", sentence_lower, re.IGNORECASE)
 
         if has_group2 and table_match:
             table_num = int(table_match.group(1))
             print(f"\n    ✓ Found Group 2 term + Table {table_num}")
             print(f"    Sentence {i}: '{sentence.strip()[:200]}...'")
+            group2_terms_list = ", ".join(group2_found_here)
+            print(f"    Group 2 Terms Present: {group2_terms_list}")
             print(f"    Attempting to parse Table {table_num}...")
 
             # Try to extract and count rows from the specified table
