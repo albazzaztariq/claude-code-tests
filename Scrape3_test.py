@@ -375,59 +375,59 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
 
     print("    Result: NO sample number column found")
 
-    # Number word to digit mapping - EVERY NUMBER 1-50 (CASE-INSENSITIVE)
-    # Include both lowercase and capitalized versions
+    # Number word to digit mapping - EVERY NUMBER 1-50 (lowercase only)
+    # We convert sentences to lowercase before searching, so only lowercase keys needed
     word_to_num = {
-        "one": 1, "One": 1,
-        "two": 2, "Two": 2,
-        "three": 3, "Three": 3,
-        "four": 4, "Four": 4,
-        "five": 5, "Five": 5,
-        "six": 6, "Six": 6,
-        "seven": 7, "Seven": 7,
-        "eight": 8, "Eight": 8,
-        "nine": 9, "Nine": 9,
-        "ten": 10, "Ten": 10,
-        "eleven": 11, "Eleven": 11,
-        "twelve": 12, "Twelve": 12,
-        "thirteen": 13, "Thirteen": 13,
-        "fourteen": 14, "Fourteen": 14,
-        "fifteen": 15, "Fifteen": 15,
-        "sixteen": 16, "Sixteen": 16,
-        "seventeen": 17, "Seventeen": 17,
-        "eighteen": 18, "Eighteen": 18,
-        "nineteen": 19, "Nineteen": 19,
-        "twenty": 20, "Twenty": 20,
-        "twenty-one": 21, "Twenty-one": 21,
-        "twenty-two": 22, "Twenty-two": 22,
-        "twenty-three": 23, "Twenty-three": 23,
-        "twenty-four": 24, "Twenty-four": 24,
-        "twenty-five": 25, "Twenty-five": 25,
-        "twenty-six": 26, "Twenty-six": 26,
-        "twenty-seven": 27, "Twenty-seven": 27,
-        "twenty-eight": 28, "Twenty-eight": 28,
-        "twenty-nine": 29, "Twenty-nine": 29,
-        "thirty": 30, "Thirty": 30,
-        "thirty-one": 31, "Thirty-one": 31,
-        "thirty-two": 32, "Thirty-two": 32,
-        "thirty-three": 33, "Thirty-three": 33,
-        "thirty-four": 34, "Thirty-four": 34,
-        "thirty-five": 35, "Thirty-five": 35,
-        "thirty-six": 36, "Thirty-six": 36,
-        "thirty-seven": 37, "Thirty-seven": 37,
-        "thirty-eight": 38, "Thirty-eight": 38,
-        "thirty-nine": 39, "Thirty-nine": 39,
-        "forty": 40, "Forty": 40,
-        "forty-one": 41, "Forty-one": 41,
-        "forty-two": 42, "Forty-two": 42,
-        "forty-three": 43, "Forty-three": 43,
-        "forty-four": 44, "Forty-four": 44,
-        "forty-five": 45, "Forty-five": 45,
-        "forty-six": 46, "Forty-six": 46,
-        "forty-seven": 47, "Forty-seven": 47,
-        "forty-eight": 48, "Forty-eight": 48,
-        "forty-nine": 49, "Forty-nine": 49,
-        "fifty": 50, "Fifty": 50,
+        "one": 1,
+        "two": 2,
+        "three": 3,
+        "four": 4,
+        "five": 5,
+        "six": 6,
+        "seven": 7,
+        "eight": 8,
+        "nine": 9,
+        "ten": 10,
+        "eleven": 11,
+        "twelve": 12,
+        "thirteen": 13,
+        "fourteen": 14,
+        "fifteen": 15,
+        "sixteen": 16,
+        "seventeen": 17,
+        "eighteen": 18,
+        "nineteen": 19,
+        "twenty": 20,
+        "twenty-one": 21,
+        "twenty-two": 22,
+        "twenty-three": 23,
+        "twenty-four": 24,
+        "twenty-five": 25,
+        "twenty-six": 26,
+        "twenty-seven": 27,
+        "twenty-eight": 28,
+        "twenty-nine": 29,
+        "thirty": 30,
+        "thirty-one": 31,
+        "thirty-two": 32,
+        "thirty-three": 33,
+        "thirty-four": 34,
+        "thirty-five": 35,
+        "thirty-six": 36,
+        "thirty-seven": 37,
+        "thirty-eight": 38,
+        "thirty-nine": 39,
+        "forty": 40,
+        "forty-one": 41,
+        "forty-two": 42,
+        "forty-three": 43,
+        "forty-four": 44,
+        "forty-five": 45,
+        "forty-six": 46,
+        "forty-seven": 47,
+        "forty-eight": 48,
+        "forty-nine": 49,
+        "fifty": 50,
     }
     
     # Roman numerals - EVERY NUMBER 1-50
@@ -572,9 +572,19 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
     
     # ===== MAIN GROUP LOGIC =====
     print("\n    MAIN GROUP LOGIC: Checking all sentences for valid combinations...")
-    
+
     for i, sentence in enumerate(sentences):
         sentence_lower = sentence.lower()
+
+        # OPTIMIZATION: Only process sentences that contain numbers
+        # Check for: arabic numerals (0-9), roman numerals, or word numbers
+        has_any_number = (
+            re.search(r'\d', sentence_lower) or  # Arabic numerals
+            re.search(rf'\b({word_pattern_check})\b', sentence_lower) or  # Word numbers
+            re.search(rf'\b({"|".join(roman_to_num.keys())})\b', sentence_lower)  # Roman numerals
+        )
+        if not has_any_number:
+            continue  # Skip sentences without any numbers
 
         # CHECK GROUP 1: "total of" (1a) OR number immediately before group 2 (1b)
         # These are TWO SEPARATE cases
