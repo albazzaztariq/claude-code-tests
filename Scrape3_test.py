@@ -691,7 +691,12 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
                 if 1 <= num <= 100:
                     if not explicit_count or num > explicit_count:
                         explicit_count = num
-                        print(f"\n    ✓ FOUND arabic numeral: {num}")
+                        print("\n    ***************************************************************************")
+                        print("    ***************************************************************************")
+                        print(f"    ✓ FOUND arabic numeral: {num}")
+                        print("    ***************************************************************************")
+                        print("    ***************************************************************************")
+                        print()
                         print(f"     Sentence: '{sentence.strip()[:200]}...'")
                     break
         
@@ -710,7 +715,12 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
                     found_count = word_to_num[word_num]
                     if not explicit_count or found_count > explicit_count:
                         explicit_count = found_count
-                        print(f"\n    ✓ FOUND word number: '{word_num}' → {found_count}")
+                        print("\n    ***************************************************************************")
+                        print("    ***************************************************************************")
+                        print(f"    ✓ FOUND word number: '{word_num}' → {found_count}")
+                        print("    ***************************************************************************")
+                        print("    ***************************************************************************")
+                        print()
                         print(f"     Sentence: '{sentence.strip()[:200]}...'")
                     break
         
@@ -728,7 +738,12 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
                     found_count = roman_to_num[roman_num]
                     if not explicit_count or found_count > explicit_count:
                         explicit_count = found_count
-                        print(f"\n    ✓ FOUND roman numeral: '{roman_num.upper()}' → {found_count}")
+                        print("\n    ***************************************************************************")
+                        print("    ***************************************************************************")
+                        print(f"    ✓ FOUND roman numeral: '{roman_num.upper()}' → {found_count}")
+                        print("    ***************************************************************************")
+                        print("    ***************************************************************************")
+                        print()
                         print(f"     Sentence: '{sentence.strip()[:200]}...'")
                     break
     
