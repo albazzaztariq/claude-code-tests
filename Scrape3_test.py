@@ -215,64 +215,15 @@ def extract_table_row_count(pdf_path: str, table_number: int) -> int:
     """
     Extract row count from a specific table number in the PDF.
     Returns the number of data rows (excluding header) if found, None otherwise.
-    Tries all three methods and shows what each finds for comparison.
+    Uses ONLY Google Cloud Vision API for table extraction.
     """
     print(f"\n    --- Extracting Table {table_number} ---")
 
     best_count = None
     best_method = None
 
-    # Try CAMELOT
-    print(f"\n    Trying CAMELOT...")
-    try:
-        tables_lattice = camelot.read_pdf(pdf_path, pages="all", flavor="lattice")
-        tables_stream = camelot.read_pdf(pdf_path, pages="all", flavor="stream")
-        all_camelot_tables = list(tables_lattice) + list(tables_stream)
-
-        if table_number <= len(all_camelot_tables):
-            table = all_camelot_tables[table_number - 1]
-            df = table.df
-            rows = len(df) - 1  # Exclude header
-            print(f"    Camelot: Found Table {table_number} with {rows} data rows")
-            print(f"    First column values:")
-            for idx, val in enumerate(df.iloc[:, 0]):
-                print(f"      Row {idx}: {val}")
-            if rows > 0 and not best_count:
-                best_count = rows
-                best_method = "Camelot"
-        else:
-            print(f"    Camelot: Table {table_number} not found (only {len(all_camelot_tables)} tables)")
-    except Exception as e:
-        print(f"    Camelot ERROR: {e}")
-
-    # Try PDFPLUMBER
-    print(f"\n    Trying PDFPLUMBER...")
-    try:
-        with pdfplumber.open(pdf_path) as pdf:
-            table_count = 0
-            found = False
-            for page_num, page in enumerate(pdf.pages):
-                tables = page.extract_tables()
-                for table in tables:
-                    table_count += 1
-                    if table_count == table_number:
-                        rows = len(table) - 1  # Exclude header
-                        print(f"    PDFPlumber: Found Table {table_number} on page {page_num + 1} with {rows} data rows")
-                        print(f"    First column values:")
-                        for idx, row in enumerate(table):
-                            first_cell = row[0] if row else ""
-                            print(f"      Row {idx}: {first_cell}")
-                        if rows > 0 and not best_count:
-                            best_count = rows
-                            best_method = "PDFPlumber"
-                        found = True
-                        break
-                if found:
-                    break
-            if not found:
-                print(f"    PDFPlumber: Table {table_number} not found")
-    except Exception as e:
-        print(f"    PDFPlumber ERROR: {e}")
+    # ONLY USING GOOGLE CLOUD VISION API
+    # Camelot and PDFPlumber disabled due to poor performance
 
     # Try GOOGLE CLOUD VISION API
     print(f"\n    Trying GOOGLE CLOUD VISION API...")
