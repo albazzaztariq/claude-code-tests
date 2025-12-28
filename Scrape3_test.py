@@ -227,6 +227,9 @@ def extract_table_row_count(pdf_path: str, table_number: int) -> int:
             df = table.df
             rows = len(df) - 1  # Exclude header
             print(f"    Camelot: Found Table {table_number} with {rows} data rows")
+            print(f"    First column values:")
+            for idx, val in enumerate(df.iloc[:, 0]):
+                print(f"      Row {idx}: {val}")
             if rows > 0:
                 return rows
     except Exception as e:
@@ -239,6 +242,9 @@ def extract_table_row_count(pdf_path: str, table_number: int) -> int:
             df = dfs[table_number - 1]
             rows = len(df) - 1 if len(df) > 1 else len(df)
             print(f"    Tabula: Found Table {table_number} with {rows} data rows")
+            print(f"    First column values:")
+            for idx, val in enumerate(df.iloc[:, 0]):
+                print(f"      Row {idx}: {val}")
             if rows > 0:
                 return rows
     except Exception as e:
@@ -255,6 +261,10 @@ def extract_table_row_count(pdf_path: str, table_number: int) -> int:
                     if table_count == table_number:
                         rows = len(table) - 1  # Exclude header
                         print(f"    PDFPlumber: Found Table {table_number} on page {page_num + 1} with {rows} data rows")
+                        print(f"    First column values:")
+                        for idx, row in enumerate(table):
+                            first_cell = row[0] if row else ""
+                            print(f"      Row {idx}: {first_cell}")
                         if rows > 0:
                             return rows
     except Exception as e:
@@ -403,42 +413,44 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
         "l": 50,
     }
     
-    # ===== SUPERSEDING CASE 1: Group 2 term + "table" =====
-    # If a sentence has a Group 2 term + "table", parse the table number and count rows
-    print("\n    SUPERSEDING CASE 1: Checking for Group 2 term + 'table'...")
-    
+    # ===== TABLE FALLBACK: Group 2 term + "table" =====
+    # If a sentence has a Group 2 term + "table", parse the table number and store as fallback
+    # Don't return immediately - keep looking for explicit counts
+    print("\n    TABLE FALLBACK: Checking for Group 2 term + 'table'...")
+
     group2_words = [
         "fabric", "fabrics", "material", "materials", "variant", "variants",
         "garment", "garments", "sample", "samples", "textile", "textiles",
         "specimen", "specimens",
     ]
-    
+
+    table_fallback_count = None
+
     for i, sentence in enumerate(sentences):
         sentence_lower = sentence.lower()
-        
+
         # Check if sentence has a Group 2 term AND "table"
         has_group2 = any(word in sentence_lower for word in group2_words)
         table_match = re.search(r"table\s+(\d+)", sentence_lower, re.IGNORECASE)
-        
+
         if has_group2 and table_match:
             table_num = int(table_match.group(1))
-            print(f"\n    ✓✓✓ SUPERSEDING CASE 1 FOUND - Group 2 term + Table {table_num} ✓✓✓")
+            print(f"\n    ✓ Found Group 2 term + Table {table_num}")
             print(f"    Sentence {i}: '{sentence.strip()[:200]}...'")
-            print(f"    Now parsing Table {table_num} to count rows...")
-            
+            print(f"    Attempting to parse Table {table_num}...")
+
             # Try to extract and count rows from the specified table
             table_count = extract_table_row_count(pdf_path, table_num)
-            if table_count:
-                print(f"\n    ✓✓✓ Successfully extracted {table_count} rows from Table {table_num} ✓✓✓")
-                print("\n    ═══════════════════════════════════════════════")
-                print(f"    DECISION: TABLE ROW COUNT = {table_count}")
-                print("    SUPERSEDES ALL OTHER METHODS - RETURNING NOW")
-                print("    ═══════════════════════════════════════════════\n")
-                return table_count
-            else:
-                print(f"    ✗ Could not parse Table {table_num}, continuing with other methods...")
-    
-    print("    Result: NO Group 2 term + table found")
+            if table_count and not table_fallback_count:
+                table_fallback_count = table_count
+                print(f"    ✓ Extracted {table_count} rows from Table {table_num} (stored as fallback)")
+            elif not table_count:
+                print(f"    ✗ Could not parse Table {table_num}")
+
+    if table_fallback_count:
+        print(f"\n    Stored table fallback count: {table_fallback_count}")
+    else:
+        print("    Result: NO valid table reference found")
     
     # ===== SUPERSEDING CASE 2: "total of" + NUMBER immediately followed by Group 2 =====
     # This takes absolute priority - if found, use it and stop searching
@@ -489,38 +501,34 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
     
     for i, sentence in enumerate(sentences):
         sentence_lower = sentence.lower()
-        
+
         # CHECK GROUP 1: "total of" (1a) OR number immediately before group 2 (1b)
         # These are TWO SEPARATE cases
         has_total_of = "total of" in sentence_lower
-        
-        # Check if WHOLE, POSITIVE number immediately precedes group 2 words
-        # Must NOT be part of a decimal (e.g., not "58" from "0.58")
+
+        # Check if WHOLE, POSITIVE number IMMEDIATELY precedes group 2 words
+        # IMMEDIATELY means the very next word, with NO words in between
+        # Pattern: number + optional whitespace + Group 2 word (NO words in between)
         has_number_before_group2_check = False
-        
-        # Pattern explanation:
-        # (?<![0-9.]) - NOT preceded by digit or decimal point (prevents "0.58" matching)
-        # (\d+) - capture the number
-        # (?![0-9.]) - NOT followed by digit or decimal point (ensures it's a complete number)
-        # \s+ - must have whitespace
-        # (?:\w+\s+){0,6} - optional words between (like "different types of")
-        # group2 terms
+
+        # STRICT pattern - number must be followed by Group 2 term with NO intervening words
+        # Only whitespace allowed between number and Group 2 term
         if re.search(
-            r"(?<![0-9.])(\d+)(?![0-9.])\s+(?:\w+\s+){0,6}(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)\b",
+            r"(?<![0-9.])(\d+)(?![0-9.])\s+(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)\b",
             sentence_lower
         ):
             has_number_before_group2_check = True
-        
-        # Check for word numbers (CASE-INSENSITIVE)
+
+        # Check for word numbers IMMEDIATELY before Group 2 (CASE-INSENSITIVE)
         if re.search(
-            rf"\b({word_pattern_check})\s+(?:\w+\s+){{0,6}}(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)\b",
+            rf"\b({word_pattern_check})\s+(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)\b",
             sentence_lower
         ):
             has_number_before_group2_check = True
-        
+
         has_group1 = has_total_of or has_number_before_group2_check
-        
-        # CHECK GROUP 2: BOTH SINGULAR AND PLURAL
+
+        # CHECK GROUP 2: BOTH SINGULAR AND PLURAL - track which terms found
         group2_words = [
             "fabric",
             "fabrics",
@@ -537,9 +545,10 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
             "specimen",
             "specimens",
         ]
-        has_group2 = any(word in sentence_lower for word in group2_words)
-        
-        # CHECK GROUP 3: action words
+        group2_found = [word for word in group2_words if word in sentence_lower]
+        has_group2 = len(group2_found) > 0
+
+        # CHECK GROUP 3: action words - track which terms found
         group3_words = [
             "tested",
             "produced",
@@ -550,7 +559,8 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
             "prepared",
             "examined",
         ]
-        has_group3 = any(word in sentence_lower for word in group3_words)
+        group3_found = [word for word in group3_words if word in sentence_lower]
+        has_group3 = len(group3_found) > 0
         
         # VALID COMBINATION CHECK
         # Group 1 is satisfied by EITHER 1a (total of) OR 1b (number before Group 2)
@@ -576,20 +586,19 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
         print(f"\n     Sentence {i}: VALID COMBINATION - {combination_type}")
         print(f"     Text: '{sentence.strip()[:250]}'")
         print(f"     Has Group 1 (total of): {has_group1}")
-        print(
-            f"     Has Group 2 (fabric/fabrics, material/materials, sample/samples, variant/variants, garment/garments, textile/textiles, specimen/specimens): {has_group2}"
-        )
-        print(f"     Has Group 3 (tested/produced/etc): {has_group3}")
-        print(f"     Has 'table': {has_table}")
-        print(f"     Has number IMMEDIATELY before group 2: {has_number_before_group2}")
+        group2_terms = ", ".join(group2_found) if group2_found else "none"
+        print(f"     Has Group 2: {has_group2}. Terms present: {group2_terms}")
+        group3_terms = ", ".join(group3_found) if group3_found else "none"
+        print(f"     Has Group 3: {has_group3}. Terms present: {group3_terms}")
+        print(f"     Has number IMMEDIATELY before group 2: {has_number_before_group2_check}")
         
         # ===== PRIORITY 1: ARABIC NUMERALS (most common) =====
         # Must be WHOLE, POSITIVE numbers only
-        # Updated patterns to allow optional words between number and Group 2
+        # Number must be IMMEDIATELY before Group 2 term (no words in between)
         digit_patterns = [
-            r"total\s+of\s+(?<![0-9.])(\d+)(?![0-9.])\s+(?:\w+\s+){0,6}(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)",
-            r"(?<![0-9.])(\d+)(?![0-9.])\s+(?:\w+\s+){0,6}(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)",
-            r"(?:tested|produced|used|analyzed|evaluated|studied|prepared|examined)\s+(?<![0-9.])(\d+)(?![0-9.])\s+(?:\w+\s+){0,6}(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)",
+            r"total\s+of\s+(?<![0-9.])(\d+)(?![0-9.])\s+(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)",
+            r"(?<![0-9.])(\d+)(?![0-9.])\s+(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)",
+            r"(?:tested|produced|used|analyzed|evaluated|studied|prepared|examined)\s+(?<![0-9.])(\d+)(?![0-9.])\s+(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)",
         ]
         
         for pattern in digit_patterns:
@@ -604,10 +613,10 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
                     break
         
         # ===== PRIORITY 2: WORD NUMBERS (one, two, three, etc.) - CASE-INSENSITIVE =====
-        # Updated patterns to allow optional words between number and Group 2
+        # Number word must be IMMEDIATELY before Group 2 term (no words in between)
         word_patterns = [
-            rf"\b({word_pattern_check})\b\s+(?:\w+\s+){{0,6}}(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)",
-            rf"\b({word_pattern_check})\b\s+(?:\w+\s+){{0,6}}(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)\s+of",
+            rf"\b({word_pattern_check})\b\s+(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)",
+            rf"\b({word_pattern_check})\b\s+(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)\s+of",
         ]
         
         for pattern in word_patterns:
@@ -646,8 +655,16 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
         print("    SUPERSEDES ALL OTHER METHODS - RETURNING NOW")
         print("    ═══════════════════════════════════════════════\n")
         return explicit_count
-    
+
     print("\n    Result: NO explicit count found using group logic")
+
+    # If we found a table fallback count earlier, use it
+    if table_fallback_count:
+        print("\n    ═══════════════════════════════════════════════")
+        print(f"    DECISION: TABLE FALLBACK COUNT = {table_fallback_count}")
+        print("    Using table row count from earlier")
+        print("    ═══════════════════════════════════════════════\n")
+        return table_fallback_count
     
     # ==================================================================
     # PRIORITY 2: SINGLE SAMPLE
