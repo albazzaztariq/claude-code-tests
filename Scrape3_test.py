@@ -8,7 +8,6 @@ import openpyxl
 from openpyxl import Workbook
 import pdfplumber
 import camelot
-import tabula
 import pytest
 from google.cloud import vision
 import io
@@ -245,25 +244,6 @@ def extract_table_row_count(pdf_path: str, table_number: int) -> int:
             print(f"    Camelot: Table {table_number} not found (only {len(all_camelot_tables)} tables)")
     except Exception as e:
         print(f"    Camelot ERROR: {e}")
-
-    # Try TABULA
-    print(f"\n    Trying TABULA...")
-    try:
-        dfs = tabula.read_pdf(pdf_path, pages="all", multiple_tables=True, silent=True)
-        if table_number <= len(dfs):
-            df = dfs[table_number - 1]
-            rows = len(df) - 1 if len(df) > 1 else len(df)
-            print(f"    Tabula: Found Table {table_number} with {rows} data rows")
-            print(f"    First column values:")
-            for idx, val in enumerate(df.iloc[:, 0]):
-                print(f"      Row {idx}: {val}")
-            if rows > 0 and not best_count:
-                best_count = rows
-                best_method = "Tabula"
-        else:
-            print(f"    Tabula: Table {table_number} not found (only {len(dfs)} tables)")
-    except Exception as e:
-        print(f"    Tabula ERROR: {e}")
 
     # Try PDFPLUMBER
     print(f"\n    Trying PDFPLUMBER...")
