@@ -580,8 +580,7 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
             f"     Has Group 2 (fabric/fabrics, material/materials, sample/samples, variant/variants, garment/garments, textile/textiles, specimen/specimens): {has_group2}"
         )
         print(f"     Has Group 3 (tested/produced/etc): {has_group3}")
-        print(f"     Has 'table': {has_table}")
-        print(f"     Has number IMMEDIATELY before group 2: {has_number_before_group2}")
+        print(f"     Has number IMMEDIATELY before group 2: {has_number_before_group2_check}")
         
         # ===== PRIORITY 1: ARABIC NUMERALS (most common) =====
         # Must be WHOLE, POSITIVE numbers only
