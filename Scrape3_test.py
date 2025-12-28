@@ -437,7 +437,7 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
         if has_group2 and table_match:
             table_num = int(table_match.group(1))
             print(f"\n    ✓ Found Group 2 term + Table {table_num}")
-            print(f"    Sentence {i}: '{sentence.strip()[:200]}...'")
+            print(f"    Sentence {i}: '{sentence.strip()[:300]}...'")
             group2_terms_list = ", ".join(group2_found_here)
             print(f"    Group 2 Terms Present: {group2_terms_list}")
             print(f"    Attempting to parse Table {table_num}...")
