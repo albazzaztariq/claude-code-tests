@@ -6,7 +6,7 @@ import fitz  # PyMuPDF
 import requests
 import openpyxl
 from openpyxl import Workbook
-import pdfplumber
+# import pdfplumber  # Commented out - using Nougat instead
 import camelot
 import pytest
 from azure.ai.formrecognizer import DocumentAnalysisClient
@@ -1357,135 +1357,15 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
     except Exception as e:
         print(f"    CameLot ERROR: {e}")
     
-    # TABULA
-    if not best_count:
-        print("\n    --- Method B: TABULA ---")
-        try:
-            dfs = tabula.read_pdf(pdf_path, pages="all", multiple_tables=True, silent=True)
-            print(f"    Found {len(dfs)} tables")
-            
-            for idx, df in enumerate(dfs):
-                rows = len(df) - 1 if len(df) > 1 else len(df)
-                print(f"\n    Table {idx + 1}:")
-                print(f"     Dimensions: {len(df)} rows × {len(df.columns)} cols")
-                print(f"     COLUMNS: {str(df.columns.tolist())[:150]}...")
-                if len(df) > 0:
-                    print(f"     DATA ROW 1: {str(df.iloc[0].tolist())[:150]}...")
-                
-                header_text = " ".join([str(col).lower() for col in df.columns])
-                fabric_keywords = [
-                    "fabric",
-                    "fabrics",
-                    "material",
-                    "materials",
-                    "sample",
-                    "samples",
-                    "fiber",
-                    "fibers",
-                    "composition",
-                    "compositions",
-                    "thickness",
-                    "density",
-                    "densities",
-                    "weight",
-                    "weights",
-                    "gsm",
-                    "structure",
-                    "structures",
-                    "weave",
-                    "weaves",
-                    "knit",
-                    "knits",
-                    "variant",
-                    "variants",
-                    "garment",
-                    "garments",
-                    "textile",
-                    "textiles",
-                    "specimen",
-                    "specimens",
-                ]
-                score = sum([kw in header_text for kw in fabric_keywords])
-                print(f"     Fabric keyword score: {score}/{len(fabric_keywords)}")
-                
-                if score >= 2 and rows > 0:
-                    print("     ✓✓✓ THIS LOOKS LIKE THE SAMPLE TABLE ✓✓✓")
-                    if not best_count:
-                        best_count = rows
-                        best_method = f"Tabula (table {idx + 1})"
-                else:
-                    print(f"     ✗ REJECTED (score {score} < 2 or rows={rows})")
-        except Exception as e:
-            print(f"    Tabula ERROR: {e}")
+    # TABULA - DISABLED (using Nougat instead)
+    # if not best_count:
+    #     print("\n    --- Method B: TABULA ---")
+    #     ... (commented out)
     
-    # PDFPLUMBER
-    if not best_count:
-        print("\n    --- Method C: PDFPLUMBER ---")
-        try:
-            with pdfplumber.open(pdf_path) as pdf:
-                for page_num, page in enumerate(pdf.pages):
-                    tables = page.extract_tables()
-                    if not tables:
-                        continue
-                    print(f"    Page {page_num + 1}: Found {len(tables)} table(s)")
-                    
-                    for t_idx, table in enumerate(tables):
-                        if not table or len(table) <= 1:
-                            continue
-                        rows = len(table) - 1
-                        print(f"\n    Page {page_num + 1}, Table {t_idx + 1}:")
-                        print(f"     Dimensions: {len(table)} rows × {len(table[0])} cols")
-                        print(f"     HEADER: {str(table[0])[:150]}...")
-                        if len(table) > 1:
-                            print(f"     DATA ROW 1: {str(table[1])[:150]}...")
-                        
-                        header_text = " ".join(
-                            [str(cell).lower() if cell else "" for cell in table[0]]
-                        )
-                        fabric_keywords = [
-                            "fabric",
-                            "fabrics",
-                            "material",
-                            "materials",
-                            "sample",
-                            "samples",
-                            "fiber",
-                            "fibers",
-                            "composition",
-                            "compositions",
-                            "thickness",
-                            "density",
-                            "densities",
-                            "weight",
-                            "weights",
-                            "gsm",
-                            "structure",
-                            "structures",
-                            "weave",
-                            "weaves",
-                            "knit",
-                            "knits",
-                            "variant",
-                            "variants",
-                            "garment",
-                            "garments",
-                            "textile",
-                            "textiles",
-                            "specimen",
-                            "specimens",
-                        ]
-                        score = sum([kw in header_text for kw in fabric_keywords])
-                        print(f"     Fabric keyword score: {score}/{len(fabric_keywords)}")
-                        
-                        if score >= 2:
-                            print("     ✓✓✓ THIS LOOKS LIKE THE SAMPLE TABLE ✓✓✓")
-                            if not best_count:
-                                best_count = rows
-                                best_method = f"pdfplumber (page {page_num + 1}, table {t_idx + 1})"
-                        else:
-                            print(f"     ✗ REJECTED (score {score} < 2)")
-        except Exception as e:
-            print(f"    pdfplumber ERROR: {e}")
+    # PDFPLUMBER - DISABLED (using Nougat instead)
+    # if not best_count:
+    #     print("\n    --- Method C: PDFPLUMBER ---")
+    #     ... (commented out)
     
     # FINAL DECISION
     if best_count:
