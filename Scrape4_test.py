@@ -1092,18 +1092,16 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
                         print()
                         print(f"     Sentence: '{sentence.strip()[:200]}...'")
 
-        # After checking ALL patterns in this sentence, if we have Groups 1+2+3, return immediately
+        # After checking ALL patterns in this sentence, continue to next sentence
+        # Don't return early - we want to find the HIGHEST number across ALL sentences
         if found_best_combination and explicit_count:
-            print("\n    ═══════════════════════════════════════════════")
-            print(f"    DECISION: FOUND GROUPS 1+2+3 WITH COUNT = {explicit_count}")
-            print("    HIGHEST NUMBER IN SENTENCE - RETURNING NOW")
-            print("    ═══════════════════════════════════════════════\n")
-            return explicit_count
+            print(f"\n    → Found Groups 1+2+3 in this sentence with count = {explicit_count}")
+            print(f"    → Continuing to check remaining sentences for higher numbers...")
     
     if explicit_count:
         print("\n    ═══════════════════════════════════════════════")
         print(f"    DECISION: EXPLICIT COUNT = {explicit_count}")
-        print("    SUPERSEDES ALL OTHER METHODS - RETURNING NOW")
+        print("    HIGHEST NUMBER FOUND ACROSS ALL SENTENCES")
         print("    ═══════════════════════════════════════════════\n")
         return explicit_count
 
