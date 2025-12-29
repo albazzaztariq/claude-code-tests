@@ -378,6 +378,16 @@ def extract_with_nougat(pdf_path: str) -> str:
 
             result = subprocess.run(cmd, capture_output=True, text=True, timeout=600)
 
+            print(f"    Return code: {result.returncode}")
+            if result.stdout:
+                print(f"    stdout: {result.stdout[:500]}")
+            if result.stderr:
+                print(f"    stderr: {result.stderr[:500]}")
+
+            # List what's in the temp dir
+            all_files = os.listdir(tmpdir)
+            print(f"    Files in temp dir: {all_files}")
+
             if result.returncode != 0:
                 print(f"    Nougat CLI error: {result.stderr}")
                 sys.exit(1)
