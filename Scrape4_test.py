@@ -19,9 +19,10 @@ try:
     from nougat import NougatModel
     from nougat.utils.checkpoint import get_checkpoint
     NOUGAT_AVAILABLE = True
-except ImportError:
+except (ImportError, Exception) as e:
     NOUGAT_AVAILABLE = False
-    print("Warning: Nougat OCR not available. Install with: pip install nougat-ocr")
+    print(f"Warning: Nougat OCR not available. Error: {e}")
+    print("Nougat has known configuration bugs. Continuing without Nougat...")
 
 # ================== CONFIGURATION ==================
 OLLAMA_URL = "http://localhost:11434/api/generate"
