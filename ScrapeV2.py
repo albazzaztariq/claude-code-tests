@@ -27,7 +27,7 @@ LLM_PROVIDER = os.getenv("LLM_PROVIDER", "ollama")  # "ollama" or "openai"
 
 # Ollama settings
 OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434/api/generate")
-OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.1:8b")  # Recommend larger model for this task
+OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "qwen2.5:14b")  # Good balance of speed and quality
 
 # OpenAI settings (if using)
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
