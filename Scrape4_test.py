@@ -3,7 +3,7 @@ import re
 import sys
 from pathlib import Path
 import fitz  # PyMuPDF
-import requests
+# import requests  # Disabled - not using LLM
 import openpyxl
 from openpyxl import Workbook
 # import pdfplumber  # Commented out - using Nougat instead
@@ -36,8 +36,8 @@ except Exception as e:
     print(f"Warning: Nougat OCR not available: {e}")
 
 # ================== CONFIGURATION ==================
-OLLAMA_URL = "http://localhost:11434/api/generate"
-OLLAMA_MODEL = "gemma2:2b"
+# OLLAMA_URL = "http://localhost:11434/api/generate"  # Disabled
+# OLLAMA_MODEL = "gemma2:2b"  # Disabled
 # AZURE_VISION_KEY = os.getenv("AZURE_VISION_KEY", "YOUR_AZURE_VISION_KEY_HERE")  # Disabled
 # AZURE_VISION_ENDPOINT = os.getenv("AZURE_VISION_ENDPOINT", "YOUR_AZURE_ENDPOINT_HERE")  # Disabled
 BASE_DIR = Path(
@@ -50,17 +50,9 @@ PDF_FOLDER = Path(
 )
 
 # ================== HELPER FUNCTIONS (not tests) ==================
-def call_local_llm(prompt: str) -> str:
-    """Call local Ollama LLM."""
-    payload = {
-        "model": OLLAMA_MODEL,
-        "prompt": prompt,
-        "stream": False,
-    }
-    resp = requests.post(OLLAMA_URL, json=payload, timeout=240)
-    resp.raise_for_status()
-    data = resp.json()
-    return data.get("response", "")
+# call_local_llm - DISABLED (not using LLM)
+# def call_local_llm(prompt: str) -> str:
+#     ... (commented out)
 
 def extract_title_with_formatting(pdf_path: str) -> str:
     """
@@ -1265,48 +1257,9 @@ def test_process_pdfs():
         if not meta_first_last:
             missing.append("author")
         
-        if missing:
-            print(
-                f"  Missing: {', '.join(missing) if missing else 'none, but trying LLM for samples'}"
-            )
-            print("  Trying LLM...")
-            short_text = full_text[:4000]
-            
-            # LLM for title
-            if "title" in missing:
-                try:
-                    title_prompt = f"What is the main article title? Return only the title.\n\nTEXT:\n{short_text[:2000]}"
-                    llm_title = call_local_llm(title_prompt).strip()
-                    if llm_title and len(llm_title) > 10 and len(llm_title) < 300:
-                        meta_title = llm_title
-                        print(f"    LLM found title: {meta_title}")
-                except Exception as e:
-                    print(f"    LLM title error: {e}")
-            
-            # LLM for year
-            if "year" in missing:
-                try:
-                    year_prompt = f"What year was this published? Return only a 4-digit year.\n\nTEXT:\n{short_text[:2000]}"
-                    llm_year = call_local_llm(year_prompt).strip()
-                    year_match = re.search(r"\b(19[9]\d|20[0-2]\d)\b", llm_year)
-                    if year_match:
-                        meta_year = int(year_match.group(1))
-                        print(f"    LLM found year: {meta_year}")
-                except Exception as e:
-                    print(f"    LLM year error: {e}")
-            
-            # LLM for author
-            if "author" in missing:
-                try:
-                    author_prompt = f"Who is the first author? Return only the last name (family name).\n\nTEXT:\n{short_text}"
-                    llm_author = call_local_llm(author_prompt).strip()
-                    llm_author = llm_author.replace('"', "").replace("'", "").strip()
-                    author_match = re.search(r"\b([A-Z][a-z]{2,})\b", llm_author)
-                    if author_match:
-                        meta_first_last = author_match.group(1)
-                        print(f"    LLM found author: {meta_first_last}")
-                except Exception as e:
-                    print(f"    LLM author error: {e}")
+        # LLM FALLBACK - DISABLED
+        # if missing:
+        #     ... (commented out)
         
         # --------- SET DEFAULTS FOR MISSING VALUES ---------
         if not meta_title:
