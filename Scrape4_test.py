@@ -758,8 +758,9 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
         sentence_lower = sentence.lower()
         
         # Check for "total of" + arabic number + group2
+        # (Less likely to match sample IDs due to "total of", but check for consistency)
         total_of_arabic = re.search(
-            r"total\s+of\s+(\d+)\s+(?:different\s+)?(?:types?\s+of\s+)?(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?|jerseys?)\b",
+            r"total\s+of\s+(?<![a-zA-Z0-9.])(\d+)(?![a-zA-Z0-9.])\s+(?:different\s+)?(?:types?\s+of\s+)?(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?|jerseys?)\b",
             sentence_lower
         )
         if total_of_arabic:
@@ -819,8 +820,9 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
 
         # STRICT pattern - number must be followed by Group 2 term with NO intervening words
         # Only whitespace allowed between number and Group 2 term
+        # Exclude sample IDs like "S18", "F3" (number must be standalone)
         if re.search(
-            r"(?<![0-9.])(\d+)(?![0-9.])\s+(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?|jerseys?)\b",
+            r"(?<![a-zA-Z0-9.])(\d+)(?![a-zA-Z0-9.])\s+(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?|jerseys?)\b",
             sentence_lower
         ):
             has_number_before_group2_check = True
@@ -846,8 +848,9 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
         # Allows: "9 different types of single jersey weft knitted fabrics"
         # Allows: "4 types of tri-layer fabrics" (handles hyphens)
         # Modifiers between "types of" and Group 2 are allowed for this pattern ONLY
+        # Exclude sample IDs like "S9", "F4" (number must be standalone)
         if re.search(
-            r"(?<![0-9.])(\d+)(?![0-9.])\s+(?:different\s+)?types?\s+of\s+(?:[\w-]+\s+){{0,6}}(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?|jerseys?)\b",
+            r"(?<![a-zA-Z0-9.])(\d+)(?![a-zA-Z0-9.])\s+(?:different\s+)?types?\s+of\s+(?:[\w-]+\s+){{0,6}}(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?|jerseys?)\b",
             sentence_lower
         ):
             has_number_before_group2_check = True
@@ -937,11 +940,12 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
         # Must be WHOLE, POSITIVE numbers only
         # Number must be IMMEDIATELY before Group 2 term (no words in between)
         # IMPORTANT: Find ALL numbers in sentence, take the highest
+        # IMPORTANT: Exclude sample IDs like "S18", "F3", etc. (must be standalone)
         digit_patterns = [
-            r"total\s+of\s+(?<![0-9.])(\d+)(?![0-9.])\s+(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?|jerseys?)",
-            r"(?<![0-9.])(\d+)(?![0-9.])\s+(?:different\s+)?types?\s+of\s+(?:[\w-]+\s+){0,6}(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?|jerseys?)",
-            r"(?<![0-9.])(\d+)(?![0-9.])\s+(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?|jerseys?)",
-            r"(?:tested|produced|used|analyzed|evaluated|studied|prepared|examined|knit|knitted|woven)\s+(?<![0-9.])(\d+)(?![0-9.])\s+(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?|jerseys?)",
+            r"total\s+of\s+(?<![a-zA-Z0-9.])(\d+)(?![a-zA-Z0-9.])\s+(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?|jerseys?)",
+            r"(?<![a-zA-Z0-9.])(\d+)(?![a-zA-Z0-9.])\s+(?:different\s+)?types?\s+of\s+(?:[\w-]+\s+){0,6}(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?|jerseys?)",
+            r"(?<![a-zA-Z0-9.])(\d+)(?![a-zA-Z0-9.])\s+(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?|jerseys?)",
+            r"(?:tested|produced|used|analyzed|evaluated|studied|prepared|examined|knit|knitted|woven)\s+(?<![a-zA-Z0-9.])(\d+)(?![a-zA-Z0-9.])\s+(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?|jerseys?)",
         ]
 
         # Find ALL matching numbers in this sentence (don't break early)
