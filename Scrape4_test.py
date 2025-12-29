@@ -239,16 +239,12 @@ def extract_table_row_count(pdf_path: str, table_number: int) -> int:
             rows = len(df) - 1  # Exclude header
             print(f"    Camelot: Found Table {table_number} with {rows} data rows")
 
-            # Show table preview (first 3 rows)
-            print(f"    Preview of extracted data:")
-            preview_rows = min(3, len(df))
-            for idx in range(preview_rows):
+            # Show FULL table with ACTUAL CELL DATA
+            print(f"    Extracted table data (ALL ROWS):")
+            for idx in range(len(df)):
                 row_data = df.iloc[idx].tolist()
-                # Clean up and format
-                row_str = " | ".join([str(cell)[:30] for cell in row_data])
+                row_str = " | ".join([str(cell)[:50] for cell in row_data])
                 print(f"      Row {idx}: {row_str}")
-            if len(df) > 3:
-                print(f"      ... ({len(df) - 3} more rows)")
 
             if rows > 0 and not best_count:
                 best_count = rows
@@ -261,12 +257,19 @@ def extract_table_row_count(pdf_path: str, table_number: int) -> int:
     # Try GOOGLE CLOUD VISION API
     print(f"\n    Trying GOOGLE CLOUD VISION API...")
     try:
-        vision_count = extract_table_with_vision_api(pdf_path, table_number)
-        if vision_count and vision_count > 0:
-            print(f"    Vision API: Found Table {table_number} with {vision_count} data rows")
-            print(f"    (Note: Vision API currently only counts rows, doesn't extract cell data)")
-            if not best_count:
-                best_count = vision_count
+        vision_result = extract_table_with_vision_api(pdf_path, table_number)
+        if vision_result:
+            rows, table_data = vision_result
+            print(f"    Vision API: Found Table {table_number} with {rows} data rows")
+
+            # Show FULL table with ACTUAL CELL DATA
+            print(f"    Extracted table data (ALL ROWS):")
+            for idx, row in enumerate(table_data):
+                row_str = " | ".join([str(cell)[:50] for cell in row])
+                print(f"      Row {idx}: {row_str}")
+
+            if rows > 0 and not best_count:
+                best_count = rows
                 best_method = "Google Vision API"
         else:
             print(f"    Vision API: Table {table_number} not found or no rows detected")
@@ -281,15 +284,11 @@ def extract_table_row_count(pdf_path: str, table_number: int) -> int:
             rows, table_data = azure_result
             print(f"    Azure: Found Table {table_number} with {rows} data rows")
 
-            # Show table preview (first 3 rows with ACTUAL CELL DATA)
-            print(f"    Preview of extracted data:")
-            preview_rows = min(3, len(table_data))
-            for idx in range(preview_rows):
-                row = table_data[idx]
-                row_str = " | ".join([str(cell)[:30] for cell in row])
+            # Show FULL table with ACTUAL CELL DATA
+            print(f"    Extracted table data (ALL ROWS):")
+            for idx, row in enumerate(table_data):
+                row_str = " | ".join([str(cell)[:50] for cell in row])
                 print(f"      Row {idx}: {row_str}")
-            if len(table_data) > 3:
-                print(f"      ... ({len(table_data) - 3} more rows)")
 
             if rows > 0 and not best_count:
                 best_count = rows
@@ -306,10 +305,11 @@ def extract_table_row_count(pdf_path: str, table_number: int) -> int:
         print(f"\n    ✗ Could not extract Table {table_number} from any method")
         return None
 
-def extract_table_with_vision_api(pdf_path: str, table_number: int) -> int:
+def extract_table_with_vision_api(pdf_path: str, table_number: int):
     """
-    Use Google Cloud Vision API to detect tables in PDF and extract row count.
-    Returns the number of data rows (excluding header) if found, None otherwise.
+    Use Google Cloud Vision API to extract table data from PDF.
+    Returns tuple of (row_count, table_data) if found, None otherwise.
+    table_data is a list of lists representing rows and cells with ACTUAL CELL DATA.
     """
     try:
         # Set API key as environment variable for the client
@@ -340,7 +340,7 @@ def extract_table_with_vision_api(pdf_path: str, table_number: int) -> int:
         # Make API call
         response = client.batch_annotate_files(requests=[request])
 
-        # Parse response to find tables
+        # Parse response to extract table cell data
         tables_found = []
         for file_response in response.responses:
             for page_response in file_response.responses:
@@ -349,12 +349,52 @@ def extract_table_with_vision_api(pdf_path: str, table_number: int) -> int:
                     for page in page_response.full_text_annotation.pages:
                         for block in page.blocks:
                             # Check if block looks like a table (multiple paragraphs in grid layout)
-                            if len(block.paragraphs) > 3:  # Likely a table if many paragraphs
-                                # Count rows by analyzing paragraph positions
-                                row_count = len(block.paragraphs) - 1  # Exclude header
-                                tables_found.append(row_count)
+                            if len(block.paragraphs) > 3:
+                                # Extract text content from each paragraph with position
+                                cells_with_position = []
+                                for para in block.paragraphs:
+                                    # Get paragraph text
+                                    para_text = ""
+                                    for word in para.words:
+                                        word_text = "".join([symbol.text for symbol in word.symbols])
+                                        para_text += word_text + " "
+                                    para_text = para_text.strip()
 
-        # Return the specified table's row count
+                                    # Get position (y-coordinate for row grouping)
+                                    if para.bounding_box and para.bounding_box.vertices:
+                                        y_pos = para.bounding_box.vertices[0].y
+                                        x_pos = para.bounding_box.vertices[0].x
+                                        cells_with_position.append((y_pos, x_pos, para_text))
+
+                                # Group cells by row (similar y-coordinates)
+                                # Sort by y position first
+                                cells_with_position.sort(key=lambda x: (x[0], x[1]))
+
+                                # Group into rows (cells within 10 pixels vertical distance are same row)
+                                rows = []
+                                current_row = []
+                                last_y = None
+
+                                for y_pos, x_pos, text in cells_with_position:
+                                    if last_y is None or abs(y_pos - last_y) < 10:
+                                        current_row.append(text)
+                                        last_y = y_pos
+                                    else:
+                                        if current_row:
+                                            rows.append(current_row)
+                                        current_row = [text]
+                                        last_y = y_pos
+
+                                # Add last row
+                                if current_row:
+                                    rows.append(current_row)
+
+                                # Store table data
+                                if rows:
+                                    row_count = len(rows) - 1  # Exclude header
+                                    tables_found.append((row_count, rows))
+
+        # Return the specified table's data
         if table_number <= len(tables_found):
             return tables_found[table_number - 1]
         else:
