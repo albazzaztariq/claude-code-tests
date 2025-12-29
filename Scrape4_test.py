@@ -462,13 +462,29 @@ def extract_table_with_nougat(pdf_path: str, table_number: int):
         model = extract_table_with_nougat.model
 
         # Process PDF with Nougat
-        predictions = model.inference(pdf_path=str(pdf_path), batch_size=1)
+        # Nougat uses a different API - need to create dataset and dataloader
+        from functools import partial
+        from nougat.utils.dataset import LazyDataset
+        from torch.utils.data import DataLoader
+
+        dataset = LazyDataset(
+            str(pdf_path),
+            partial(model.encoder.prepare_input, random_padding=False),
+        )
+        dataloader = DataLoader(dataset, batch_size=1, shuffle=False)
+
+        predictions = []
+        for batch in dataloader:
+            batch = batch.to(model.device)
+            output = model.inference(image_tensors=batch)
+            predictions.extend(output["predictions"])
 
         if not predictions or len(predictions) == 0:
             print("    ✗ Nougat returned no predictions")
             return None
 
-        markdown_text = predictions[0]
+        # Join all page predictions into one document
+        markdown_text = "\n\n".join(predictions)
 
         # DEBUG: Show first 2000 chars of Nougat output
         print(f"    Nougat output preview (first 2000 chars):")
