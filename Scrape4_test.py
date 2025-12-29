@@ -780,7 +780,8 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
             "knitted",
             "woven",
         ]
-        group3_found = [word for word in group3_words if word in sentence_lower]
+        # Use word boundaries to avoid false matches (e.g., "used" in "focused")
+        group3_found = [word for word in group3_words if re.search(rf'\b{word}\b', sentence_lower)]
         has_group3 = len(group3_found) > 0
         
         # VALID COMBINATION CHECK
@@ -846,6 +847,14 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
                         print("    ***************************************************************************")
                         print()
                         print(f"     Sentence: '{sentence.strip()[:200]}...'")
+
+                        # If we have Groups 1+2+3, this is the best combination - return immediately
+                        if found_best_combination:
+                            print("\n    ═══════════════════════════════════════════════")
+                            print(f"    DECISION: FOUND GROUPS 1+2+3 WITH COUNT = {explicit_count}")
+                            print("    SOURCE OF TRUTH - RETURNING NOW")
+                            print("    ═══════════════════════════════════════════════\n")
+                            return explicit_count
                     break
         
         # ===== PRIORITY 2: WORD NUMBERS (one, two, three, etc.) - CASE-INSENSITIVE =====
@@ -872,6 +881,14 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
                         print("    ***************************************************************************")
                         print()
                         print(f"     Sentence: '{sentence.strip()[:200]}...'")
+
+                        # If we have Groups 1+2+3, this is the best combination - return immediately
+                        if found_best_combination:
+                            print("\n    ═══════════════════════════════════════════════")
+                            print(f"    DECISION: FOUND GROUPS 1+2+3 WITH COUNT = {explicit_count}")
+                            print("    SOURCE OF TRUTH - RETURNING NOW")
+                            print("    ═══════════════════════════════════════════════\n")
+                            return explicit_count
                     break
         
         # ===== PRIORITY 3: ROMAN NUMERALS (rare but possible) =====
@@ -895,6 +912,14 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
                         print("    ***************************************************************************")
                         print()
                         print(f"     Sentence: '{sentence.strip()[:200]}...'")
+
+                        # If we have Groups 1+2+3, this is the best combination - return immediately
+                        if found_best_combination:
+                            print("\n    ═══════════════════════════════════════════════")
+                            print(f"    DECISION: FOUND GROUPS 1+2+3 WITH COUNT = {explicit_count}")
+                            print("    SOURCE OF TRUTH - RETURNING NOW")
+                            print("    ═══════════════════════════════════════════════\n")
+                            return explicit_count
                     break
     
     if explicit_count:
