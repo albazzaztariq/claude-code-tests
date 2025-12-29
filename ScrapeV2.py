@@ -53,13 +53,7 @@ try:
 except ImportError:
     pass
 
-try:
-    from nougat import NougatModel
-    from nougat.utils.checkpoint import get_checkpoint
-    NOUGAT_AVAILABLE = True
-except ImportError:
-    NOUGAT_AVAILABLE = False
-    print("Warning: Nougat OCR not available. Install with: pip install nougat-ocr")
+# Nougat is used via CLI, no Python imports needed
 
 # ================== CONFIGURATION ==================
 # LLM Configuration - Choose one
@@ -402,37 +396,47 @@ def call_llm(prompt: str, system_prompt: str = "") -> str:
 
 def extract_with_nougat(pdf_path: str) -> str:
     """
-    Extract text from PDF using Nougat OCR Python API.
-    COPIED VERBATIM from Scrape4_test.py - this implementation works at 100% accuracy.
-    Uses hasattr caching pattern for model reuse.
+    Extract text from PDF using Nougat CLI (most reliable method).
     """
-    if not NOUGAT_AVAILABLE:
-        print("    ⚠ Nougat OCR not available, cannot proceed")
-        sys.exit(1)
+    import subprocess
+    import tempfile
 
     try:
-        print(f"    Extracting with Nougat OCR...")
+        print(f"    Extracting with Nougat CLI...")
 
-        # Initialize Nougat model (cached after first use)
-        if not hasattr(extract_with_nougat, 'model'):
-            print("    Loading Nougat model (first time only)...")
-            checkpoint = get_checkpoint("facebook/nougat-base")
-            extract_with_nougat.model = NougatModel.from_pretrained(checkpoint)
-            print("    Model loaded successfully")
+        # Create temp output directory
+        with tempfile.TemporaryDirectory() as tmpdir:
+            # Run nougat CLI
+            cmd = ["nougat", str(pdf_path), "-o", tmpdir, "--no-skipping"]
+            print(f"    Running: {' '.join(cmd)}")
 
-        model = extract_with_nougat.model
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=600)
 
-        # Process PDF with Nougat
-        predictions = model.inference(pdf_path=str(pdf_path), batch_size=1)
+            if result.returncode != 0:
+                print(f"    Nougat CLI error: {result.stderr}")
+                sys.exit(1)
 
-        if not predictions or len(predictions) == 0:
-            print("    ✗ Nougat returned no predictions")
-            sys.exit(1)
+            # Find the output .mmd file
+            import glob
+            mmd_files = glob.glob(os.path.join(tmpdir, "*.mmd"))
 
-        markdown_text = predictions[0]
-        print(f"    ✓ Got {len(markdown_text)} characters (markdown with tables)")
-        return markdown_text
+            if not mmd_files:
+                print("    No .mmd output file found")
+                sys.exit(1)
 
+            # Read the markdown output
+            with open(mmd_files[0], "r", encoding="utf-8") as f:
+                markdown_text = f.read()
+
+            print(f"    Got {len(markdown_text)} characters (markdown with tables)")
+            return markdown_text
+
+    except subprocess.TimeoutExpired:
+        print("    Nougat timed out after 10 minutes")
+        sys.exit(1)
+    except FileNotFoundError:
+        print("    Nougat CLI not found. Install with: pip install nougat-ocr")
+        sys.exit(1)
     except Exception as e:
         print(f"    Nougat ERROR: {e}")
         sys.exit(1)
