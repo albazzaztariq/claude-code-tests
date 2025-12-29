@@ -309,14 +309,29 @@ def extract_table_with_azure(pdf_path: str, table_number: int):
 
         print(f"    Camelot accuracy: {accuracy:.1f}%, Rows: {len(df)}, Cols: {len(df.columns)}")
 
-        # Reject false positives: need decent accuracy AND multiple rows/cols
+        # Reject false positives: need HIGH accuracy AND multiple rows/cols
         # Require at least 3x3 table (3 rows, 3 columns) to ensure it's a real table
-        if accuracy < 30 or len(df) < 3 or len(df.columns) < 3:
+        if accuracy < 60 or len(df) < 3 or len(df.columns) < 3:
             print(f"    ✗ Low accuracy or insufficient table structure - likely not a real table")
             print(f"    Skipping (Camelot false positive)")
             return None
 
-        print(f"    ✓ Verified as real table structure")
+        # Check if table has actual data (at least some cells with numbers)
+        # Real tables have numeric data, not just text or empty cells
+        all_values = df.values.flatten()
+        numeric_cells = sum(1 for val in all_values if str(val).strip() and any(c.isdigit() for c in str(val)))
+        total_cells = len(all_values)
+        numeric_ratio = numeric_cells / total_cells if total_cells > 0 else 0
+
+        print(f"    Table has {numeric_cells}/{total_cells} cells with numbers ({numeric_ratio*100:.1f}%)")
+
+        # Require at least 20% of cells to have numeric content
+        if numeric_ratio < 0.2:
+            print(f"    ✗ Too few numeric cells - likely not a data table")
+            print(f"    Skipping (text block or figure, not a data table)")
+            return None
+
+        print(f"    ✓ Verified as real data table")
 
         page_num = camelot_table.page - 1  # Camelot uses 1-indexed, fitz uses 0-indexed
 
