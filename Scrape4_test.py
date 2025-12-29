@@ -20,6 +20,17 @@ try:
     from nougat import NougatModel
     from nougat.utils.checkpoint import get_checkpoint
     NOUGAT_AVAILABLE = True
+
+    # Monkey-patch nougat's BARTDecoder to handle new transformers cache_position arg
+    from nougat.model import BARTDecoder
+    _original_prepare = BARTDecoder.prepare_inputs_for_inference
+    def _patched_prepare(self, input_ids, encoder_outputs, past=None, past_key_values=None,
+                         use_cache=None, attention_mask=None, cache_position=None, **kwargs):
+        # Ignore cache_position - nougat doesn't use it
+        return _original_prepare(self, input_ids, encoder_outputs, past, past_key_values,
+                                 use_cache, attention_mask)
+    BARTDecoder.prepare_inputs_for_inference = _patched_prepare
+    print("Nougat loaded with transformers compatibility patch")
 except ImportError:
     NOUGAT_AVAILABLE = False
     print("Warning: Nougat OCR not available. Install with: pip install nougat-ocr")
