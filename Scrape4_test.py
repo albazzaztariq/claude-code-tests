@@ -379,13 +379,19 @@ def extract_table_with_azure(pdf_path: str, table_number: int):
 
         # Analyze document with prebuilt-layout model
         with open(pdf_path, 'rb') as pdf_file:
-            poller = client.begin_analyze_document("prebuilt-layout", pdf_file)
+            poller = client.begin_analyze_document("prebuilt-layout", document=pdf_file)
 
         result = poller.result()
+
+        # DEBUG: Print what Azure found
+        print(f"    Azure found {len(result.tables) if result.tables else 0} total tables in document")
 
         # Check if the requested table exists
         if result.tables and table_number <= len(result.tables):
             table = result.tables[table_number - 1]
+
+            # DEBUG: Show table structure
+            print(f"    Table {table_number}: {table.row_count} rows x {table.column_count} columns, {len(table.cells)} total cells")
 
             # Build table data structure - group cells by row
             rows_dict = {}
@@ -400,8 +406,14 @@ def extract_table_with_azure(pdf_path: str, table_number: int):
             for row_idx in sorted(rows_dict.keys()):
                 row = []
                 for col_idx in sorted(rows_dict[row_idx].keys()):
-                    row.append(rows_dict[row_idx][col_idx])
+                    cell_content = rows_dict[row_idx][col_idx]
+                    row.append(cell_content)
                 table_data.append(row)
+
+            # DEBUG: Show first row of extracted data
+            if table_data:
+                first_row_preview = " | ".join([str(cell)[:20] for cell in table_data[0]])
+                print(f"    First row data: {first_row_preview}")
 
             # Calculate row count (excluding header)
             row_count = len(table_data) - 1 if len(table_data) > 0 else 0
