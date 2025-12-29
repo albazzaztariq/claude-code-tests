@@ -7,7 +7,7 @@ import requests
 import openpyxl
 from openpyxl import Workbook
 # import pdfplumber  # Commented out - using Nougat instead
-import camelot
+# import camelot  # Commented out - using Nougat instead
 import pytest
 from azure.ai.formrecognizer import DocumentAnalysisClient
 from azure.core.credentials import AzureKeyCredential
@@ -294,34 +294,9 @@ def extract_table_row_count(pdf_path: str, table_number: int) -> int:
         except Exception as e:
             print(f"    Azure ERROR: {e}")
 
-    # Try CAMELOT as last resort
-    if not best_count:
-        print(f"\n    Trying CAMELOT (fallback)...")
-        try:
-            tables_lattice = camelot.read_pdf(pdf_path, pages="all", flavor="lattice")
-            tables_stream = camelot.read_pdf(pdf_path, pages="all", flavor="stream")
-            all_camelot_tables = list(tables_lattice) + list(tables_stream)
-
-            if table_number <= len(all_camelot_tables):
-                table = all_camelot_tables[table_number - 1]
-                df = table.df
-                rows = len(df) - 1  # Exclude header
-                print(f"    Camelot: Found Table {table_number} with {rows} data rows")
-
-                # Show FULL table with ACTUAL CELL DATA
-                print(f"    Extracted table data (ALL ROWS):")
-                for idx in range(len(df)):
-                    row_data = df.iloc[idx].tolist()
-                    row_str = " | ".join([str(cell)[:50] for cell in row_data])
-                    print(f"      Row {idx}: {row_str}")
-
-                if rows > 0:
-                    best_count = rows
-                    best_method = "Camelot"
-            else:
-                print(f"    Camelot: Table {table_number} not found (only {len(all_camelot_tables)} tables)")
-        except Exception as e:
-            print(f"    Camelot ERROR: {e}")
+    # CAMELOT - DISABLED (using Nougat instead)
+    # if not best_count:
+    #     ... (commented out)
 
     if best_count:
         print(f"\n    ✓ Best result: {best_count} rows from {best_method}")
@@ -1294,68 +1269,9 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
     best_count = None
     best_method = None
     
-    # CAMELOT
-    print("\n    --- Method A: CAMELOT ---")
-    try:
-        tables_lattice = camelot.read_pdf(pdf_path, pages="all", flavor="lattice")
-        tables_stream = camelot.read_pdf(pdf_path, pages="all", flavor="stream")
-        all_camelot_tables = list(tables_lattice) + list(tables_stream)
-        print(f"    Found {len(all_camelot_tables)} total tables")
-        
-        for idx, table in enumerate(all_camelot_tables):
-            df = table.df
-            rows = len(df) - 1
-            print(f"\n    Table {idx + 1}:")
-            print(f"     Dimensions: {len(df)} rows × {len(df.columns)} cols")
-            print(f"     HEADER ROW: {str(df.iloc[0].tolist())[:150]}...")
-            if len(df) > 1:
-                print(f"     DATA ROW 1: {str(df.iloc[1].tolist())[:150]}...")
-            
-            header_text = " ".join(df.iloc[0].astype(str)).lower()
-            fabric_keywords = [
-                "fabric",
-                "fabrics",
-                "material",
-                "materials",
-                "sample",
-                "samples",
-                "fiber",
-                "fibers",
-                "composition",
-                "compositions",
-                "thickness",
-                "density",
-                "densities",
-                "weight",
-                "weights",
-                "gsm",
-                "structure",
-                "structures",
-                "weave",
-                "weaves",
-                "knit",
-                "knits",
-                "variant",
-                "variants",
-                "garment",
-                "garments",
-                "textile",
-                "textiles",
-                "specimen",
-                "specimens",
-            ]
-            score = sum([kw in header_text for kw in fabric_keywords])
-            print(f"     Fabric keyword score: {score}/{len(fabric_keywords)}")
-            
-            if score >= 2 and rows > 0:
-                print("     ✓✓✓ THIS LOOKS LIKE THE SAMPLE TABLE ✓✓✓")
-                if not best_count:
-                    best_count = rows
-                    best_method = f"Camelot (table {idx + 1})"
-            else:
-                print(f"     ✗ REJECTED (score {score} < 2 or rows={rows})")
-    except Exception as e:
-        print(f"    CameLot ERROR: {e}")
+    # CAMELOT - DISABLED (using Nougat instead)
+    # print("\n    --- Method A: CAMELOT ---")
+    # ... (commented out)
     
     # TABULA - DISABLED (using Nougat instead)
     # if not best_count:
