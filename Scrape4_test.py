@@ -18,6 +18,7 @@ import io
 # Fix for albumentations v1.4.0+ compatibility with nougat-ocr
 try:
     import albumentations as alb
+
     # Monkeypatch ImageCompression to accept old API (quality as first positional arg)
     _original_ImageCompression = alb.ImageCompression
     class ImageCompression(_original_ImageCompression):
@@ -29,6 +30,17 @@ try:
                 # If first arg is string, treat as compression_type
                 super().__init__(compression_type=quality_or_type, p=p, **kwargs)
     alb.ImageCompression = ImageCompression
+
+    # Monkeypatch GaussNoise to accept old API (var_limit as single int)
+    _original_GaussNoise = alb.GaussNoise
+    class GaussNoise(_original_GaussNoise):
+        def __init__(self, var_limit=(10, 50), mean=0, per_channel=True, p=0.5, **kwargs):
+            # If var_limit is int, convert to tuple (0, var_limit)
+            if isinstance(var_limit, (int, float)):
+                var_limit = (0, var_limit)
+            super().__init__(var_limit=var_limit, mean=mean, per_channel=per_channel, p=p, **kwargs)
+    alb.GaussNoise = GaussNoise
+
 except ImportError:
     pass  # albumentations not installed, skip patch
 
