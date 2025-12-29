@@ -9,8 +9,8 @@ from openpyxl import Workbook
 # import pdfplumber  # Commented out - using Nougat instead
 # import camelot  # Commented out - using Nougat instead
 # import pytest  # Not needed for direct execution
-from azure.ai.formrecognizer import DocumentAnalysisClient
-from azure.core.credentials import AzureKeyCredential
+# from azure.ai.formrecognizer import DocumentAnalysisClient  # Disabled - using Nougat only
+# from azure.core.credentials import AzureKeyCredential  # Disabled - using Nougat only
 from PIL import Image
 import io
 
@@ -38,8 +38,8 @@ except Exception as e:
 # ================== CONFIGURATION ==================
 OLLAMA_URL = "http://localhost:11434/api/generate"
 OLLAMA_MODEL = "gemma2:2b"
-AZURE_VISION_KEY = os.getenv("AZURE_VISION_KEY", "YOUR_AZURE_VISION_KEY_HERE")
-AZURE_VISION_ENDPOINT = os.getenv("AZURE_VISION_ENDPOINT", "YOUR_AZURE_ENDPOINT_HERE")
+# AZURE_VISION_KEY = os.getenv("AZURE_VISION_KEY", "YOUR_AZURE_VISION_KEY_HERE")  # Disabled
+# AZURE_VISION_ENDPOINT = os.getenv("AZURE_VISION_ENDPOINT", "YOUR_AZURE_ENDPOINT_HERE")  # Disabled
 BASE_DIR = Path(
     r"C:\Users\azt12\OneDrive\Documents\Wrestling Robe\Materials Science - Wickability\Studies for Analysis by LLM AI\Datafiles & Python Scripts"
 )
@@ -239,7 +239,7 @@ def extract_table_row_count(pdf_path: str, table_number: int) -> int:
     """
     Extract row count from a specific table number in the PDF.
     Returns the number of data rows (excluding header) if found, None otherwise.
-    Tries: Nougat OCR first (best), then Azure, then Camelot (worst).
+    Uses Nougat OCR for table extraction.
     """
     print(f"\n    --- Extracting Table {table_number} ---")
 
@@ -271,28 +271,9 @@ def extract_table_row_count(pdf_path: str, table_number: int) -> int:
     else:
         print(f"\n    Nougat OCR not available, skipping...")
 
-    # Try AZURE COMPUTER VISION (if Nougat failed)
-    if not best_count:
-        print(f"\n    Trying AZURE COMPUTER VISION...")
-        try:
-            azure_result = extract_table_with_azure(pdf_path, table_number)
-            if azure_result:
-                rows, table_data = azure_result
-                print(f"    Azure: Found Table {table_number} with {rows} data rows")
-
-                # Show FULL table with ACTUAL CELL DATA
-                print(f"    Extracted table data (ALL ROWS):")
-                for idx, row in enumerate(table_data):
-                    row_str = " | ".join([str(cell)[:50] for cell in row])
-                    print(f"      Row {idx}: {row_str}")
-
-                if rows > 0:
-                    best_count = rows
-                    best_method = "Azure Computer Vision"
-            else:
-                print(f"    Azure: Table {table_number} not found or no rows detected")
-        except Exception as e:
-            print(f"    Azure ERROR: {e}")
+    # AZURE - DISABLED (using Nougat only)
+    # if not best_count:
+    #     ... (commented out)
 
     # CAMELOT - DISABLED (using Nougat instead)
     # if not best_count:
@@ -305,125 +286,9 @@ def extract_table_row_count(pdf_path: str, table_number: int) -> int:
         print(f"\n    ✗ Could not extract Table {table_number} from any method")
         return None
 
-def extract_table_with_azure(pdf_path: str, table_number: int):
-    """
-    Use Azure Document Intelligence to extract tables from PDF.
-    Finds table by searching for "Table X" text, then extracts that area.
-    Returns tuple of (row_count, table_data) if found, None otherwise.
-    """
-    try:
-        # Search for "Table X" in the PDF and extract that area
-        print(f"    Searching for 'Table {table_number}' in PDF...")
-        doc = fitz.open(pdf_path)
-
-        # Search all pages for "Table {table_number}"
-        table_found = False
-        rect = None
-        page_num = None
-        for page_idx in range(len(doc)):
-            page = doc[page_idx]
-            text = page.get_text()
-
-            # Look for "Table X" in the text
-            if re.search(rf'\bTable\s+{table_number}\b', text, re.IGNORECASE):
-                print(f"    ✓ Found 'Table {table_number}' on page {page_idx + 1}")
-
-                # Search for the text location to get approximate position
-                search_results = page.search_for(f"Table {table_number}")
-
-                if search_results:
-                    # Get the position of "Table X" text
-                    table_caption_rect = search_results[0]
-
-                    # Extract a large area below the caption (likely contains the table)
-                    page_rect = page.rect
-                    rect = fitz.Rect(
-                        page_rect.x0,  # Left edge of page
-                        table_caption_rect.y0,  # Start at table caption
-                        page_rect.x1,  # Right edge of page
-                        min(table_caption_rect.y0 + 400, page_rect.y1)  # 400 points below or bottom of page
-                    )
-
-                    page_num = page_idx
-                    table_found = True
-                    print(f"    → Extracting area around 'Table {table_number}' caption")
-                    break
-
-        doc.close()
-
-        if not table_found:
-            print(f"    ✗ Could not find 'Table {table_number}' text in PDF")
-            return None
-
-        # Reopen for extraction
-        doc = fitz.open(pdf_path)
-        page = doc[page_num]
-
-        print(f"    ✓ Found table area on page {page_num + 1}")
-
-        # Render the table area as image with zoom for quality
-        zoom = 2.0  # 2x resolution
-        mat = fitz.Matrix(zoom, zoom)
-        pix = page.get_pixmap(matrix=mat, clip=rect)
-
-        # Convert to PIL Image
-        img_data = pix.tobytes("png")
-        img = Image.open(io.BytesIO(img_data))
-
-        # Compress as JPEG to reduce size
-        img_buffer = io.BytesIO()
-        img.convert('RGB').save(img_buffer, format='JPEG', quality=85, optimize=True)
-        img_buffer.seek(0)
-        compressed_size = len(img_buffer.getvalue())
-
-        print(f"    Table image extracted: {compressed_size / 1024:.1f} KB")
-        doc.close()
-
-        # Send compressed image to Azure
-        credential = AzureKeyCredential(AZURE_VISION_KEY)
-        client = DocumentAnalysisClient(
-            endpoint=AZURE_VISION_ENDPOINT,
-            credential=credential
-        )
-
-        poller = client.begin_analyze_document("prebuilt-layout", document=img_buffer)
-        result = poller.result()
-
-        print(f"    Azure found {len(result.tables) if result.tables else 0} tables in extracted image")
-
-        # Azure should find 1 table (the one we extracted)
-        if result.tables and len(result.tables) > 0:
-            table = result.tables[0]  # Use first table found in the image
-
-            print(f"    Table structure: {table.row_count} rows x {table.column_count} columns, {len(table.cells)} cells")
-
-            # Build table data structure
-            rows_dict = {}
-            for cell in table.cells:
-                row_idx = cell.row_index
-                if row_idx not in rows_dict:
-                    rows_dict[row_idx] = {}
-                rows_dict[row_idx][cell.column_index] = cell.content
-
-            # Convert to list of lists
-            table_data = []
-            for row_idx in sorted(rows_dict.keys()):
-                row = []
-                for col_idx in sorted(rows_dict[row_idx].keys()):
-                    row.append(rows_dict[row_idx][col_idx])
-                table_data.append(row)
-
-            if table_data:
-                first_row_preview = " | ".join([str(cell)[:20] for cell in table_data[0]])
-                print(f"    First row: {first_row_preview}")
-
-            row_count = len(table_data) - 1 if len(table_data) > 0 else 0
-            return (row_count, table_data)
-        else:
-            return None
-
-    except Exception as e:
-        raise Exception(f"Azure extraction failed: {str(e)}")
+# extract_table_with_azure - DISABLED (using Nougat only)
+# def extract_table_with_azure(pdf_path: str, table_number: int):
+#     ... (entire function commented out)
 
 def extract_table_with_nougat(pdf_path: str, table_number: int):
     """
