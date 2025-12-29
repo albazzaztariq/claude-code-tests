@@ -14,6 +14,15 @@ from azure.core.credentials import AzureKeyCredential
 from PIL import Image
 import io
 
+# Nougat OCR for table extraction
+try:
+    from nougat import NougatModel
+    from nougat.utils.checkpoint import get_checkpoint
+    NOUGAT_AVAILABLE = True
+except ImportError:
+    NOUGAT_AVAILABLE = False
+    print("Warning: Nougat OCR not available. Install with: pip install nougat-ocr")
+
 # ================== CONFIGURATION ==================
 OLLAMA_URL = "http://localhost:11434/api/generate"
 OLLAMA_MODEL = "gemma2:2b"
@@ -218,7 +227,7 @@ def extract_table_row_count(pdf_path: str, table_number: int) -> int:
     """
     Extract row count from a specific table number in the PDF.
     Returns the number of data rows (excluding header) if found, None otherwise.
-    Tries: Camelot, Azure Computer Vision (for comparison).
+    Tries: Camelot, Azure Computer Vision, Nougat OCR (in that order).
     """
     print(f"\n    --- Extracting Table {table_number} ---")
 
@@ -274,6 +283,29 @@ def extract_table_row_count(pdf_path: str, table_number: int) -> int:
             print(f"    Azure: Table {table_number} not found or no rows detected")
     except Exception as e:
         print(f"    Azure ERROR: {e}")
+
+    # Try NOUGAT OCR
+    if NOUGAT_AVAILABLE:
+        print(f"\n    Trying NOUGAT OCR...")
+        try:
+            nougat_result = extract_table_with_nougat(pdf_path, table_number)
+            if nougat_result:
+                rows, table_data = nougat_result
+                print(f"    Nougat: Found Table {table_number} with {rows} data rows")
+
+                # Show FULL table with ACTUAL CELL DATA
+                print(f"    Extracted table data (ALL ROWS):")
+                for idx, row in enumerate(table_data):
+                    row_str = " | ".join([str(cell)[:50] for cell in row])
+                    print(f"      Row {idx}: {row_str}")
+
+                if rows > 0 and not best_count:
+                    best_count = rows
+                    best_method = "Nougat OCR"
+            else:
+                print(f"    Nougat: Table {table_number} not found or no rows detected")
+        except Exception as e:
+            print(f"    Nougat ERROR: {e}")
 
     if best_count:
         print(f"\n    ✓ Best result: {best_count} rows from {best_method}")
@@ -483,6 +515,82 @@ def extract_table_with_azure(pdf_path: str, table_number: int):
 
     except Exception as e:
         raise Exception(f"Azure extraction failed: {str(e)}")
+
+def extract_table_with_nougat(pdf_path: str, table_number: int):
+    """
+    Use Nougat OCR to extract tables from PDF.
+    Nougat outputs markdown, which we parse for table data.
+    Returns tuple of (row_count, table_data) if found, None otherwise.
+    """
+    if not NOUGAT_AVAILABLE:
+        print("    ⚠ Nougat OCR not available, skipping")
+        return None
+
+    try:
+        print(f"    Extracting with Nougat OCR...")
+
+        # Initialize Nougat model (cached after first use)
+        if not hasattr(extract_table_with_nougat, 'model'):
+            print("    Loading Nougat model (first time only)...")
+            checkpoint = get_checkpoint("facebook/nougat-base")
+            extract_table_with_nougat.model = NougatModel.from_pretrained(checkpoint)
+            print("    Model loaded successfully")
+
+        model = extract_table_with_nougat.model
+
+        # Process PDF with Nougat
+        predictions = model.inference(pdf_path=str(pdf_path), batch_size=1)
+
+        if not predictions or len(predictions) == 0:
+            print("    ✗ Nougat returned no predictions")
+            return None
+
+        markdown_text = predictions[0]
+
+        # Parse markdown for tables
+        # Markdown tables look like:
+        # | Header 1 | Header 2 |
+        # |----------|----------|
+        # | Cell 1   | Cell 2   |
+
+        # Find all markdown tables
+        table_pattern = r'\|[^\n]+\|\n\|[-:\s|]+\|\n(?:\|[^\n]+\|\n)+'
+        tables = re.findall(table_pattern, markdown_text)
+
+        if table_number > len(tables):
+            print(f"    ✗ Table {table_number} not found (Nougat found {len(tables)} tables)")
+            return None
+
+        # Get the requested table
+        table_md = tables[table_number - 1]
+
+        # Parse markdown table into rows
+        lines = [line.strip() for line in table_md.split('\n') if line.strip()]
+
+        # Remove the separator line (contains --- and |)
+        data_lines = [line for line in lines if not all(c in '-:|' for c in line.replace(' ', ''))]
+
+        # Parse each row
+        table_data = []
+        for line in data_lines:
+            # Split by | and clean up
+            cells = [cell.strip() for cell in line.split('|')]
+            # Remove empty first/last cells (from leading/trailing |)
+            cells = [c for c in cells if c]
+            if cells:
+                table_data.append(cells)
+
+        if len(table_data) > 0:
+            row_count = len(table_data) - 1  # Subtract header row
+            print(f"    ✓ Nougat extracted {row_count} data rows from Table {table_number}")
+            return (row_count, table_data)
+        else:
+            print("    ✗ No data rows found in table")
+            return None
+
+    except Exception as e:
+        print(f"    Nougat ERROR: {e}")
+        return None
 
 def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
     """
