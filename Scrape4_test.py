@@ -934,16 +934,17 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
         # ===== PRIORITY 1: ARABIC NUMERALS (most common) =====
         # Must be WHOLE, POSITIVE numbers only
         # Number must be IMMEDIATELY before Group 2 term (no words in between)
+        # IMPORTANT: Find ALL numbers in sentence, take the highest
         digit_patterns = [
             r"total\s+of\s+(?<![0-9.])(\d+)(?![0-9.])\s+(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)",
             r"(?<![0-9.])(\d+)(?![0-9.])\s+(?:different\s+)?types?\s+of\s+(?:[\w-]+\s+){0,6}(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)",
             r"(?<![0-9.])(\d+)(?![0-9.])\s+(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)",
             r"(?:tested|produced|used|analyzed|evaluated|studied|prepared|examined|knit|knitted|woven)\s+(?<![0-9.])(\d+)(?![0-9.])\s+(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)",
         ]
-        
+
+        # Find ALL matching numbers in this sentence (don't break early)
         for pattern in digit_patterns:
-            match = re.search(pattern, sentence_lower)
-            if match:
+            for match in re.finditer(pattern, sentence_lower):
                 num = int(match.group(1))
                 if 1 <= num <= 100:
                     if not explicit_count or num > explicit_count:
@@ -955,28 +956,20 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
                         print("    ***************************************************************************")
                         print()
                         print(f"     Sentence: '{sentence.strip()[:200]}...'")
-
-                        # If we have Groups 1+2+3, this is the best combination - return immediately
-                        if found_best_combination:
-                            print("\n    ═══════════════════════════════════════════════")
-                            print(f"    DECISION: FOUND GROUPS 1+2+3 WITH COUNT = {explicit_count}")
-                            print("    SOURCE OF TRUTH - RETURNING NOW")
-                            print("    ═══════════════════════════════════════════════\n")
-                            return explicit_count
-                    break
         
         # ===== PRIORITY 2: WORD NUMBERS (one, two, three, etc.) - CASE-INSENSITIVE =====
         # Number word must be IMMEDIATELY before Group 2 term (no words in between)
         # ONLY exception: "X different types of [Group2]" or "X types of [Group2]"
+        # IMPORTANT: Find ALL numbers in sentence, take the highest
         word_patterns = [
             rf"\b({word_pattern_check})\b\s+(?:different\s+)?types?\s+of\s+(?:[\w-]+\s+){{0,6}}(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)",
             rf"\b({word_pattern_check})\b\s+(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)",
             rf"\b({word_pattern_check})\b\s+(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)\s+of",
         ]
-        
+
+        # Find ALL matching numbers in this sentence (don't break early)
         for pattern in word_patterns:
-            match = re.search(pattern, sentence_lower)
-            if match:
+            for match in re.finditer(pattern, sentence_lower):
                 word_num = match.group(1)
                 if word_num in word_to_num:
                     found_count = word_to_num[word_num]
@@ -989,25 +982,17 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
                         print("    ***************************************************************************")
                         print()
                         print(f"     Sentence: '{sentence.strip()[:200]}...'")
-
-                        # If we have Groups 1+2+3, this is the best combination - return immediately
-                        if found_best_combination:
-                            print("\n    ═══════════════════════════════════════════════")
-                            print(f"    DECISION: FOUND GROUPS 1+2+3 WITH COUNT = {explicit_count}")
-                            print("    SOURCE OF TRUTH - RETURNING NOW")
-                            print("    ═══════════════════════════════════════════════\n")
-                            return explicit_count
-                    break
         
         # ===== PRIORITY 3: ROMAN NUMERALS (rare but possible) =====
+        # IMPORTANT: Find ALL numbers in sentence, take the highest
         roman_pattern = "|".join(roman_to_num.keys())
         roman_patterns = [
             rf"(?:^|\s)({roman_pattern})(?:\s+)(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)\b",
         ]
-        
+
+        # Find ALL matching numbers in this sentence (don't break early)
         for pattern in roman_patterns:
-            match = re.search(pattern, sentence_lower)
-            if match:
+            for match in re.finditer(pattern, sentence_lower):
                 roman_num = match.group(1)
                 if roman_num in roman_to_num:
                     found_count = roman_to_num[roman_num]
@@ -1021,14 +1006,13 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
                         print()
                         print(f"     Sentence: '{sentence.strip()[:200]}...'")
 
-                        # If we have Groups 1+2+3, this is the best combination - return immediately
-                        if found_best_combination:
-                            print("\n    ═══════════════════════════════════════════════")
-                            print(f"    DECISION: FOUND GROUPS 1+2+3 WITH COUNT = {explicit_count}")
-                            print("    SOURCE OF TRUTH - RETURNING NOW")
-                            print("    ═══════════════════════════════════════════════\n")
-                            return explicit_count
-                    break
+        # After checking ALL patterns in this sentence, if we have Groups 1+2+3, return immediately
+        if found_best_combination and explicit_count:
+            print("\n    ═══════════════════════════════════════════════")
+            print(f"    DECISION: FOUND GROUPS 1+2+3 WITH COUNT = {explicit_count}")
+            print("    HIGHEST NUMBER IN SENTENCE - RETURNING NOW")
+            print("    ═══════════════════════════════════════════════\n")
+            return explicit_count
     
     if explicit_count:
         print("\n    ═══════════════════════════════════════════════")
