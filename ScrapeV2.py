@@ -36,7 +36,7 @@ OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4-turbo-preview")
 
 # Paths
 BASE_DIR = Path(
-    r"C:\Users\azt12\OneDrive\Documents\Wrestling Robe\Materials Science - Wickability\Studies for Analysis by LLM AI\Datafiles & Python Scripts"
+    r"C:\Users\azt12\OneDrive\Documents\Wrestling Robe\Materials Science - Wickability\Studies for Analysis by LLM AI"
 )
 PDF_FOLDER = Path(
     r"C:\Users\azt12\OneDrive\Documents\Wrestling Robe\Materials Science - Wickability\Studies for Analysis by LLM AI"
