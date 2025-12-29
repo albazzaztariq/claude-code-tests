@@ -453,14 +453,14 @@ def extract_table_with_azure(pdf_path: str, table_number: int):
 def extract_table_with_nougat(pdf_path: str, table_number: int):
     """
     Use Nougat OCR to extract tables from PDF.
-    Uses Python API directly (with monkey-patch for transformers compatibility).
+    Uses Python API with PyMuPDF for rendering (bypasses pypdfium2 issues).
     Returns tuple of (row_count, table_data) if found, None otherwise.
     """
     try:
         print(f"    Extracting with Nougat OCR (Python API with GPU)...")
         import torch
-        from nougat.utils.dataset import LazyDataset
-        from torch.utils.data import DataLoader
+        from nougat.utils.dataset import NougatDataset
+        import torchvision.transforms as T
 
         # Load model (cached after first load)
         if not hasattr(extract_table_with_nougat, '_model'):
@@ -476,25 +476,39 @@ def extract_table_with_nougat(pdf_path: str, table_number: int):
         model = extract_table_with_nougat._model
         device = next(model.parameters()).device
 
-        # Create dataset and dataloader
-        dataset = LazyDataset(pdf_path, None, None)
-        print(f"    Processing {len(dataset)} pages...")
+        # Use PyMuPDF to render pages (more reliable than pypdfium2)
+        doc = fitz.open(pdf_path)
+        print(f"    Processing {len(doc)} pages with PyMuPDF...")
 
-        # Process each page and collect predictions
+        # Nougat expects 896x672 images normalized
+        transform = T.Compose([
+            T.ToTensor(),
+            T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+        ])
+
         predictions = []
-        for page_idx in range(len(dataset)):
-            sample = dataset[page_idx]
-            if sample is None or sample[0] is None:
-                print(f"    Page {page_idx + 1}: skipped (no content)")
-                continue
+        for page_idx in range(len(doc)):
+            page = doc[page_idx]
+            # Render at 150 DPI then resize to Nougat's expected size
+            pix = page.get_pixmap(matrix=fitz.Matrix(150/72, 150/72))
+            img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
 
-            image_tensor = sample[0].unsqueeze(0).to(device)
+            # Resize to Nougat's expected input size (896 x 672)
+            img = img.resize((672, 896), Image.Resampling.LANCZOS)
+
+            # Transform to tensor
+            image_tensor = transform(img).unsqueeze(0).to(device)
+
             with torch.no_grad():
                 output = model.inference(image_tensors=image_tensor)
 
             if output and output[0]:
                 predictions.append(output[0])
                 print(f"    Page {page_idx + 1}: {len(output[0])} chars extracted")
+            else:
+                print(f"    Page {page_idx + 1}: no output")
+
+        doc.close()
 
         if not predictions:
             print("    No text extracted from any page")
