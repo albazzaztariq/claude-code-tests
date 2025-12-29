@@ -15,14 +15,30 @@ from PIL import Image
 import io
 
 # Nougat OCR for table extraction
+# Fix for albumentations v1.4.0+ compatibility with nougat-ocr
+try:
+    import albumentations as alb
+    # Monkeypatch ImageCompression to accept old API (quality as first positional arg)
+    _original_ImageCompression = alb.ImageCompression
+    class ImageCompression(_original_ImageCompression):
+        def __init__(self, quality_or_type=95, p=0.5, **kwargs):
+            # If first arg is int, treat as quality and default to 'jpeg'
+            if isinstance(quality_or_type, int):
+                super().__init__(quality=quality_or_type, compression_type='jpeg', p=p, **kwargs)
+            else:
+                # If first arg is string, treat as compression_type
+                super().__init__(compression_type=quality_or_type, p=p, **kwargs)
+    alb.ImageCompression = ImageCompression
+except ImportError:
+    pass  # albumentations not installed, skip patch
+
 try:
     from nougat import NougatModel
     from nougat.utils.checkpoint import get_checkpoint
     NOUGAT_AVAILABLE = True
-except (ImportError, Exception) as e:
+except ImportError:
     NOUGAT_AVAILABLE = False
-    print(f"Warning: Nougat OCR not available. Error: {e}")
-    print("Nougat has known configuration bugs. Continuing without Nougat...")
+    print("Warning: Nougat OCR not available. Install with: pip install nougat-ocr")
 
 # ================== CONFIGURATION ==================
 OLLAMA_URL = "http://localhost:11434/api/generate"
