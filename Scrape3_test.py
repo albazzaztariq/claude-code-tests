@@ -471,7 +471,10 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
         "xlix": 49,
         "l": 50,
     }
-    
+
+    # Build word number pattern for regex (used in multiple places)
+    word_pattern_check = "|".join(word_to_num.keys())
+
     # ===== TABLE FALLBACK: Group 2 term + "table" =====
     # If a sentence has a Group 2 term + "table", parse the table number and store as fallback
     # Don't return immediately - keep looking for explicit counts
@@ -527,9 +530,7 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
     # ===== SUPERSEDING CASE 2: "total of" + NUMBER immediately followed by Group 2 =====
     # This takes absolute priority - if found, use it and stop searching
     print("\n    SUPERSEDING CASE 2: Checking for 'total of' + number + Group 2 term...")
-    
-    word_pattern_check = "|".join(word_to_num.keys())
-    
+
     for i, sentence in enumerate(sentences):
         sentence_lower = sentence.lower()
         
