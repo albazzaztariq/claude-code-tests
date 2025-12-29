@@ -31,9 +31,9 @@ try:
                                  use_cache, attention_mask)
     BARTDecoder.prepare_inputs_for_inference = _patched_prepare
     print("Nougat loaded with transformers compatibility patch")
-except ImportError:
+except Exception as e:
     NOUGAT_AVAILABLE = False
-    print("Warning: Nougat OCR not available. Install with: pip install nougat-ocr")
+    print(f"Warning: Nougat OCR not available: {e}")
 
 # ================== CONFIGURATION ==================
 OLLAMA_URL = "http://localhost:11434/api/generate"
