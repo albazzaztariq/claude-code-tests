@@ -12,6 +12,8 @@ import os
 import re
 import json
 import sys
+import subprocess
+import tempfile
 from pathlib import Path
 from typing import Optional, Dict, List, Any, Tuple
 import fitz  # PyMuPDF
@@ -20,6 +22,18 @@ import openpyxl
 from openpyxl import Workbook
 from openpyxl.styles import Font, Alignment, PatternFill
 from openpyxl.utils import get_column_letter
+
+# Check for Nougat availability
+NOUGAT_AVAILABLE = False
+try:
+    result = subprocess.run(["nougat", "--help"], capture_output=True, timeout=10)
+    NOUGAT_AVAILABLE = result.returncode == 0
+except (subprocess.SubprocessError, FileNotFoundError):
+    pass
+
+if not NOUGAT_AVAILABLE:
+    print("Note: Nougat CLI not found. Install with: pip install nougat-ocr")
+    print("      Will use PyMuPDF text extraction as fallback.")
 
 # ================== CONFIGURATION ==================
 # LLM Configuration - Choose one
@@ -360,8 +374,47 @@ def call_llm(prompt: str, system_prompt: str = "") -> str:
 
 # ================== EXTRACTION FUNCTIONS ==================
 
+def extract_text_with_nougat(pdf_path: str) -> Optional[str]:
+    """Extract text from PDF using Nougat OCR (better for tables/figures)."""
+    if not NOUGAT_AVAILABLE:
+        return None
+
+    try:
+        # Create temp directory for output
+        with tempfile.TemporaryDirectory() as tmpdir:
+            # Run nougat CLI
+            result = subprocess.run(
+                ["nougat", str(pdf_path), "-o", tmpdir, "--no-skipping"],
+                capture_output=True,
+                text=True,
+                timeout=300  # 5 minute timeout
+            )
+
+            if result.returncode != 0:
+                print(f"  Nougat warning: {result.stderr[:200]}")
+                return None
+
+            # Find output file (same name as PDF but .mmd extension)
+            pdf_name = Path(pdf_path).stem
+            output_file = Path(tmpdir) / f"{pdf_name}.mmd"
+
+            if output_file.exists():
+                with open(output_file, 'r', encoding='utf-8') as f:
+                    return f.read()
+            else:
+                print(f"  Nougat: No output file found")
+                return None
+
+    except subprocess.TimeoutExpired:
+        print("  Nougat: Timeout (>5 min)")
+        return None
+    except Exception as e:
+        print(f"  Nougat error: {e}")
+        return None
+
+
 def extract_text_from_pdf(pdf_path: str) -> str:
-    """Extract all text from PDF using PyMuPDF."""
+    """Extract all text from PDF using PyMuPDF (fallback)."""
     doc = fitz.open(pdf_path)
     full_text = ""
     for page in doc:
@@ -370,24 +423,81 @@ def extract_text_from_pdf(pdf_path: str) -> str:
     return full_text
 
 
-def extract_study_metadata(pdf_path: str, full_text: str) -> Dict[str, Any]:
-    """Extract study-level metadata using regex and LLM."""
+def extract_document(pdf_path: str) -> Tuple[str, str]:
+    """
+    Extract document content using best available method.
+    Returns (nougat_text, pymupdf_text) - nougat_text may be None.
+    """
+    print("  Extracting with PyMuPDF...")
+    pymupdf_text = extract_text_from_pdf(pdf_path)
+    print(f"    Got {len(pymupdf_text)} characters")
+
+    print("  Extracting with Nougat (for tables)...")
+    nougat_text = extract_text_with_nougat(pdf_path)
+    if nougat_text:
+        print(f"    Got {len(nougat_text)} characters (markdown with tables)")
+    else:
+        print("    Nougat not available, using PyMuPDF only")
+
+    return nougat_text, pymupdf_text
+
+
+def extract_study_metadata(pdf_path: str, full_text: str, nougat_text: Optional[str] = None) -> Dict[str, Any]:
+    """Extract study-level metadata using LLM reasoning (not regex)."""
     metadata = {}
 
-    # Use existing PROVEN functions for basic metadata (from Scrape4_test.py)
+    # Use existing functions for basic metadata (from Scrape4_test.py)
     from Scrape4_test import (
         extract_title_with_formatting,
         extract_year_from_text,
         extract_first_author_with_formatting,
-        extract_sample_count_from_table,  # Use the proven regex logic!
     )
 
     metadata["Study Title"] = extract_title_with_formatting(pdf_path) or "Not found"
     metadata["Year of Publish"] = extract_year_from_text(full_text) or "Not found"
     metadata["Name of First-Listed Author"] = extract_first_author_with_formatting(pdf_path) or "Not found"
 
-    # Use the PROVEN regex-based sample count extraction
-    metadata["Number of Sample Fabrics"] = extract_sample_count_from_table(pdf_path, full_text)
+    # Use LLM to determine sample count (more reliable than regex)
+    # Prefer Nougat text if available (better table structure)
+    analysis_text = nougat_text if nougat_text else full_text
+
+    sample_count_prompt = f"""
+You are analyzing a textile research paper. Your task is to determine the EXACT number of fabric samples tested in this study.
+
+Look for:
+1. Explicit statements like "eight samples", "10 fabrics were tested", "six fabric specimens"
+2. Tables listing sample properties (count the rows)
+3. Sample IDs like S1-S8, F1-F10, Sample A-H
+4. Figures showing data for multiple samples (count the bars/lines)
+5. Phrases like "sample groups", "fabric variants", "test specimens"
+
+IMPORTANT: Return ONLY a single integer number. No text, no explanation.
+
+Examples of what to look for:
+- "eight sample groups were tested" → 8
+- "Table 1 shows properties of 12 fabrics" → 12
+- Samples labeled S1 through S6 → 6
+- "four different fabric types" → 4
+
+PAPER TEXT:
+{analysis_text[:20000]}
+
+Return ONLY the number (integer):"""
+
+    sample_count_response = call_llm(sample_count_prompt)
+
+    # Parse the response - should be just a number
+    try:
+        # Extract first number from response
+        num_match = re.search(r'\d+', sample_count_response.strip())
+        if num_match:
+            metadata["Number of Sample Fabrics"] = int(num_match.group())
+        else:
+            print(f"  Warning: Could not parse sample count from LLM: {sample_count_response[:100]}")
+            metadata["Number of Sample Fabrics"] = 1
+    except Exception as e:
+        print(f"  Warning: Sample count error: {e}")
+        metadata["Number of Sample Fabrics"] = 1
 
     # Use LLM to extract testing standards used
     standards_prompt = f"""
@@ -579,20 +689,21 @@ def process_single_pdf(pdf_path: str) -> List[Dict[str, Any]]:
     print(f"Processing: {pdf_path}")
     print(f"{'='*60}")
 
-    # Extract text
-    full_text = extract_text_from_pdf(pdf_path)
-    print(f"  Extracted {len(full_text)} characters of text")
+    # Extract text using both methods
+    nougat_text, full_text = extract_document(pdf_path)
 
-    # Get study metadata
-    print("\n  Extracting study metadata...")
-    study_metadata = extract_study_metadata(pdf_path, full_text)
+    # Get study metadata (uses LLM for sample counting)
+    print("\n  Extracting study metadata (using LLM reasoning)...")
+    study_metadata = extract_study_metadata(pdf_path, full_text, nougat_text)
     for key, value in study_metadata.items():
         print(f"    {key}: {value}")
 
-    # Identify samples using the PROVEN sample count
+    # Identify samples using LLM-determined count
     sample_count = study_metadata.get("Number of Sample Fabrics", 1)
-    print(f"\n  Identifying {sample_count} samples (from proven regex logic)...")
-    samples = extract_samples_info(full_text, sample_count)
+    print(f"\n  Identifying {sample_count} samples (from LLM reasoning)...")
+    # Use nougat text for sample identification if available
+    analysis_text = nougat_text if nougat_text else full_text
+    samples = extract_samples_info(analysis_text, sample_count)
     print(f"    LLM identified {len(samples)} samples")
     for sample in samples:
         print(f"      - {sample.get('sample_id')}: {sample.get('num_layers')} layer(s)")
@@ -624,8 +735,8 @@ def process_single_pdf(pdf_path: str) -> List[Dict[str, Any]]:
             if layer_key in structure:
                 row[f"Structure: {layer_name}"] = structure[layer_key]
 
-        # Extract all metrics
-        metrics = extract_metrics_for_sample(full_text, sample, all_headers)
+        # Extract all metrics (prefer nougat text for better table parsing)
+        metrics = extract_metrics_for_sample(analysis_text, sample, all_headers)
         row.update(metrics)
 
         # Count non-null metrics
