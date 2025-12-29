@@ -25,8 +25,8 @@ try:
         def __init__(self, quality_or_type=95, p=0.5, **kwargs):
             # If first arg is int, treat as quality bounds and default to 'jpeg'
             if isinstance(quality_or_type, int):
-                # New API: quality_lower, quality_upper, compression_type
-                super().__init__(quality_lower=quality_or_type, quality_upper=quality_or_type,
+                # New API: quality_range=(min, max), compression_type='jpeg'|'webp'
+                super().__init__(quality_range=(quality_or_type, 100),
                                compression_type='jpeg', p=p, **kwargs)
             else:
                 # If first arg is string, treat as compression_type (new API call)
