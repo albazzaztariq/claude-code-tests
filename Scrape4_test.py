@@ -948,6 +948,27 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
             for match in re.finditer(pattern, sentence_lower):
                 num = int(match.group(1))
                 if 1 <= num <= 100:
+                    # SKIP common section headers (appear in all studies)
+                    match_context = sentence_lower[max(0, match.start()-5):min(len(sentence_lower), match.end()+40)]
+                    section_headers = [
+                        r'\d+\s+materials?\s+and\s+methods?',
+                        r'\d+\s+introduction',
+                        r'\d+\s+results?',
+                        r'\d+\s+discussion',
+                        r'\d+\s+conclusion',
+                        r'\d+\s+experimental',
+                        r'\d+\s+methodology',
+                        r'\d+\s+background',
+                        r'\d+\s+literature\s+review',
+                    ]
+                    is_section_header = False
+                    for header_pattern in section_headers:
+                        if re.search(header_pattern, match_context, re.IGNORECASE):
+                            print(f"    ⚠ SKIPPING {num}: Section header detected")
+                            is_section_header = True
+                            break
+                    if is_section_header:
+                        continue
                     # Get position of this number match
                     match_pos = match.start()
 
