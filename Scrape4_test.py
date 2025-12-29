@@ -9,15 +9,12 @@ from openpyxl import Workbook
 import pdfplumber
 import camelot
 import pytest
-from google.cloud import vision
-import io
 from azure.ai.formrecognizer import DocumentAnalysisClient
 from azure.core.credentials import AzureKeyCredential
 
 # ================== CONFIGURATION ==================
 OLLAMA_URL = "http://localhost:11434/api/generate"
 OLLAMA_MODEL = "gemma2:2b"
-GOOGLE_VISION_API_KEY = os.getenv("GOOGLE_VISION_API_KEY", "YOUR_GOOGLE_VISION_API_KEY_HERE")
 AZURE_VISION_KEY = os.getenv("AZURE_VISION_KEY", "YOUR_AZURE_VISION_KEY_HERE")
 AZURE_VISION_ENDPOINT = os.getenv("AZURE_VISION_ENDPOINT", "YOUR_AZURE_ENDPOINT_HERE")
 BASE_DIR = Path(
@@ -219,7 +216,7 @@ def extract_table_row_count(pdf_path: str, table_number: int) -> int:
     """
     Extract row count from a specific table number in the PDF.
     Returns the number of data rows (excluding header) if found, None otherwise.
-    Tries: Camelot, Google Vision API, Azure Computer Vision (for comparison).
+    Tries: Camelot, Azure Computer Vision (for comparison).
     """
     print(f"\n    --- Extracting Table {table_number} ---")
 
@@ -254,28 +251,6 @@ def extract_table_row_count(pdf_path: str, table_number: int) -> int:
     except Exception as e:
         print(f"    Camelot ERROR: {e}")
 
-    # Try GOOGLE CLOUD VISION API
-    print(f"\n    Trying GOOGLE CLOUD VISION API...")
-    try:
-        vision_result = extract_table_with_vision_api(pdf_path, table_number)
-        if vision_result:
-            rows, table_data = vision_result
-            print(f"    Vision API: Found Table {table_number} with {rows} data rows")
-
-            # Show FULL table with ACTUAL CELL DATA
-            print(f"    Extracted table data (ALL ROWS):")
-            for idx, row in enumerate(table_data):
-                row_str = " | ".join([str(cell)[:50] for cell in row])
-                print(f"      Row {idx}: {row_str}")
-
-            if rows > 0 and not best_count:
-                best_count = rows
-                best_method = "Google Vision API"
-        else:
-            print(f"    Vision API: Table {table_number} not found or no rows detected")
-    except Exception as e:
-        print(f"    Vision API ERROR: {e}")
-
     # Try AZURE COMPUTER VISION (Document Intelligence)
     print(f"\n    Trying AZURE COMPUTER VISION...")
     try:
@@ -304,104 +279,6 @@ def extract_table_row_count(pdf_path: str, table_number: int) -> int:
     else:
         print(f"\n    ✗ Could not extract Table {table_number} from any method")
         return None
-
-def extract_table_with_vision_api(pdf_path: str, table_number: int):
-    """
-    Use Google Cloud Vision API to extract table data from PDF.
-    Returns tuple of (row_count, table_data) if found, None otherwise.
-    table_data is a list of lists representing rows and cells with ACTUAL CELL DATA.
-    """
-    try:
-        # Set API key as environment variable for the client
-        os.environ['GOOGLE_API_KEY'] = GOOGLE_VISION_API_KEY
-
-        # Initialize Vision API client with API key
-        client = vision.ImageAnnotatorClient(
-            client_options={"api_key": GOOGLE_VISION_API_KEY}
-        )
-
-        # Read PDF file
-        with open(pdf_path, 'rb') as pdf_file:
-            content = pdf_file.read()
-
-        # Prepare the request
-        input_config = vision.InputConfig(
-            content=content,
-            mime_type='application/pdf'
-        )
-
-        # Use document_text_detection for better table structure recognition
-        feature = vision.Feature(type_=vision.Feature.Type.DOCUMENT_TEXT_DETECTION)
-        request = vision.AnnotateFileRequest(
-            input_config=input_config,
-            features=[feature]
-        )
-
-        # Make API call
-        response = client.batch_annotate_files(requests=[request])
-
-        # Parse response to extract table cell data
-        tables_found = []
-        for file_response in response.responses:
-            for page_response in file_response.responses:
-                if page_response.full_text_annotation:
-                    # Look for table-like structures in blocks
-                    for page in page_response.full_text_annotation.pages:
-                        for block in page.blocks:
-                            # Check if block looks like a table (multiple paragraphs in grid layout)
-                            if len(block.paragraphs) > 3:
-                                # Extract text content from each paragraph with position
-                                cells_with_position = []
-                                for para in block.paragraphs:
-                                    # Get paragraph text
-                                    para_text = ""
-                                    for word in para.words:
-                                        word_text = "".join([symbol.text for symbol in word.symbols])
-                                        para_text += word_text + " "
-                                    para_text = para_text.strip()
-
-                                    # Get position (y-coordinate for row grouping)
-                                    if para.bounding_box and para.bounding_box.vertices:
-                                        y_pos = para.bounding_box.vertices[0].y
-                                        x_pos = para.bounding_box.vertices[0].x
-                                        cells_with_position.append((y_pos, x_pos, para_text))
-
-                                # Group cells by row (similar y-coordinates)
-                                # Sort by y position first
-                                cells_with_position.sort(key=lambda x: (x[0], x[1]))
-
-                                # Group into rows (cells within 10 pixels vertical distance are same row)
-                                rows = []
-                                current_row = []
-                                last_y = None
-
-                                for y_pos, x_pos, text in cells_with_position:
-                                    if last_y is None or abs(y_pos - last_y) < 10:
-                                        current_row.append(text)
-                                        last_y = y_pos
-                                    else:
-                                        if current_row:
-                                            rows.append(current_row)
-                                        current_row = [text]
-                                        last_y = y_pos
-
-                                # Add last row
-                                if current_row:
-                                    rows.append(current_row)
-
-                                # Store table data
-                                if rows:
-                                    row_count = len(rows) - 1  # Exclude header
-                                    tables_found.append((row_count, rows))
-
-        # Return the specified table's data
-        if table_number <= len(tables_found):
-            return tables_found[table_number - 1]
-        else:
-            return None
-
-    except Exception as e:
-        raise Exception(f"Vision API extraction failed: {str(e)}")
 
 def extract_table_with_azure(pdf_path: str, table_number: int):
     """
