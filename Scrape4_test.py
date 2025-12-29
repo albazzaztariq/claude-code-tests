@@ -8,7 +8,7 @@ import openpyxl
 from openpyxl import Workbook
 # import pdfplumber  # Commented out - using Nougat instead
 # import camelot  # Commented out - using Nougat instead
-import pytest
+# import pytest  # Not needed for direct execution
 from azure.ai.formrecognizer import DocumentAnalysisClient
 from azure.core.credentials import AzureKeyCredential
 from PIL import Image
@@ -1303,7 +1303,7 @@ def test_process_pdfs():
     
     if not INPUT_EXCEL.exists():
         print(f"ERROR: Input file not found -> {INPUT_EXCEL}")
-        pytest.fail(f"Input file not found: {INPUT_EXCEL}")
+        sys.exit(1)
     
     wb_input = openpyxl.load_workbook(INPUT_EXCEL)
     ws_input = wb_input.active
