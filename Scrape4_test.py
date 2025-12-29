@@ -547,68 +547,9 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
     # Build word number pattern for regex (used in multiple places)
     word_pattern_check = "|".join(word_to_num.keys())
 
-    # ===== TABLE FALLBACK: Group 2 term + "table" =====
-    # If a sentence has a Group 2 term + "table", parse the table number and store as fallback
-    # Don't return immediately - keep looking for explicit counts
-    # RESTRICTED to 6 specific terms to avoid false triggers
-    print("\n    TABLE FALLBACK: Checking for Group 2 term + 'table'...")
+    # Track if we find the BEST combination (Groups 1+2+3 together)
+    found_best_combination = False
 
-    group2_words = [
-        "fabric", "fabrics",
-        "garment", "garments",
-        "sample", "samples",
-    ]
-
-    table_fallback_count = None
-    extracted_tables = set()  # Track which tables we've already extracted
-
-    for i, sentence in enumerate(sentences):
-        sentence_lower = sentence.lower()
-
-        # OPTIMIZATION: Only process sentences that contain numbers
-        # Skip sentences without any numbers (arabic, word, or roman)
-        has_any_number = (
-            re.search(r'\d', sentence_lower) or  # Arabic numerals
-            re.search(rf'\b({word_pattern_check})\b', sentence_lower) or  # Word numbers
-            re.search(rf'\b({"|".join(roman_to_num.keys())})\b', sentence_lower)  # Roman numerals
-        )
-        if not has_any_number:
-            continue  # Skip sentences without any numbers
-
-        # Check if sentence has a Group 2 term AND "table"
-        group2_found_here = [word for word in group2_words if word in sentence_lower]
-        has_group2 = len(group2_found_here) > 0
-        table_match = re.search(r"table\s+(\d+)", sentence_lower, re.IGNORECASE)
-
-        if has_group2 and table_match:
-            table_num = int(table_match.group(1))
-
-            # Skip if we've already extracted this table
-            if table_num in extracted_tables:
-                print(f"\n    ⊗ Skipping Table {table_num} (already extracted)")
-                continue
-
-            print(f"\n    ✓ Found Group 2 term + Table {table_num}")
-            print(f"    Sentence {i}: '{sentence.strip()[:300]}...'")
-            group2_terms_list = ", ".join(group2_found_here)
-            print(f"    Group 2 Terms Present: {group2_terms_list}")
-            print(f"    Attempting to parse Table {table_num}...")
-
-            # Try to extract and count rows from the specified table
-            table_count = extract_table_row_count(pdf_path, table_num)
-            extracted_tables.add(table_num)  # Mark this table as extracted
-
-            if table_count and not table_fallback_count:
-                table_fallback_count = table_count
-                print(f"    ✓ Extracted {table_count} rows from Table {table_num} (stored as fallback)")
-            elif not table_count:
-                print(f"    ✗ Could not parse Table {table_num}")
-
-    if table_fallback_count:
-        print(f"\n    Stored table fallback count: {table_fallback_count}")
-    else:
-        print("    Result: NO valid table reference found")
-    
     # ===== SUPERSEDING CASE 2: "total of" + NUMBER immediately followed by Group 2 =====
     # This takes absolute priority - if found, use it and stop searching
     print("\n    SUPERSEDING CASE 2: Checking for 'total of' + number + Group 2 term...")
@@ -754,6 +695,7 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
         if has_group1 and has_group2 and has_group3:
             valid_combination = True
             combination_type = "Group 1 + 2 + 3 (BEST)"
+            found_best_combination = True  # Mark that we found the best combination
         elif has_group1 and has_group2:
             valid_combination = True
             combination_type = "Group 1 + 2 (COMMON)"
@@ -867,7 +809,71 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
 
     print("\n    Result: NO explicit count found using group logic")
 
-    # If we found a table fallback count earlier, use it
+    # ===== TABLE FALLBACK: Group 2 term + "table" =====
+    # ONLY run table extraction if we did NOT find the BEST combination (Groups 1+2+3)
+    # If we found Groups 1+2+3 together, that's conclusive - don't waste time on tables
+    if not found_best_combination:
+        print("\n    TABLE FALLBACK: No Groups 1+2+3 found, checking for Group 2 term + 'table'...")
+
+        group2_words = [
+            "fabric", "fabrics",
+            "garment", "garments",
+            "sample", "samples",
+        ]
+
+        table_fallback_count = None
+        extracted_tables = set()  # Track which tables we've already extracted
+
+        for i, sentence in enumerate(sentences):
+            sentence_lower = sentence.lower()
+
+            # OPTIMIZATION: Only process sentences that contain numbers
+            has_any_number = (
+                re.search(r'\d', sentence_lower) or  # Arabic numerals
+                re.search(rf'\b({word_pattern_check})\b', sentence_lower) or  # Word numbers
+                re.search(rf'\b({"|".join(roman_to_num.keys())})\b', sentence_lower)  # Roman numerals
+            )
+            if not has_any_number:
+                continue
+
+            # Check if sentence has a Group 2 term AND "table"
+            group2_found_here = [word for word in group2_words if word in sentence_lower]
+            has_group2 = len(group2_found_here) > 0
+            table_match = re.search(r"table\s+(\d+)", sentence_lower, re.IGNORECASE)
+
+            if has_group2 and table_match:
+                table_num = int(table_match.group(1))
+
+                # Skip if we've already extracted this table
+                if table_num in extracted_tables:
+                    print(f"\n    ⊗ Skipping Table {table_num} (already extracted)")
+                    continue
+
+                print(f"\n    ✓ Found Group 2 term + Table {table_num}")
+                print(f"    Sentence {i}: '{sentence.strip()[:300]}...'")
+                group2_terms_list = ", ".join(group2_found_here)
+                print(f"    Group 2 Terms Present: {group2_terms_list}")
+                print(f"    Attempting to parse Table {table_num}...")
+
+                # Try to extract and count rows from the specified table
+                table_count = extract_table_row_count(pdf_path, table_num)
+                extracted_tables.add(table_num)  # Mark this table as extracted
+
+                if table_count and not table_fallback_count:
+                    table_fallback_count = table_count
+                    print(f"    ✓ Extracted {table_count} rows from Table {table_num} (stored as fallback)")
+                elif not table_count:
+                    print(f"    ✗ Could not parse Table {table_num}")
+
+        if table_fallback_count:
+            print(f"\n    Stored table fallback count: {table_fallback_count}")
+        else:
+            print("    Result: NO valid table reference found")
+    else:
+        print("\n    TABLE FALLBACK: Skipped (already found Groups 1+2+3 together)")
+        table_fallback_count = None
+
+    # If we found a table fallback count, use it
     if table_fallback_count:
         print("\n    ═══════════════════════════════════════════════")
         print(f"    DECISION: TABLE FALLBACK COUNT = {table_fallback_count}")
