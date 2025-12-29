@@ -234,6 +234,18 @@ def extract_table_row_count(pdf_path: str, table_number: int) -> int:
             df = table.df
             rows = len(df) - 1  # Exclude header
             print(f"    Camelot: Found Table {table_number} with {rows} data rows")
+
+            # Show table preview (first 3 rows)
+            print(f"    Preview of extracted data:")
+            preview_rows = min(3, len(df))
+            for idx in range(preview_rows):
+                row_data = df.iloc[idx].tolist()
+                # Clean up and format
+                row_str = " | ".join([str(cell)[:30] for cell in row_data])
+                print(f"      Row {idx}: {row_str}")
+            if len(df) > 3:
+                print(f"      ... ({len(df) - 3} more rows)")
+
             if rows > 0 and not best_count:
                 best_count = rows
                 best_method = "Camelot"
@@ -248,6 +260,7 @@ def extract_table_row_count(pdf_path: str, table_number: int) -> int:
         vision_count = extract_table_with_vision_api(pdf_path, table_number)
         if vision_count and vision_count > 0:
             print(f"    Vision API: Found Table {table_number} with {vision_count} data rows")
+            print(f"    (Note: Vision API currently only counts rows, doesn't extract cell data)")
             if not best_count:
                 best_count = vision_count
                 best_method = "Google Vision API"
