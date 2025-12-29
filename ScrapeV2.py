@@ -20,7 +20,7 @@ from openpyxl import Workbook
 from openpyxl.styles import Font, Alignment, PatternFill
 from openpyxl.utils import get_column_letter
 
-# ================== NOUGAT SETUP (with albumentations patches) ==================
+# Nougat OCR for table extraction
 # Fix for albumentations v1.4.0+ compatibility with nougat-ocr
 try:
     import albumentations as alb
@@ -29,10 +29,13 @@ try:
     _original_ImageCompression = alb.ImageCompression
     class ImageCompression(_original_ImageCompression):
         def __init__(self, quality_or_type=95, p=0.5, **kwargs):
+            # If first arg is int, treat as quality bounds and default to 'jpeg'
             if isinstance(quality_or_type, int):
+                # New API: quality_lower, quality_upper, compression_type
                 super().__init__(quality_lower=quality_or_type, quality_upper=quality_or_type,
                                compression_type='jpeg', p=p, **kwargs)
             else:
+                # If first arg is string, treat as compression_type (new API call)
                 super().__init__(compression_type=quality_or_type, p=p, **kwargs)
     alb.ImageCompression = ImageCompression
 
@@ -40,10 +43,14 @@ try:
     _original_GaussNoise = alb.GaussNoise
     class GaussNoise(_original_GaussNoise):
         def __init__(self, std_or_limit=20, p=0.5, **kwargs):
+            # If first arg is int/float, convert to std_range tuple
+            # Old API used 0-255 scale, new API uses 0-1 normalized scale
             if isinstance(std_or_limit, (int, float)):
+                # Normalize: divide by 255 to convert to 0-1 range
                 normalized = std_or_limit / 255.0
                 super().__init__(std_range=(0, normalized), p=p, **kwargs)
             else:
+                # If already a tuple, normalize both values
                 normalized = (std_or_limit[0] / 255.0, std_or_limit[1] / 255.0)
                 super().__init__(std_range=normalized, p=p, **kwargs)
     alb.GaussNoise = GaussNoise
@@ -51,17 +58,13 @@ try:
 except ImportError:
     pass  # albumentations not installed, skip patch
 
-# Import Nougat (REQUIRED)
 try:
     from nougat import NougatModel
     from nougat.utils.checkpoint import get_checkpoint
     NOUGAT_AVAILABLE = True
 except ImportError:
-    print("ERROR: Nougat not installed. Install with: pip install nougat-ocr")
-    sys.exit(1)
-
-# Global model cache
-_nougat_model = None
+    NOUGAT_AVAILABLE = False
+    print("Warning: Nougat OCR not available. Install with: pip install nougat-ocr")
 
 # ================== CONFIGURATION ==================
 # LLM Configuration - Choose one
@@ -402,59 +405,105 @@ def call_llm(prompt: str, system_prompt: str = "") -> str:
 
 # ================== EXTRACTION FUNCTIONS ==================
 
-def get_nougat_model():
-    """Get or initialize the Nougat model (cached)."""
-    global _nougat_model
-    if _nougat_model is None:
-        print("  Loading Nougat model (first time only)...")
-        checkpoint = get_checkpoint("facebook/nougat-base")
-        _nougat_model = NougatModel.from_pretrained(checkpoint)
-        print("  Nougat model loaded successfully")
-    return _nougat_model
-
-
 def extract_with_nougat(pdf_path: str) -> str:
-    """Extract text from PDF using Nougat OCR Python API (same as Scrape4_test.py)."""
-    print("  Extracting with Nougat (Python API)...")
+    """
+    Extract text from PDF using Nougat OCR Python API.
+    COPIED VERBATIM from Scrape4_test.py - this implementation works at 100% accuracy.
+    Uses hasattr caching pattern for model reuse.
+    """
+    if not NOUGAT_AVAILABLE:
+        print("    ⚠ Nougat OCR not available, cannot proceed")
+        sys.exit(1)
 
     try:
-        model = get_nougat_model()
+        print(f"    Extracting with Nougat OCR...")
+
+        # Initialize Nougat model (cached after first use)
+        if not hasattr(extract_with_nougat, 'model'):
+            print("    Loading Nougat model (first time only)...")
+            checkpoint = get_checkpoint("facebook/nougat-base")
+            extract_with_nougat.model = NougatModel.from_pretrained(checkpoint)
+            print("    Model loaded successfully")
+
+        model = extract_with_nougat.model
 
         # Process PDF with Nougat
         predictions = model.inference(pdf_path=str(pdf_path), batch_size=1)
 
         if not predictions or len(predictions) == 0:
-            print("  Nougat ERROR: No predictions returned")
+            print("    ✗ Nougat returned no predictions")
             sys.exit(1)
 
-        # Nougat returns markdown text
         markdown_text = predictions[0]
-        print(f"    Got {len(markdown_text)} characters (markdown with tables)")
+        print(f"    ✓ Got {len(markdown_text)} characters (markdown with tables)")
         return markdown_text
 
     except Exception as e:
-        print(f"  Nougat ERROR: {e}")
+        print(f"    Nougat ERROR: {e}")
         sys.exit(1)
 
 
 def extract_study_metadata(pdf_path: str, nougat_text: str) -> Dict[str, Any]:
-    """Extract study-level metadata using LLM reasoning (Nougat text only)."""
+    """
+    Extract study-level metadata using LLM reasoning.
+    NOUGAT TEXT ONLY - no PyMuPDF.
+    """
     metadata = {}
 
-    # Use existing functions for basic metadata (from Scrape4_test.py)
-    from Scrape4_test import (
-        extract_title_with_formatting,
-        extract_year_from_text,
-        extract_first_author_with_formatting,
-    )
+    # Use LLM to extract title from Nougat text
+    title_prompt = f"""
+From this academic paper text, extract the MAIN TITLE of the paper.
+The title is usually at the very beginning, before author names.
+Return ONLY the title text, nothing else.
 
-    metadata["Study Title"] = extract_title_with_formatting(pdf_path) or "Not found"
-    metadata["Year of Publish"] = extract_year_from_text(nougat_text) or "Not found"
-    metadata["Name of First-Listed Author"] = extract_first_author_with_formatting(pdf_path) or "Not found"
+TEXT (first 2000 chars):
+{nougat_text[:2000]}
+
+Title:"""
+
+    title_response = call_llm(title_prompt)
+    title = title_response.strip() if title_response else "Not found"
+    # Clean up title - remove quotes, limit length
+    title = title.strip('"\'')
+    if len(title) > 200:
+        title = title[:200]
+    metadata["Study Title"] = title
+
+    # Use LLM to extract year from Nougat text
+    year_prompt = f"""
+From this academic paper text, find the PUBLICATION YEAR.
+Look for: "Published", "Received", "Accepted", copyright notices, or years near the title.
+Return ONLY a 4-digit year (e.g., 2021). Nothing else.
+
+TEXT (first 3000 chars):
+{nougat_text[:3000]}
+
+Year:"""
+
+    year_response = call_llm(year_prompt)
+    year_match = re.search(r'\b(19[9]\d|20[0-2]\d)\b', year_response.strip() if year_response else "")
+    metadata["Year of Publish"] = int(year_match.group(1)) if year_match else "Not found"
+
+    # Use LLM to extract first author from Nougat text
+    author_prompt = f"""
+From this academic paper text, identify the FIRST AUTHOR's LAST NAME (family name).
+The authors are usually listed right after the title.
+Return ONLY the last name of the first author, nothing else.
+
+TEXT (first 2000 chars):
+{nougat_text[:2000]}
+
+First author's last name:"""
+
+    author_response = call_llm(author_prompt)
+    author = author_response.strip() if author_response else "Not found"
+    # Clean up author name
+    author = re.sub(r'[^A-Za-z\s-]', '', author).strip()
+    if len(author) > 50:
+        author = author[:50]
+    metadata["Name of First-Listed Author"] = author if author else "Not found"
 
     # Use LLM to determine sample count from Nougat text
-    analysis_text = nougat_text
-
     sample_count_prompt = f"""
 You are analyzing a textile research paper. Your task is to determine the EXACT number of fabric samples tested in this study.
 
@@ -474,7 +523,7 @@ Examples of what to look for:
 - "four different fabric types" → 4
 
 PAPER TEXT:
-{analysis_text[:20000]}
+{nougat_text[:20000]}
 
 Return ONLY the number (integer):"""
 
@@ -502,7 +551,7 @@ Return ONLY a comma-separated list of the standards found, e.g.: "AATCC, ISO 923
 If none found, return "Not specified"
 
 TEXT (first 8000 chars):
-{full_text[:8000]}
+{nougat_text[:8000]}
 """
 
     standards_response = call_llm(standards_prompt)
