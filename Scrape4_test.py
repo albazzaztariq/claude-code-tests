@@ -228,66 +228,16 @@ def extract_table_row_count(pdf_path: str, table_number: int) -> int:
     """
     Extract row count from a specific table number in the PDF.
     Returns the number of data rows (excluding header) if found, None otherwise.
-    Tries: Camelot, Azure Computer Vision, Nougat OCR (in that order).
+    Tries: Nougat OCR first (best), then Azure, then Camelot (worst).
     """
     print(f"\n    --- Extracting Table {table_number} ---")
 
     best_count = None
     best_method = None
 
-    # Try CAMELOT
-    print(f"\n    Trying CAMELOT...")
-    try:
-        tables_lattice = camelot.read_pdf(pdf_path, pages="all", flavor="lattice")
-        tables_stream = camelot.read_pdf(pdf_path, pages="all", flavor="stream")
-        all_camelot_tables = list(tables_lattice) + list(tables_stream)
-
-        if table_number <= len(all_camelot_tables):
-            table = all_camelot_tables[table_number - 1]
-            df = table.df
-            rows = len(df) - 1  # Exclude header
-            print(f"    Camelot: Found Table {table_number} with {rows} data rows")
-
-            # Show FULL table with ACTUAL CELL DATA
-            print(f"    Extracted table data (ALL ROWS):")
-            for idx in range(len(df)):
-                row_data = df.iloc[idx].tolist()
-                row_str = " | ".join([str(cell)[:50] for cell in row_data])
-                print(f"      Row {idx}: {row_str}")
-
-            if rows > 0 and not best_count:
-                best_count = rows
-                best_method = "Camelot"
-        else:
-            print(f"    Camelot: Table {table_number} not found (only {len(all_camelot_tables)} tables)")
-    except Exception as e:
-        print(f"    Camelot ERROR: {e}")
-
-    # Try AZURE COMPUTER VISION (Document Intelligence)
-    print(f"\n    Trying AZURE COMPUTER VISION...")
-    try:
-        azure_result = extract_table_with_azure(pdf_path, table_number)
-        if azure_result:
-            rows, table_data = azure_result
-            print(f"    Azure: Found Table {table_number} with {rows} data rows")
-
-            # Show FULL table with ACTUAL CELL DATA
-            print(f"    Extracted table data (ALL ROWS):")
-            for idx, row in enumerate(table_data):
-                row_str = " | ".join([str(cell)[:50] for cell in row])
-                print(f"      Row {idx}: {row_str}")
-
-            if rows > 0 and not best_count:
-                best_count = rows
-                best_method = "Azure Computer Vision"
-        else:
-            print(f"    Azure: Table {table_number} not found or no rows detected")
-    except Exception as e:
-        print(f"    Azure ERROR: {e}")
-
-    # Try NOUGAT OCR
+    # Try NOUGAT OCR FIRST (processes whole PDF, finds tables from markdown)
     if NOUGAT_AVAILABLE:
-        print(f"\n    Trying NOUGAT OCR...")
+        print(f"\n    Trying NOUGAT OCR (primary method)...")
         try:
             nougat_result = extract_table_with_nougat(pdf_path, table_number)
             if nougat_result:
@@ -300,13 +250,67 @@ def extract_table_row_count(pdf_path: str, table_number: int) -> int:
                     row_str = " | ".join([str(cell)[:50] for cell in row])
                     print(f"      Row {idx}: {row_str}")
 
-                if rows > 0 and not best_count:
+                if rows > 0:
                     best_count = rows
                     best_method = "Nougat OCR"
             else:
                 print(f"    Nougat: Table {table_number} not found or no rows detected")
         except Exception as e:
             print(f"    Nougat ERROR: {e}")
+    else:
+        print(f"\n    Nougat OCR not available, skipping...")
+
+    # Try AZURE COMPUTER VISION (if Nougat failed)
+    if not best_count:
+        print(f"\n    Trying AZURE COMPUTER VISION...")
+        try:
+            azure_result = extract_table_with_azure(pdf_path, table_number)
+            if azure_result:
+                rows, table_data = azure_result
+                print(f"    Azure: Found Table {table_number} with {rows} data rows")
+
+                # Show FULL table with ACTUAL CELL DATA
+                print(f"    Extracted table data (ALL ROWS):")
+                for idx, row in enumerate(table_data):
+                    row_str = " | ".join([str(cell)[:50] for cell in row])
+                    print(f"      Row {idx}: {row_str}")
+
+                if rows > 0:
+                    best_count = rows
+                    best_method = "Azure Computer Vision"
+            else:
+                print(f"    Azure: Table {table_number} not found or no rows detected")
+        except Exception as e:
+            print(f"    Azure ERROR: {e}")
+
+    # Try CAMELOT as last resort
+    if not best_count:
+        print(f"\n    Trying CAMELOT (fallback)...")
+        try:
+            tables_lattice = camelot.read_pdf(pdf_path, pages="all", flavor="lattice")
+            tables_stream = camelot.read_pdf(pdf_path, pages="all", flavor="stream")
+            all_camelot_tables = list(tables_lattice) + list(tables_stream)
+
+            if table_number <= len(all_camelot_tables):
+                table = all_camelot_tables[table_number - 1]
+                df = table.df
+                rows = len(df) - 1  # Exclude header
+                print(f"    Camelot: Found Table {table_number} with {rows} data rows")
+
+                # Show FULL table with ACTUAL CELL DATA
+                print(f"    Extracted table data (ALL ROWS):")
+                for idx in range(len(df)):
+                    row_data = df.iloc[idx].tolist()
+                    row_str = " | ".join([str(cell)[:50] for cell in row_data])
+                    print(f"      Row {idx}: {row_str}")
+
+                if rows > 0:
+                    best_count = rows
+                    best_method = "Camelot"
+            else:
+                print(f"    Camelot: Table {table_number} not found (only {len(all_camelot_tables)} tables)")
+        except Exception as e:
+            print(f"    Camelot ERROR: {e}")
 
     if best_count:
         print(f"\n    ✓ Best result: {best_count} rows from {best_method}")
@@ -318,126 +322,58 @@ def extract_table_row_count(pdf_path: str, table_number: int) -> int:
 def extract_table_with_azure(pdf_path: str, table_number: int):
     """
     Use Azure Document Intelligence to extract tables from PDF.
-    Extracts table area as compressed image to avoid file size limits.
+    Finds table by searching for "Table X" text, then extracts that area.
     Returns tuple of (row_count, table_data) if found, None otherwise.
     """
     try:
-        # First, use Camelot to find where the table is located
-        print(f"    Finding table location with Camelot...")
-        tables_lattice = camelot.read_pdf(pdf_path, pages="all", flavor="lattice")
-        tables_stream = camelot.read_pdf(pdf_path, pages="all", flavor="stream")
-        all_tables = list(tables_lattice) + list(tables_stream)
+        # Search for "Table X" in the PDF and extract that area
+        print(f"    Searching for 'Table {table_number}' in PDF...")
+        doc = fitz.open(pdf_path)
 
-        if table_number > len(all_tables):
-            print(f"    Table {table_number} not found by Camelot")
+        # Search all pages for "Table {table_number}"
+        table_found = False
+        rect = None
+        page_num = None
+        for page_idx in range(len(doc)):
+            page = doc[page_idx]
+            text = page.get_text()
+
+            # Look for "Table X" in the text
+            if re.search(rf'\bTable\s+{table_number}\b', text, re.IGNORECASE):
+                print(f"    ✓ Found 'Table {table_number}' on page {page_idx + 1}")
+
+                # Search for the text location to get approximate position
+                search_results = page.search_for(f"Table {table_number}")
+
+                if search_results:
+                    # Get the position of "Table X" text
+                    table_caption_rect = search_results[0]
+
+                    # Extract a large area below the caption (likely contains the table)
+                    page_rect = page.rect
+                    rect = fitz.Rect(
+                        page_rect.x0,  # Left edge of page
+                        table_caption_rect.y0,  # Start at table caption
+                        page_rect.x1,  # Right edge of page
+                        min(table_caption_rect.y0 + 400, page_rect.y1)  # 400 points below or bottom of page
+                    )
+
+                    page_num = page_idx
+                    table_found = True
+                    print(f"    → Extracting area around 'Table {table_number}' caption")
+                    break
+
+        doc.close()
+
+        if not table_found:
+            print(f"    ✗ Could not find 'Table {table_number}' text in PDF")
             return None
 
-        # Get the table and its location
-        camelot_table = all_tables[table_number - 1]
+        # Reopen for extraction
+        doc = fitz.open(pdf_path)
+        page = doc[page_num]
 
-        # VERIFY this is actually a table with structure
-        # Check Camelot's accuracy and ensure it has multiple rows/columns
-        df = camelot_table.df
-        accuracy = camelot_table.parsing_report.get('accuracy', 0) if hasattr(camelot_table, 'parsing_report') else 0
-
-        print(f"    Camelot accuracy: {accuracy:.1f}%, Rows: {len(df)}, Cols: {len(df.columns)}")
-
-        camelot_failed = False
-
-        # Check if Camelot failed to properly detect the table
-        if accuracy < 60 or len(df) < 3 or len(df.columns) < 3:
-            print(f"    ⚠ Camelot has low accuracy or insufficient table structure")
-            camelot_failed = True
-        else:
-            # Check if table has actual data (at least some cells with numbers)
-            # Real tables have numeric data, not just text or empty cells
-            all_values = df.values.flatten()
-            numeric_cells = sum(1 for val in all_values if str(val).strip() and any(c.isdigit() for c in str(val)))
-            total_cells = len(all_values)
-            numeric_ratio = numeric_cells / total_cells if total_cells > 0 else 0
-
-            print(f"    Table has {numeric_cells}/{total_cells} cells with numbers ({numeric_ratio*100:.1f}%)")
-
-            # Require at least 20% of cells to have numeric content
-            if numeric_ratio < 0.2:
-                print(f"    ⚠ Too few numeric cells")
-                camelot_failed = True
-
-        # If Camelot failed, try searching for "Table X" in the PDF and extract that area
-        if camelot_failed:
-            print(f"    → Falling back to text search for 'Table {table_number}'")
-            doc = fitz.open(pdf_path)
-
-            # Search all pages for "Table {table_number}"
-            table_found = False
-            for page_idx in range(len(doc)):
-                page = doc[page_idx]
-                text = page.get_text()
-
-                # Look for "Table X" in the text
-                if re.search(rf'\bTable\s+{table_number}\b', text, re.IGNORECASE):
-                    print(f"    ✓ Found 'Table {table_number}' on page {page_idx + 1}")
-
-                    # Search for the text location to get approximate position
-                    search_results = page.search_for(f"Table {table_number}")
-
-                    if search_results:
-                        # Get the position of "Table X" text
-                        table_caption_rect = search_results[0]
-
-                        # Extract a large area below the caption (likely contains the table)
-                        # Take from caption down to 60% of page height
-                        page_rect = page.rect
-                        extraction_rect = fitz.Rect(
-                            page_rect.x0,  # Left edge of page
-                            table_caption_rect.y0,  # Start at table caption
-                            page_rect.x1,  # Right edge of page
-                            min(table_caption_rect.y0 + 400, page_rect.y1)  # 400 points below or bottom of page
-                        )
-
-                        rect = extraction_rect
-                        page_num = page_idx
-                        table_found = True
-                        print(f"    → Extracting area around 'Table {table_number}' caption")
-                        break
-
-            doc.close()
-
-            if not table_found:
-                print(f"    ✗ Could not find 'Table {table_number}' text in PDF")
-                return None
-
-            # Reopen for extraction
-            doc = fitz.open(pdf_path)
-            page = doc[page_num]
-        else:
-            print(f"    ✓ Verified as real data table")
-            page_num = camelot_table.page - 1  # Camelot uses 1-indexed, fitz uses 0-indexed
-
-            # Get table bounding box from Camelot
-            # Camelot bbox format: (x1, y1, x2, y2) in PDF coordinates
-            table_bbox = camelot_table._bbox if hasattr(camelot_table, '_bbox') else None
-
-            # Open PDF with PyMuPDF to extract table area as image
-            doc = fitz.open(pdf_path)
-            page = doc[page_num]
-
-            # If we have bbox, use it; otherwise use full page
-            if table_bbox:
-                # Convert Camelot bbox to fitz rect
-                rect = fitz.Rect(table_bbox)
-            else:
-                # Use full page
-                rect = page.rect
-
-        # Verify the extracted area contains "Table {table_number}" text
-        text_in_area = page.get_text("text", clip=rect)
-        if not re.search(rf'\bTable\s+{table_number}\b', text_in_area, re.IGNORECASE):
-            print(f"    ✗ Extracted area doesn't contain 'Table {table_number}' - wrong region")
-            doc.close()
-            return None
-
-        print(f"    ✓ Verified area contains 'Table {table_number}' text")
+        print(f"    ✓ Found table area on page {page_num + 1}")
 
         # Render the table area as image with zoom for quality
         zoom = 2.0  # 2x resolution
