@@ -1531,7 +1531,29 @@ def test_process_pdfs():
     ]
     output_rows = []
     
-    for study_id in study_ids:
+    for study_idx, study_id in enumerate(study_ids):
+        # Extract study number from study_id (e.g., "Study1" -> 1)
+        study_num_match = re.search(r'(\d+)', study_id)
+        study_num = int(study_num_match.group(1)) if study_num_match else study_idx + 1
+
+        # Stop after study 10 and print summary table
+        if study_num > 10:
+            print(f"\n{'=' * 60}")
+            print("STOPPING AFTER STUDY 10 - SUMMARY TABLE")
+            print(f"{'=' * 60}")
+            print("\n" + "=" * 70)
+            print(f"{'Study':<15} {'Samples':>10}")
+            print("-" * 70)
+            for row in output_rows:
+                study = row.get("Study Number", "N/A")
+                samples = row.get("Number of Sample Fabrics", "N/A")
+                print(f"{study:<15} {samples:>10}")
+            print("=" * 70)
+            print(f"\nTotal studies processed: {len(output_rows)}")
+            print("(Stopping here - first 10 studies finalized)")
+            print("=" * 70 + "\n")
+            break
+
         print(f"\n{'=' * 60}")
         print(f"Processing Study {study_id}")
         print(f"{'=' * 60}")
