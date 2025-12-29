@@ -457,20 +457,21 @@ def extract_table_with_nougat(pdf_path: str, table_number: int):
             temp_pdf = Path(tmpdir) / "input.pdf"
             shutil.copy2(pdf_path, temp_pdf)
 
-            # Call nougat CLI on the temp copy
-            cmd = ["nougat", str(temp_pdf), "-o", tmpdir, "--no-skipping"]
-            print(f"    Running: nougat input.pdf -o tmpdir --no-skipping")
+            # Call nougat CLI on the temp copy (longer timeout for CPU)
+            cmd = ["nougat", str(temp_pdf), "-o", tmpdir]
+            print(f"    Running: nougat input.pdf -o tmpdir (timeout=600s for CPU)")
 
-            result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=600)
 
-            # Always show stderr for debugging
+            # Always show return code and output for debugging
+            print(f"    Nougat return code: {result.returncode}")
             if result.stderr:
-                print(f"    Nougat stderr: {result.stderr[:500]}")
+                print(f"    Nougat stderr: {result.stderr[:1000]}")
             if result.stdout:
-                print(f"    Nougat stdout: {result.stdout[:500]}")
+                print(f"    Nougat stdout: {result.stdout[:1000]}")
 
             if result.returncode != 0:
-                print(f"    Nougat CLI failed with code {result.returncode}")
+                print(f"    Nougat CLI failed")
                 return None
 
             # Find the output .mmd file
