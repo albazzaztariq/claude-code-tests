@@ -301,6 +301,22 @@ def extract_table_with_azure(pdf_path: str, table_number: int):
 
         # Get the table and its location
         camelot_table = all_tables[table_number - 1]
+
+        # VERIFY this is actually a table with structure
+        # Check Camelot's accuracy and ensure it has multiple rows/columns
+        df = camelot_table.df
+        accuracy = camelot_table.parsing_report.get('accuracy', 0) if hasattr(camelot_table, 'parsing_report') else 0
+
+        print(f"    Camelot accuracy: {accuracy:.1f}%, Rows: {len(df)}, Cols: {len(df.columns)}")
+
+        # Reject false positives: need decent accuracy AND multiple rows/cols
+        if accuracy < 30 or len(df) < 2 or len(df.columns) < 2:
+            print(f"    ✗ Low accuracy or insufficient table structure - likely not a real table")
+            print(f"    Skipping (Camelot false positive)")
+            return None
+
+        print(f"    ✓ Verified as real table structure")
+
         page_num = camelot_table.page - 1  # Camelot uses 1-indexed, fitz uses 0-indexed
 
         # Get table bounding box from Camelot
