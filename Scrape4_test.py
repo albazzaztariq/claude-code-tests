@@ -390,21 +390,7 @@ def extract_table_with_azure(pdf_path: str, table_number: int):
         img_buffer.seek(0)
         compressed_size = len(img_buffer.getvalue())
 
-        # Save image to disk for debugging
-        # Extract study number from PDF filename (e.g., "Study3.pdf" → 3)
-        pdf_dir = Path(pdf_path).parent
-        pdf_name = Path(pdf_path).stem
-        study_match = re.search(r'(\d+)', pdf_name)
-        study_number = study_match.group(1) if study_match else "unknown"
-
-        # Format: 1_study_{study_number}_table{table_number}.jpeg
-        debug_image_path = pdf_dir / f"1_study_{study_number}_table{table_number}.jpeg"
-        with open(debug_image_path, 'wb') as f:
-            f.write(img_buffer.getvalue())
-        img_buffer.seek(0)  # Reset buffer position after writing
-
         print(f"    Table image extracted: {compressed_size / 1024:.1f} KB")
-        print(f"    Saved to: {debug_image_path}")
         doc.close()
 
         # Send compressed image to Azure
