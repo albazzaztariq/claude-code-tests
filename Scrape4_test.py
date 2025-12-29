@@ -758,22 +758,21 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
         has_group3 = len(group3_found) > 0
         
         # VALID COMBINATION CHECK
+        # Group 1 (number immediately before Group 2) is REQUIRED for ALL combinations
         # Group 1 is satisfied by EITHER 1a (total of) OR 1b (number before Group 2)
         valid_combination = False
         combination_type = ""
-        
+
         if has_group1 and has_group2 and has_group3:
             valid_combination = True
             combination_type = "Group 1 + 2 + 3 (BEST)"
-        elif has_group2 and has_group3:
-            valid_combination = True
-            combination_type = "Group 2 + 3 (COMMON)"
         elif has_group1 and has_group2:
             valid_combination = True
             combination_type = "Group 1 + 2 (COMMON)"
         elif has_group1 and has_group3:
             valid_combination = True
             combination_type = "Group 1 + 3 (RARE)"
+        # REMOVED: Group 2 + 3 without Group 1 - user requires number IMMEDIATELY before Group 2
         
         if not valid_combination:
             continue
