@@ -943,15 +943,32 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
         ]
 
         # Find ALL matching numbers in this sentence (don't break early)
+        # IMPORTANT: Only accept if Group 3 term is NEARBY (not at end of sentence)
         for pattern in digit_patterns:
             for match in re.finditer(pattern, sentence_lower):
                 num = int(match.group(1))
                 if 1 <= num <= 100:
+                    # Get position of this number match
+                    match_pos = match.start()
+
+                    # Find closest Group 3 term position
+                    closest_group3_distance = float('inf')
+                    for g3_word in group3_words:
+                        for g3_match in re.finditer(rf'\b{g3_word}\b', sentence_lower):
+                            distance = abs(g3_match.start() - match_pos)
+                            closest_group3_distance = min(closest_group3_distance, distance)
+
+                    # Only accept if Group 3 is within 100 characters (same clause/phrase)
+                    # This filters out section headers like "2 Materials and Methods"
+                    if closest_group3_distance > 100:
+                        print(f"    ⚠ SKIPPING {num}: Group 3 term too far away ({closest_group3_distance} chars)")
+                        continue
+
                     if not explicit_count or num > explicit_count:
                         explicit_count = num
                         print("\n    ***************************************************************************")
                         print("    ***************************************************************************")
-                        print(f"    ✓ FOUND arabic numeral: {num}")
+                        print(f"    ✓ FOUND arabic numeral: {num} (Group 3 within {closest_group3_distance} chars)")
                         print("    ***************************************************************************")
                         print("    ***************************************************************************")
                         print()
@@ -968,16 +985,33 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
         ]
 
         # Find ALL matching numbers in this sentence (don't break early)
+        # IMPORTANT: Only accept if Group 3 term is NEARBY (not at end of sentence)
         for pattern in word_patterns:
             for match in re.finditer(pattern, sentence_lower):
                 word_num = match.group(1)
                 if word_num in word_to_num:
                     found_count = word_to_num[word_num]
+
+                    # Get position of this number match
+                    match_pos = match.start()
+
+                    # Find closest Group 3 term position
+                    closest_group3_distance = float('inf')
+                    for g3_word in group3_words:
+                        for g3_match in re.finditer(rf'\b{g3_word}\b', sentence_lower):
+                            distance = abs(g3_match.start() - match_pos)
+                            closest_group3_distance = min(closest_group3_distance, distance)
+
+                    # Only accept if Group 3 is within 100 characters (same clause/phrase)
+                    if closest_group3_distance > 100:
+                        print(f"    ⚠ SKIPPING '{word_num}' ({found_count}): Group 3 term too far away ({closest_group3_distance} chars)")
+                        continue
+
                     if not explicit_count or found_count > explicit_count:
                         explicit_count = found_count
                         print("\n    ***************************************************************************")
                         print("    ***************************************************************************")
-                        print(f"    ✓ FOUND word number: '{word_num}' → {found_count}")
+                        print(f"    ✓ FOUND word number: '{word_num}' → {found_count} (Group 3 within {closest_group3_distance} chars)")
                         print("    ***************************************************************************")
                         print("    ***************************************************************************")
                         print()
@@ -991,16 +1025,33 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
         ]
 
         # Find ALL matching numbers in this sentence (don't break early)
+        # IMPORTANT: Only accept if Group 3 term is NEARBY (not at end of sentence)
         for pattern in roman_patterns:
             for match in re.finditer(pattern, sentence_lower):
                 roman_num = match.group(1)
                 if roman_num in roman_to_num:
                     found_count = roman_to_num[roman_num]
+
+                    # Get position of this number match
+                    match_pos = match.start()
+
+                    # Find closest Group 3 term position
+                    closest_group3_distance = float('inf')
+                    for g3_word in group3_words:
+                        for g3_match in re.finditer(rf'\b{g3_word}\b', sentence_lower):
+                            distance = abs(g3_match.start() - match_pos)
+                            closest_group3_distance = min(closest_group3_distance, distance)
+
+                    # Only accept if Group 3 is within 100 characters (same clause/phrase)
+                    if closest_group3_distance > 100:
+                        print(f"    ⚠ SKIPPING '{roman_num.upper()}' ({found_count}): Group 3 term too far away ({closest_group3_distance} chars)")
+                        continue
+
                     if not explicit_count or found_count > explicit_count:
                         explicit_count = found_count
                         print("\n    ***************************************************************************")
                         print("    ***************************************************************************")
-                        print(f"    ✓ FOUND roman numeral: '{roman_num.upper()}' → {found_count}")
+                        print(f"    ✓ FOUND roman numeral: '{roman_num.upper()}' → {found_count} (Group 3 within {closest_group3_distance} chars)")
                         print("    ***************************************************************************")
                         print("    ***************************************************************************")
                         print()
