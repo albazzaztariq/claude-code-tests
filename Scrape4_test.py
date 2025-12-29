@@ -719,6 +719,9 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
             "studied",
             "prepared",
             "examined",
+            "knit",
+            "knitted",
+            "woven",
         ]
         group3_found = [word for word in group3_words if word in sentence_lower]
         has_group3 = len(group3_found) > 0
