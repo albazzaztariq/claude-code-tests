@@ -1015,6 +1015,14 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
                 if word_num in word_to_num:
                     found_count = word_to_num[word_num]
 
+                    # DEBUG: Show exact match context
+                    match_start = match.start()
+                    match_end = match.end()
+                    context_start = max(0, match_start - 20)
+                    context_end = min(len(sentence_lower), match_end + 20)
+                    match_context_full = sentence_lower[context_start:context_end]
+                    print(f"    [DEBUG] Matched '{word_num}' at pos {match_start}: '...{match_context_full}...'")
+
                     # Get position of this number match
                     match_pos = match.start()
 
