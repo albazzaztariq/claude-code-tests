@@ -442,7 +442,7 @@ def extract_table_with_azure(pdf_path: str, table_number: int):
 def extract_table_with_nougat(pdf_path: str, table_number: int):
     """
     Use Nougat OCR to extract tables from PDF.
-    Nougat outputs markdown, which we parse for table data.
+    Nougat outputs markdown/LaTeX, which we parse for table data.
     Returns tuple of (row_count, table_data) if found, None otherwise.
     """
     if not NOUGAT_AVAILABLE:
@@ -470,42 +470,102 @@ def extract_table_with_nougat(pdf_path: str, table_number: int):
 
         markdown_text = predictions[0]
 
-        # Parse markdown for tables
-        # Markdown tables look like:
-        # | Header 1 | Header 2 |
-        # |----------|----------|
-        # | Cell 1   | Cell 2   |
+        # DEBUG: Show first 2000 chars of Nougat output
+        print(f"    Nougat output preview (first 2000 chars):")
+        print(f"    {markdown_text[:2000]}")
+        print(f"    ... (total {len(markdown_text)} chars)")
 
-        # Find all markdown tables
-        table_pattern = r'\|[^\n]+\|\n\|[-:\s|]+\|\n(?:\|[^\n]+\|\n)+'
-        tables = re.findall(table_pattern, markdown_text)
+        # Try multiple table patterns - Nougat may output different formats
+        tables = []
+
+        # Pattern 1: Standard markdown tables
+        md_table_pattern = r'\|[^\n]+\|\n\|[-:\s|]+\|\n(?:\|[^\n]+\|\n)+'
+        md_tables = re.findall(md_table_pattern, markdown_text)
+        if md_tables:
+            print(f"    Found {len(md_tables)} markdown tables")
+            tables.extend([('markdown', t) for t in md_tables])
+
+        # Pattern 2: LaTeX tabular environments (common in scientific papers)
+        latex_pattern = r'\\begin\{tabular\}.*?\\end\{tabular\}'
+        latex_tables = re.findall(latex_pattern, markdown_text, re.DOTALL)
+        if latex_tables:
+            print(f"    Found {len(latex_tables)} LaTeX tables")
+            tables.extend([('latex', t) for t in latex_tables])
+
+        # Pattern 3: Nougat's special table format (may use \\ for rows)
+        nougat_table_pattern = r'\\begin\{table\}.*?\\end\{table\}'
+        nougat_tables = re.findall(nougat_table_pattern, markdown_text, re.DOTALL)
+        if nougat_tables:
+            print(f"    Found {len(nougat_tables)} Nougat-style tables")
+            tables.extend([('nougat', t) for t in nougat_tables])
+
+        if not tables:
+            print(f"    ✗ No tables found in Nougat output")
+            return None
 
         if table_number > len(tables):
             print(f"    ✗ Table {table_number} not found (Nougat found {len(tables)} tables)")
             return None
 
         # Get the requested table
-        table_md = tables[table_number - 1]
+        table_type, table_content = tables[table_number - 1]
+        print(f"    Processing table {table_number} (type: {table_type})")
+        print(f"    Table content: {table_content[:500]}...")
 
-        # Parse markdown table into rows
-        lines = [line.strip() for line in table_md.split('\n') if line.strip()]
-
-        # Remove the separator line (contains --- and |)
-        data_lines = [line for line in lines if not all(c in '-:|' for c in line.replace(' ', ''))]
-
-        # Parse each row
+        # Parse based on table type
         table_data = []
-        for line in data_lines:
-            # Split by | and clean up
-            cells = [cell.strip() for cell in line.split('|')]
-            # Remove empty first/last cells (from leading/trailing |)
-            cells = [c for c in cells if c]
-            if cells:
-                table_data.append(cells)
+
+        if table_type == 'markdown':
+            # Parse markdown table into rows
+            lines = [line.strip() for line in table_content.split('\n') if line.strip()]
+            data_lines = [line for line in lines if not all(c in '-:|' for c in line.replace(' ', ''))]
+            for line in data_lines:
+                cells = [cell.strip() for cell in line.split('|')]
+                cells = [c for c in cells if c]
+                if cells:
+                    table_data.append(cells)
+
+        elif table_type in ('latex', 'nougat'):
+            # Parse LaTeX table - rows separated by \\ or \\hline
+            # Extract content between begin and end
+            content_match = re.search(r'\\begin\{tabular\}\{[^}]*\}(.*?)\\end\{tabular\}', table_content, re.DOTALL)
+            if content_match:
+                content = content_match.group(1)
+            else:
+                content = table_content
+
+            # Split by \\ (row separator in LaTeX)
+            rows = re.split(r'\\\\|\\hline|\\tabularnewline', content)
+            for row in rows:
+                row = row.strip()
+                if row and not row.startswith('\\'):
+                    # Split by & (column separator in LaTeX)
+                    cells = [cell.strip() for cell in row.split('&')]
+                    cells = [c for c in cells if c]
+                    if cells:
+                        table_data.append(cells)
 
         if len(table_data) > 0:
             row_count = len(table_data) - 1  # Subtract header row
             print(f"    ✓ Nougat extracted {row_count} data rows from Table {table_number}")
+
+            # Save debug image of the page containing this table
+            try:
+                doc = fitz.open(pdf_path)
+                # Save first few pages as reference (tables usually in first pages)
+                for page_idx in range(min(3, len(doc))):
+                    page = doc[page_idx]
+                    pix = page.get_pixmap(matrix=fitz.Matrix(2, 2))
+                    pdf_dir = Path(pdf_path).parent
+                    study_match = re.search(r'(\d+)', Path(pdf_path).stem)
+                    study_num = study_match.group(1) if study_match else "unknown"
+                    img_path = pdf_dir / f"nougat_study{study_num}_page{page_idx+1}.png"
+                    pix.save(str(img_path))
+                    print(f"    Saved: {img_path}")
+                doc.close()
+            except Exception as e:
+                print(f"    Could not save debug image: {e}")
+
             return (row_count, table_data)
         else:
             print("    ✗ No data rows found in table")
