@@ -22,38 +22,50 @@ from openpyxl.utils import get_column_letter
 
 # Nougat OCR for table extraction
 # Fix for albumentations v1.4.0+ compatibility with nougat-ocr
+# COPIED EXACTLY FROM SCRAPE4_TEST.PY
 try:
     import albumentations as alb
-    from albumentations.augmentations.transforms import ImageCompression as _original_ImageCompression
 
+    # Monkeypatch ImageCompression to accept old API (quality as first positional arg)
+    _original_ImageCompression = alb.ImageCompression
     class ImageCompression(_original_ImageCompression):
         def __init__(self, quality_or_type=95, p=0.5, **kwargs):
+            # If first arg is int, treat as quality bounds and default to 'jpeg'
             if isinstance(quality_or_type, int):
-                super().__init__(
-                    quality_lower=quality_or_type,
-                    quality_upper=quality_or_type,
-                    compression_type=_original_ImageCompression.ImageCompressionType.JPEG,
-                    p=p,
-                    **kwargs
-                )
+                # New API: quality_lower, quality_upper, compression_type
+                super().__init__(quality_lower=quality_or_type, quality_upper=quality_or_type,
+                               compression_type='jpeg', p=p, **kwargs)
             else:
+                # If first arg is string, treat as compression_type (new API call)
                 super().__init__(compression_type=quality_or_type, p=p, **kwargs)
     alb.ImageCompression = ImageCompression
 
+    # Monkeypatch GaussNoise to accept old API (std as single int)
     _original_GaussNoise = alb.GaussNoise
     class GaussNoise(_original_GaussNoise):
-        def __init__(self, *args, **kwargs):
-            if args and isinstance(args[0], (int, float)):
-                kwargs.setdefault('p', 0.5 if len(args) < 2 else args[1])
-                super().__init__(**kwargs)
+        def __init__(self, std_or_limit=20, p=0.5, **kwargs):
+            # If first arg is int/float, convert to std_range tuple
+            # Old API used 0-255 scale, new API uses 0-1 normalized scale
+            if isinstance(std_or_limit, (int, float)):
+                # Normalize: divide by 255 to convert to 0-1 range
+                normalized = std_or_limit / 255.0
+                super().__init__(std_range=(0, normalized), p=p, **kwargs)
             else:
-                super().__init__(*args, **kwargs)
+                # If already a tuple, normalize both values
+                normalized = (std_or_limit[0] / 255.0, std_or_limit[1] / 255.0)
+                super().__init__(std_range=normalized, p=p, **kwargs)
     alb.GaussNoise = GaussNoise
 
 except ImportError:
-    pass
+    pass  # albumentations not installed, skip patch
 
-# Nougat is used via CLI, no Python imports needed
+try:
+    from nougat import NougatModel
+    from nougat.utils.checkpoint import get_checkpoint
+    NOUGAT_AVAILABLE = True
+except ImportError:
+    NOUGAT_AVAILABLE = False
+    print("Warning: Nougat OCR not available. Install with: pip install nougat-ocr")
 
 # ================== CONFIGURATION ==================
 # LLM Configuration - Choose one
@@ -396,47 +408,36 @@ def call_llm(prompt: str, system_prompt: str = "") -> str:
 
 def extract_with_nougat(pdf_path: str) -> str:
     """
-    Extract text from PDF using Nougat CLI (most reliable method).
+    Extract text from PDF using Nougat OCR Python API.
+    COPIED EXACTLY FROM SCRAPE4_TEST.PY
     """
-    import subprocess
-    import tempfile
+    if not NOUGAT_AVAILABLE:
+        print("    Nougat OCR not available, cannot proceed")
+        sys.exit(1)
 
     try:
-        print(f"    Extracting with Nougat CLI...")
+        print(f"    Extracting with Nougat OCR...")
 
-        # Create temp output directory
-        with tempfile.TemporaryDirectory() as tmpdir:
-            # Run nougat CLI
-            cmd = ["nougat", str(pdf_path), "-o", tmpdir, "--no-skipping"]
-            print(f"    Running: {' '.join(cmd)}")
+        # Initialize Nougat model (cached after first use)
+        if not hasattr(extract_with_nougat, 'model'):
+            print("    Loading Nougat model (first time only)...")
+            checkpoint = get_checkpoint("facebook/nougat-base")
+            extract_with_nougat.model = NougatModel.from_pretrained(checkpoint)
+            print("    Model loaded successfully")
 
-            result = subprocess.run(cmd, capture_output=True, text=True, timeout=600)
+        model = extract_with_nougat.model
 
-            if result.returncode != 0:
-                print(f"    Nougat CLI error: {result.stderr}")
-                sys.exit(1)
+        # Process PDF with Nougat
+        predictions = model.inference(pdf_path=str(pdf_path), batch_size=1)
 
-            # Find the output .mmd file
-            import glob
-            mmd_files = glob.glob(os.path.join(tmpdir, "*.mmd"))
+        if not predictions or len(predictions) == 0:
+            print("    Nougat returned no predictions")
+            sys.exit(1)
 
-            if not mmd_files:
-                print("    No .mmd output file found")
-                sys.exit(1)
+        markdown_text = predictions[0]
+        print(f"    Got {len(markdown_text)} characters (markdown with tables)")
+        return markdown_text
 
-            # Read the markdown output
-            with open(mmd_files[0], "r", encoding="utf-8") as f:
-                markdown_text = f.read()
-
-            print(f"    Got {len(markdown_text)} characters (markdown with tables)")
-            return markdown_text
-
-    except subprocess.TimeoutExpired:
-        print("    Nougat timed out after 10 minutes")
-        sys.exit(1)
-    except FileNotFoundError:
-        print("    Nougat CLI not found. Install with: pip install nougat-ocr")
-        sys.exit(1)
     except Exception as e:
         print(f"    Nougat ERROR: {e}")
         sys.exit(1)
