@@ -619,7 +619,9 @@ def extract_table_with_nougat(pdf_path: str, table_number: int):
             return None
 
     except Exception as e:
+        import traceback
         print(f"    Nougat ERROR: {e}")
+        print(f"    Traceback: {traceback.format_exc()}")
         return None
 
 def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
