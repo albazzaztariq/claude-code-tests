@@ -473,45 +473,88 @@ def extract_table_with_nougat(pdf_path: str, table_number: int):
 
 def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
     """
-    Extract number of samples with SIMPLE, CLEAR, VISIBLE logic.
+    Extract number of samples - TABLE EXTRACTION FIRST, then text detection as fallback.
     """
     print("\n    === SAMPLE DETECTION DIAGNOSTICS ===")
     search_text = full_text
     print(f"    Searching through {len(search_text)} characters of text")
-    
-    # ==================================================================
-    # PRIORITY 1: EXPLICIT COUNT - GROUP LOGIC
-    # ==================================================================
-    print("\n    PRIORITY 1: Looking for EXPLICIT COUNT statements...")
-    print("    GROUP 1a: 'total of' + number immediately following")
-    print("    GROUP 1b: number that immediately precedes a Group 2 term (with optional words)")
-    print(
-        "    GROUP 2: fabrics/materials/variants/garments/samples/textiles/specimens (singular + plural)"
-    )
-    print(
-        "    GROUP 3: tested/produced/used/analyzed/evaluated/studied/prepared/examined"
-    )
-    print("    Numbers: Arabic (1-100), Roman (I-L), Words (one-fifty)")
-    print("    ")
-    print("    Valid combinations:")
-    print("    - Group 1a OR 1b + Group 2 + Group 3 (BEST)")
-    print("    - Group 2 + Group 3 (COMMON)")
-    print("    - Group 1a OR 1b + Group 2 (COMMON)")
-    print("    - Group 1a OR 1b + Group 3 (RARE)")
-    
-    explicit_count = None
-    # Split on period/question/exclamation followed by space and capital letter
-    # This handles both "word. Next" and "word.\nNext" patterns
+
+    # Split sentences for later use
     sentences = re.split(r'[.!?](?=\s+[A-Z])', search_text)
     print(f"    Split text into {len(sentences)} sentences")
 
     # ==================================================================
-    # PRIORITY 0: SAMPLE NUMBER COLUMN - DISABLED (too many false positives)
+    # PRIORITY 0: TABLE EXTRACTION (PRIMARY METHOD)
     # ==================================================================
-    # DISABLED - Camelot extracts tables incorrectly, causing false matches
-    # Using other detection methods instead
-    print("\n    PRIORITY 0: Sample number column detection DISABLED")
-    print("    (Too many false positives with Camelot table extraction)")
+    print("\n    ═══════════════════════════════════════════════")
+    print("    PRIORITY 0: TABLE EXTRACTION (PRIMARY METHOD)")
+    print("    ═══════════════════════════════════════════════")
+    print("    Looking for table references near fabric/sample/material keywords...")
+
+    group2_words = [
+        "fabric", "fabrics",
+        "material", "materials",
+        "garment", "garments",
+        "sample", "samples",
+        "specimen", "specimens",
+    ]
+
+    table_count = None
+    extracted_tables = set()
+
+    for i, sentence in enumerate(sentences):
+        sentence_lower = sentence.lower()
+
+        # Check if sentence has a Group 2 term AND "table"
+        group2_found_here = [word for word in group2_words if word in sentence_lower]
+        has_group2 = len(group2_found_here) > 0
+        table_match = re.search(r"table\s+(\d+)", sentence_lower, re.IGNORECASE)
+
+        if has_group2 and table_match:
+            table_num = int(table_match.group(1))
+
+            # Skip if we've already extracted this table
+            if table_num in extracted_tables:
+                continue
+
+            print(f"\n    ✓ Found Group 2 term + Table {table_num}")
+            print(f"    Sentence: '{sentence.strip()[:200]}...'")
+            group2_terms_list = ", ".join(group2_found_here)
+            print(f"    Keywords found: {group2_terms_list}")
+            print(f"    Extracting Table {table_num} with Nougat...")
+
+            # Extract table with Nougat
+            result = extract_table_row_count(pdf_path, table_num)
+            extracted_tables.add(table_num)
+
+            if result and result > 0:
+                table_count = result
+                print(f"\n    ═══════════════════════════════════════════════")
+                print(f"    DECISION: TABLE EXTRACTION = {table_count} samples")
+                print(f"    Source: Table {table_num} extracted by Nougat OCR")
+                print("    ═══════════════════════════════════════════════\n")
+                return table_count
+            else:
+                print(f"    ✗ Could not extract Table {table_num}")
+
+    if not extracted_tables:
+        print("    No table references found near fabric/sample keywords")
+    else:
+        print(f"    Tried {len(extracted_tables)} tables but none had valid data")
+
+    # ==================================================================
+    # PRIORITY 1: TEXT DETECTION (FALLBACK)
+    # ==================================================================
+    print("\n    ═══════════════════════════════════════════════")
+    print("    PRIORITY 1: TEXT DETECTION (FALLBACK)")
+    print("    ═══════════════════════════════════════════════")
+    print("    Looking for explicit count statements in text...")
+    print("    GROUP 1: 'total of' + number OR number before Group 2")
+    print("    GROUP 2: fabrics/materials/samples/etc.")
+    print("    GROUP 3: tested/produced/used/etc.")
+
+    explicit_count = None
+    found_best_combination = False
 
 
     # Number word to digit mapping - EVERY NUMBER 1-50 (lowercase only)
@@ -988,80 +1031,8 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
         print("    ═══════════════════════════════════════════════\n")
         return explicit_count
 
-    print("\n    Result: NO explicit count found using group logic")
+    print("\n    Result: NO explicit count found in text")
 
-    # ===== TABLE FALLBACK: Group 2 term + "table" =====
-    # ONLY run table extraction if we did NOT find the BEST combination (Groups 1+2+3)
-    # If we found Groups 1+2+3 together, that's conclusive - don't waste time on tables
-    if not found_best_combination:
-        print("\n    TABLE FALLBACK: No Groups 1+2+3 found, checking for Group 2 term + 'table'...")
-
-        group2_words = [
-            "fabric", "fabrics",
-            "garment", "garments",
-            "sample", "samples",
-        ]
-
-        table_fallback_count = None
-        extracted_tables = set()  # Track which tables we've already extracted
-
-        for i, sentence in enumerate(sentences):
-            sentence_lower = sentence.lower()
-
-            # OPTIMIZATION: Only process sentences that contain numbers
-            has_any_number = (
-                re.search(r'\d', sentence_lower) or  # Arabic numerals
-                re.search(rf'\b({word_pattern_check})\b', sentence_lower) or  # Word numbers
-                re.search(rf'\b({"|".join(roman_to_num.keys())})\b', sentence_lower)  # Roman numerals
-            )
-            if not has_any_number:
-                continue
-
-            # Check if sentence has a Group 2 term AND "table"
-            group2_found_here = [word for word in group2_words if word in sentence_lower]
-            has_group2 = len(group2_found_here) > 0
-            table_match = re.search(r"table\s+(\d+)", sentence_lower, re.IGNORECASE)
-
-            if has_group2 and table_match:
-                table_num = int(table_match.group(1))
-
-                # Skip if we've already extracted this table
-                if table_num in extracted_tables:
-                    print(f"\n    ⊗ Skipping Table {table_num} (already extracted)")
-                    continue
-
-                print(f"\n    ✓ Found Group 2 term + Table {table_num}")
-                print(f"    Sentence {i}: '{sentence.strip()[:300]}...'")
-                group2_terms_list = ", ".join(group2_found_here)
-                print(f"    Group 2 Terms Present: {group2_terms_list}")
-                print(f"    Attempting to parse Table {table_num}...")
-
-                # Try to extract and count rows from the specified table
-                table_count = extract_table_row_count(pdf_path, table_num)
-                extracted_tables.add(table_num)  # Mark this table as extracted
-
-                if table_count and not table_fallback_count:
-                    table_fallback_count = table_count
-                    print(f"    ✓ Extracted {table_count} rows from Table {table_num} (stored as fallback)")
-                elif not table_count:
-                    print(f"    ✗ Could not parse Table {table_num}")
-
-        if table_fallback_count:
-            print(f"\n    Stored table fallback count: {table_fallback_count}")
-        else:
-            print("    Result: NO valid table reference found")
-    else:
-        print("\n    TABLE FALLBACK: Skipped (already found Groups 1+2+3 together)")
-        table_fallback_count = None
-
-    # If we found a table fallback count, use it
-    if table_fallback_count:
-        print("\n    ═══════════════════════════════════════════════")
-        print(f"    DECISION: TABLE FALLBACK COUNT = {table_fallback_count}")
-        print("    Using table row count from earlier")
-        print("    ═══════════════════════════════════════════════\n")
-        return table_fallback_count
-    
     # ==================================================================
     # PRIORITY 2: SINGLE SAMPLE
     # ==================================================================
@@ -1085,88 +1056,14 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
             return 1
     
     print("    Result: NOT a single sample study")
-    
+
     # ==================================================================
-    # PRIORITY 3: TABLE REFERENCE
+    # FINAL FALLBACK: Default to 1
     # ==================================================================
-    print("\n    PRIORITY 3: Looking for table references...")
-    print(
-        "    Required in same sentence: (fabric/fabrics OR material/materials OR sample/samples OR variant/variants OR garment/garments OR textile/textiles OR specimen/specimens) AND 'table'"
-    )
-    
-    table_numbers = set()
-    
-    for i, sentence in enumerate(sentences):
-        sentence_lower = sentence.lower()
-        has_sample_word = any(
-            word in sentence_lower
-            for word in [
-                "fabric",
-                "fabrics",
-                "material",
-                "materials",
-                "sample",
-                "samples",
-                "garment",
-                "garments",
-                "textile",
-                "textiles",
-                "specimen",
-                "specimens",
-                "variant",
-                "variants",
-            ]
-        )
-        has_table_ref = re.search(r"table\s+(\d+)", sentence_lower, re.IGNORECASE)
-        
-        if has_sample_word and has_table_ref:
-            table_num = has_table_ref.group(1)
-            table_numbers.add(table_num)
-            print(f"    ✓ Sentence {i}: Has sample word + Table {table_num}")
-            print(f"     Text: '{sentence.strip()[:200]}...'")
-    
-    if not table_numbers:
-        print("    Result: NO table reference found")
-        print("\n    ═══════════════════════════════════════════════")
-        print("    DECISION: No indicators found = 1")
-        print("    ═══════════════════════════════════════════════\n")
-        return 1
-    
-    print(f"\n    ✓ Found table references: {sorted(table_numbers)}")
-    
-    # ==================================================================
-    # PRIORITY 4: EXTRACT TABLES
-    # ==================================================================
-    print("\n    PRIORITY 4: Extracting tables to count rows...")
-    best_count = None
-    best_method = None
-    
-    # CAMELOT - DISABLED (using Nougat instead)
-    # print("\n    --- Method A: CAMELOT ---")
-    # ... (commented out)
-    
-    # TABULA - DISABLED (using Nougat instead)
-    # if not best_count:
-    #     print("\n    --- Method B: TABULA ---")
-    #     ... (commented out)
-    
-    # PDFPLUMBER - DISABLED (using Nougat instead)
-    # if not best_count:
-    #     print("\n    --- Method C: PDFPLUMBER ---")
-    #     ... (commented out)
-    
-    # FINAL DECISION
-    if best_count:
-        print("\n    ═══════════════════════════════════════════════")
-        print(f"    DECISION: Extracted {best_count} rows")
-        print(f"    Method: {best_method}")
-        print("    ═══════════════════════════════════════════════\n")
-        return best_count
-    else:
-        print("\n    ═══════════════════════════════════════════════")
-        print("    DECISION: All extraction methods failed = 1")
-        print("    ═══════════════════════════════════════════════\n")
-        return 1
+    print("\n    ═══════════════════════════════════════════════")
+    print("    DECISION: No indicators found - defaulting to 1")
+    print("    ═══════════════════════════════════════════════\n")
+    return 1
 
 # ================== TEST FUNCTIONS ==================
 def test_process_pdfs():
