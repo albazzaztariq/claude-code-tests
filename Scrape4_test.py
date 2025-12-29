@@ -11,11 +11,15 @@ import camelot
 import pytest
 from google.cloud import vision
 import io
+from azure.ai.formrecognizer import DocumentAnalysisClient
+from azure.core.credentials import AzureKeyCredential
 
 # ================== CONFIGURATION ==================
 OLLAMA_URL = "http://localhost:11434/api/generate"
 OLLAMA_MODEL = "gemma2:2b"
-GOOGLE_VISION_API_KEY = "AIzaSyCe65GfV7FwFchPBqM0UjR1QlfsnRnroHA"
+GOOGLE_VISION_API_KEY = os.getenv("GOOGLE_VISION_API_KEY", "YOUR_GOOGLE_VISION_API_KEY_HERE")
+AZURE_VISION_KEY = os.getenv("AZURE_VISION_KEY", "YOUR_AZURE_VISION_KEY_HERE")
+AZURE_VISION_ENDPOINT = os.getenv("AZURE_VISION_ENDPOINT", "YOUR_AZURE_ENDPOINT_HERE")
 BASE_DIR = Path(
     r"C:\Users\azt12\OneDrive\Documents\Wrestling Robe\Materials Science - Wickability\Studies for Analysis by LLM AI\Datafiles & Python Scripts"
 )
@@ -215,7 +219,7 @@ def extract_table_row_count(pdf_path: str, table_number: int) -> int:
     """
     Extract row count from a specific table number in the PDF.
     Returns the number of data rows (excluding header) if found, None otherwise.
-    Tries: Camelot, Google Vision API (for comparison).
+    Tries: Camelot, Google Vision API, Azure Computer Vision (for comparison).
     """
     print(f"\n    --- Extracting Table {table_number} ---")
 
@@ -268,6 +272,32 @@ def extract_table_row_count(pdf_path: str, table_number: int) -> int:
             print(f"    Vision API: Table {table_number} not found or no rows detected")
     except Exception as e:
         print(f"    Vision API ERROR: {e}")
+
+    # Try AZURE COMPUTER VISION (Document Intelligence)
+    print(f"\n    Trying AZURE COMPUTER VISION...")
+    try:
+        azure_result = extract_table_with_azure(pdf_path, table_number)
+        if azure_result:
+            rows, table_data = azure_result
+            print(f"    Azure: Found Table {table_number} with {rows} data rows")
+
+            # Show table preview (first 3 rows with ACTUAL CELL DATA)
+            print(f"    Preview of extracted data:")
+            preview_rows = min(3, len(table_data))
+            for idx in range(preview_rows):
+                row = table_data[idx]
+                row_str = " | ".join([str(cell)[:30] for cell in row])
+                print(f"      Row {idx}: {row_str}")
+            if len(table_data) > 3:
+                print(f"      ... ({len(table_data) - 3} more rows)")
+
+            if rows > 0 and not best_count:
+                best_count = rows
+                best_method = "Azure Computer Vision"
+        else:
+            print(f"    Azure: Table {table_number} not found or no rows detected")
+    except Exception as e:
+        print(f"    Azure ERROR: {e}")
 
     if best_count:
         print(f"\n    ✓ Best result: {best_count} rows from {best_method}")
@@ -332,6 +362,56 @@ def extract_table_with_vision_api(pdf_path: str, table_number: int) -> int:
 
     except Exception as e:
         raise Exception(f"Vision API extraction failed: {str(e)}")
+
+def extract_table_with_azure(pdf_path: str, table_number: int):
+    """
+    Use Azure Computer Vision (Document Intelligence) to extract tables from PDF.
+    Returns tuple of (row_count, table_data) if found, None otherwise.
+    table_data is a list of lists representing rows and cells with ACTUAL CELL DATA.
+    """
+    try:
+        # Initialize Azure Document Intelligence client
+        credential = AzureKeyCredential(AZURE_VISION_KEY)
+        client = DocumentAnalysisClient(
+            endpoint=AZURE_VISION_ENDPOINT,
+            credential=credential
+        )
+
+        # Analyze document with prebuilt-layout model
+        with open(pdf_path, 'rb') as pdf_file:
+            poller = client.begin_analyze_document("prebuilt-layout", pdf_file)
+
+        result = poller.result()
+
+        # Check if the requested table exists
+        if result.tables and table_number <= len(result.tables):
+            table = result.tables[table_number - 1]
+
+            # Build table data structure - group cells by row
+            rows_dict = {}
+            for cell in table.cells:
+                row_idx = cell.row_index
+                if row_idx not in rows_dict:
+                    rows_dict[row_idx] = {}
+                rows_dict[row_idx][cell.column_index] = cell.content
+
+            # Convert to list of lists (sorted by row, then column)
+            table_data = []
+            for row_idx in sorted(rows_dict.keys()):
+                row = []
+                for col_idx in sorted(rows_dict[row_idx].keys()):
+                    row.append(rows_dict[row_idx][col_idx])
+                table_data.append(row)
+
+            # Calculate row count (excluding header)
+            row_count = len(table_data) - 1 if len(table_data) > 0 else 0
+
+            return (row_count, table_data)
+        else:
+            return None
+
+    except Exception as e:
+        raise Exception(f"Azure extraction failed: {str(e)}")
 
 def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
     """
