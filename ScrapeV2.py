@@ -445,282 +445,187 @@ def extract_with_nougat(pdf_path: str) -> str:
 
 def extract_study_metadata(pdf_path: str, nougat_text: str) -> Dict[str, Any]:
     """
-    Extract study-level metadata using LLM reasoning.
+    Extract study-level metadata using ONE consolidated LLM call.
     NOUGAT TEXT ONLY - no PyMuPDF.
     """
     metadata = {}
 
-    # Use LLM to extract title from Nougat text
-    title_prompt = f"""
-From this academic paper text, extract the MAIN TITLE of the paper.
-The title is usually at the very beginning, before author names.
-Return ONLY the title text, nothing else.
+    # ONE consolidated LLM call for all metadata
+    consolidated_prompt = f"""
+Analyze this textile research paper and extract the following information.
+Return ONLY a JSON object with these exact keys:
 
-TEXT (first 2000 chars):
-{nougat_text[:2000]}
+{{
+  "title": "the main paper title",
+  "year": 2021,
+  "first_author_lastname": "Smith",
+  "sample_count": 8,
+  "standards": "AATCC, ISO 9237"
+}}
 
-Title:"""
-
-    title_response = call_llm(title_prompt)
-    title = title_response.strip() if title_response else "Not found"
-    # Clean up title - remove quotes, limit length
-    title = title.strip('"\'')
-    if len(title) > 200:
-        title = title[:200]
-    metadata["Study Title"] = title
-
-    # Use LLM to extract year from Nougat text
-    year_prompt = f"""
-From this academic paper text, find the PUBLICATION YEAR.
-Look for: "Published", "Received", "Accepted", copyright notices, or years near the title.
-Return ONLY a 4-digit year (e.g., 2021). Nothing else.
-
-TEXT (first 3000 chars):
-{nougat_text[:3000]}
-
-Year:"""
-
-    year_response = call_llm(year_prompt)
-    year_match = re.search(r'\b(19[9]\d|20[0-2]\d)\b', year_response.strip() if year_response else "")
-    metadata["Year of Publish"] = int(year_match.group(1)) if year_match else "Not found"
-
-    # Use LLM to extract first author from Nougat text
-    author_prompt = f"""
-From this academic paper text, identify the FIRST AUTHOR's LAST NAME (family name).
-The authors are usually listed right after the title.
-Return ONLY the last name of the first author, nothing else.
-
-TEXT (first 2000 chars):
-{nougat_text[:2000]}
-
-First author's last name:"""
-
-    author_response = call_llm(author_prompt)
-    author = author_response.strip() if author_response else "Not found"
-    # Clean up author name
-    author = re.sub(r'[^A-Za-z\s-]', '', author).strip()
-    if len(author) > 50:
-        author = author[:50]
-    metadata["Name of First-Listed Author"] = author if author else "Not found"
-
-    # Use LLM to determine sample count from Nougat text
-    sample_count_prompt = f"""
-You are analyzing a textile research paper. Your task is to determine the EXACT number of fabric samples tested in this study.
-
-Look for:
-1. Explicit statements like "eight samples", "10 fabrics were tested", "six fabric specimens"
-2. Tables listing sample properties (count the rows)
-3. Sample IDs like S1-S8, F1-F10, Sample A-H
-4. Figures showing data for multiple samples (count the bars/lines)
-5. Phrases like "sample groups", "fabric variants", "test specimens"
-
-IMPORTANT: Return ONLY a single integer number. No text, no explanation.
-
-Examples of what to look for:
-- "eight sample groups were tested" → 8
-- "Table 1 shows properties of 12 fabrics" → 12
-- Samples labeled S1 through S6 → 6
-- "four different fabric types" → 4
+RULES:
+- title: The main paper title (first 200 chars max)
+- year: Publication year as integer (look for "Published", "Received", "Accepted", copyright)
+- first_author_lastname: Last name of first author only
+- sample_count: EXACT number of fabric samples tested (look for "eight samples", "10 fabrics", sample IDs like S1-S8, table rows)
+- standards: Comma-separated list of testing standards (AATCC, ISO, JIS, ASTM, etc.) or "Not specified"
 
 PAPER TEXT:
-{nougat_text[:20000]}
+{nougat_text[:15000]}
 
-Return ONLY the number (integer):"""
+Return ONLY the JSON object:"""
 
-    sample_count_response = call_llm(sample_count_prompt)
+    response = call_llm(consolidated_prompt)
 
-    # Parse the response - should be just a number
+    # Parse JSON response
     try:
-        # Extract first number from response
-        num_match = re.search(r'\d+', sample_count_response.strip())
-        if num_match:
-            metadata["Number of Sample Fabrics"] = int(num_match.group())
+        json_match = re.search(r'\{[\s\S]*\}', response)
+        if json_match:
+            data = json.loads(json_match.group())
+            metadata["Study Title"] = str(data.get("title", "Not found"))[:200]
+            metadata["Year of Publish"] = data.get("year", "Not found")
+            metadata["Name of First-Listed Author"] = str(data.get("first_author_lastname", "Not found"))[:50]
+            metadata["Number of Sample Fabrics"] = int(data.get("sample_count", 1))
+            metadata["Testing/Standards Bodies Methods Used"] = data.get("standards", "Not specified")
         else:
-            print(f"  Warning: Could not parse sample count from LLM: {sample_count_response[:100]}")
+            print(f"  Warning: Could not parse metadata JSON")
+            metadata["Study Title"] = "Not found"
+            metadata["Year of Publish"] = "Not found"
+            metadata["Name of First-Listed Author"] = "Not found"
             metadata["Number of Sample Fabrics"] = 1
+            metadata["Testing/Standards Bodies Methods Used"] = "Not specified"
     except Exception as e:
-        print(f"  Warning: Sample count error: {e}")
+        print(f"  Warning: Metadata extraction error: {e}")
+        metadata["Study Title"] = "Not found"
+        metadata["Year of Publish"] = "Not found"
+        metadata["Name of First-Listed Author"] = "Not found"
         metadata["Number of Sample Fabrics"] = 1
-
-    # Use LLM to extract testing standards used
-    standards_prompt = f"""
-From this textile research paper text, identify ALL testing/standards bodies mentioned.
-Look for: AATCC, ISO, JIS, EN, ASTM, GB/T, MMT, or any other testing standards.
-
-Return ONLY a comma-separated list of the standards found, e.g.: "AATCC, ISO 9237, ASTM D737"
-If none found, return "Not specified"
-
-TEXT (first 8000 chars):
-{nougat_text[:8000]}
-"""
-
-    standards_response = call_llm(standards_prompt)
-    metadata["Testing/Standards Bodies Methods Used"] = standards_response.strip() if standards_response else "Not specified"
+        metadata["Testing/Standards Bodies Methods Used"] = "Not specified"
 
     return metadata
 
 
-def extract_samples_info(full_text: str, expected_count: int) -> List[Dict[str, Any]]:
+def extract_all_samples_with_metrics(nougat_text: str, expected_count: int) -> List[Dict[str, Any]]:
     """
-    Use LLM to identify all samples in the study and their basic properties.
-    Uses the expected_count (from proven regex logic) to guide the LLM.
-    Returns a list of sample dictionaries.
+    ONE LLM call to extract ALL samples with ALL metrics found in the paper.
+    LLM finds what's there, then we match to schema columns.
     """
-
-    system_prompt = """You are a textile research data extractor. Your task is to identify all fabric samples
-mentioned in a research paper and extract their basic properties.
-
-IMPORTANT RULES:
-1. Return ONLY valid JSON, no other text
-2. Each sample should have a unique ID from the paper (e.g., "S1", "Sample A", "Fabric 1")
-3. If samples aren't explicitly named, use "Sample 1", "Sample 2", etc.
-4. Determine the number of layers for each sample (1 = monolayer, 2 = bilayer, 3 = trilayer)
-5. Extract material composition for each layer
-6. You MUST return EXACTLY the number of samples specified - no more, no less."""
 
     extraction_prompt = f"""
-Analyze this textile research paper and identify ALL fabric samples tested.
+Analyze this textile research paper. Extract ALL data for ALL {expected_count} fabric samples.
 
-IMPORTANT: There are EXACTLY {expected_count} fabric samples in this study. You must identify all {expected_count} of them.
+For EACH sample, extract:
+1. sample_id: The ID/name from the paper
+2. ALL properties and metrics you can find (material, structure, thickness, GSM, any test results)
 
-For each sample, extract:
-1. sample_id: The name/ID used in the paper (look in tables for sample names like S1, F1, Sample 1, Fabric A, etc.)
-2. num_layers: Number of fabric layers (1 = monolayer, 2 = bilayer, 3 = trilayer)
-3. materials: Dictionary with layer materials, e.g., {{"inner": "cotton", "outer": "polyester"}} or {{"monolayer": "cotton/polyester blend"}}
-4. structure: Dictionary with layer structures, e.g., {{"inner": "woven", "outer": "knit"}} or {{"monolayer": "woven"}}
-
-Return as a JSON array with EXACTLY {expected_count} samples. Example:
+Return as JSON array. Include ANY metric you find - use the exact name from the paper.
+Example format:
 [
   {{
     "sample_id": "S1",
-    "num_layers": 1,
-    "materials": {{"monolayer": "100% cotton"}},
-    "structure": {{"monolayer": "plain weave"}}
-  }},
-  {{
-    "sample_id": "S2",
-    "num_layers": 2,
-    "materials": {{"inner": "polyester", "outer": "cotton"}},
-    "structure": {{"inner": "knit", "outer": "woven"}}
+    "material": "100% polyester",
+    "structure": "single jersey",
+    "gsm": 150,
+    "thickness_mm": 0.45,
+    "WTT": 3.2,
+    "WTB": 2.8,
+    "ARB": 45.5,
+    "ART": 42.1,
+    "SSb": 2.1,
+    "SSt": 1.9,
+    "MWRb": 25,
+    "MWRt": 22,
+    "AOTI": 380,
+    "OMMC": 0.65,
+    ... any other metrics found ...
   }}
 ]
 
+Extract ALL numeric values from tables. Include units where shown.
+
 PAPER TEXT:
-{full_text[:15000]}
+{nougat_text[:30000]}
 
-Return ONLY the JSON array with exactly {expected_count} samples, no explanation:"""
+Return ONLY the JSON array:"""
 
-    response = call_llm(extraction_prompt, system_prompt)
+    response = call_llm(extraction_prompt)
 
     # Parse JSON response
     try:
-        # Try to extract JSON from response
         json_match = re.search(r'\[[\s\S]*\]', response)
         if json_match:
             samples = json.loads(json_match.group())
-            # Verify we got the expected count
-            if len(samples) != expected_count:
-                print(f"  Warning: LLM returned {len(samples)} samples, expected {expected_count}")
-                # If LLM returned wrong count, create placeholder samples
-                if len(samples) < expected_count:
-                    for i in range(len(samples) + 1, expected_count + 1):
-                        samples.append({"sample_id": f"Sample {i}", "num_layers": 1, "materials": {}, "structure": {}})
-                elif len(samples) > expected_count:
-                    samples = samples[:expected_count]
-            return samples
+            # Pad if needed
+            while len(samples) < expected_count:
+                samples.append({"sample_id": f"Sample {len(samples)+1}"})
+            return samples[:expected_count]
     except json.JSONDecodeError as e:
-        print(f"Failed to parse samples JSON: {e}")
-        print(f"Response was: {response[:500]}")
+        print(f"  Warning: Failed to parse samples JSON: {e}")
 
-    # Fallback: return expected number of placeholder samples
-    return [{"sample_id": f"Sample {i}", "num_layers": 1, "materials": {}, "structure": {}} for i in range(1, expected_count + 1)]
+    # Fallback
+    return [{"sample_id": f"Sample {i}"} for i in range(1, expected_count + 1)]
 
 
-def extract_metrics_for_sample(full_text: str, sample: Dict[str, Any], all_headers: List[str]) -> Dict[str, Any]:
-    """
-    Use LLM to extract all available metrics for a specific sample.
-    """
-    sample_id = sample.get("sample_id", "Unknown")
-    num_layers = sample.get("num_layers", 1)
+# Mapping from common metric names/abbreviations to schema column names
+METRIC_MAPPING = {
+    # Basic properties
+    "material": "Material: Monolayer",
+    "structure": "Structure: Monolayer",
+    "gsm": "Fabric Weight/GSM: Monolayer",
+    "weight": "Fabric Weight/GSM: Monolayer",
+    "thickness": "Fabric Thickness: Monolayer",
+    "thickness_mm": "Fabric Thickness: Monolayer",
 
-    # Determine which layer columns to use based on num_layers
-    if num_layers == 1:
-        relevant_layers = ["Monolayer"]
-    elif num_layers == 2:
-        relevant_layers = ["Inner Layer", "Outer Layer"]
-    else:  # 3 layers
-        relevant_layers = ["Inner Layer", "Middle Layer", "Outer Layer"]
+    # AATCC MMT metrics
+    "wtt": "Wetting Time Top (WTT): Monolayer",
+    "wtb": "Wetting Time Bottom (WTB): Monolayer",
+    "wt": "Wetting Time (WT): Monolayer",
+    "wetting_time": "Wetting Time (WT): Monolayer",
+    "art": "Top Absorption Rate (TAR): Monolayer",
+    "arb": "Bottom Absorption Rate (BAR): Monolayer",
+    "tar": "Top Absorption Rate (TAR): Monolayer",
+    "bar": "Bottom Absorption Rate (BAR): Monolayer",
+    "absorption_rate": "Absorption Rate Top (ART): Monolayer",
+    "sst": "Spreading Speed Top (SSt): Monolayer",
+    "ssb": "Spreading Speed Bottom (SSb): Monolayer",
+    "ss": "Spreading Speed (SS): Monolayer",
+    "spreading_speed": "Spreading Speed (SS): Monolayer",
+    "mwrt": "Max Wetted Radius Top (MWRt): Monolayer",
+    "mwrb": "Max Wetted Radius Bottom (MWRb): Monolayer",
+    "aoti": "Accumulative One-Way Transport Index (AOTI): Monolayer",
+    "owtc": "One Way Transport Capability (OWTC): Monolayer",
+    "ommc": "Overall Moisture Management Capacity (OMMC): Monolayer",
 
-    # Filter headers to only include relevant layers
-    relevant_headers = []
-    for header in all_headers:
-        # Skip study/sample metadata
-        if header in STUDY_METADATA or header in SAMPLE_METADATA:
+    # Thermal
+    "thermal_resistance": "Thermal Resistance (Rct): Monolayer",
+    "rct": "Thermal Resistance (Rct): Monolayer",
+    "thermal_conductivity": "Thermal Conductivity: Monolayer",
+    "ret": "Evaporative Resistance (Ret): Monolayer",
+    "evaporative_resistance": "Evaporative Resistance (Ret): Monolayer",
+
+    # Other
+    "air_permeability": "Air Permeability: Monolayer",
+    "wvtr": "Water Vapor Transmission Rate (WVTR): Monolayer",
+    "contact_angle": "Contact Angle: Monolayer",
+    "porosity": "Open Area Fraction: Monolayer",
+    "drying_time": "Drying Time: Monolayer",
+    "drying_rate": "Drying Rate: Monolayer",
+}
+
+
+def map_extracted_to_schema(sample: Dict[str, Any]) -> Dict[str, Any]:
+    """Map extracted metric names to schema column names."""
+    mapped = {}
+    for key, value in sample.items():
+        if value is None:
             continue
-
-        # Check if header contains a layer specification
-        has_layer = any(layer in header for layer in LAYER_TYPES)
-
-        if has_layer:
-            # Only include if it's a relevant layer for this sample
-            if any(layer in header for layer in relevant_layers):
-                relevant_headers.append(header)
+        key_lower = key.lower().replace(" ", "_").replace("-", "_")
+        if key_lower in METRIC_MAPPING:
+            mapped[METRIC_MAPPING[key_lower]] = value
         else:
-            # Non-layer-specific headers
-            relevant_headers.append(header)
-
-    # Create a focused extraction prompt
-    system_prompt = """You are a precise textile data extractor. Extract numerical values and specifications
-from research papers into a structured JSON format.
-
-RULES:
-1. Return ONLY valid JSON
-2. Use null for values not found in the text
-3. Include units when available (e.g., "25.3 g/m²" not just "25.3")
-4. Be precise - only extract values that are clearly stated
-5. For the specific sample requested, find its data in tables and text"""
-
-    # Break headers into chunks to avoid overwhelming the LLM
-    chunk_size = 50
-    all_extracted = {}
-
-    for i in range(0, len(relevant_headers), chunk_size):
-        chunk_headers = relevant_headers[i:i+chunk_size]
-        headers_list = "\n".join([f"- {h}" for h in chunk_headers])
-
-        extraction_prompt = f"""
-Extract data for SAMPLE "{sample_id}" from this textile research paper.
-
-This sample has {num_layers} layer(s). Only extract values for the relevant layer type(s).
-
-Extract these specific metrics (return null if not found):
-{headers_list}
-
-PAPER TEXT:
-{full_text[:12000]}
-
-Return as JSON object with metric names as keys. Example:
-{{
-  "Fabric Weight/GSM: Monolayer": "185 g/m²",
-  "Thermal Conductivity: Monolayer": "0.045 W/m·K",
-  "Wetting Time (WT): Monolayer": "3.2 seconds"
-}}
-
-JSON output for sample "{sample_id}":"""
-
-        response = call_llm(extraction_prompt, system_prompt)
-
-        # Parse response
-        try:
-            json_match = re.search(r'\{[\s\S]*\}', response)
-            if json_match:
-                chunk_data = json.loads(json_match.group())
-                all_extracted.update(chunk_data)
-        except json.JSONDecodeError:
-            print(f"  Warning: Failed to parse chunk {i//chunk_size + 1}")
-            continue
-
-    return all_extracted
+            # Keep original if no mapping (for sample_id, etc.)
+            mapped[key] = value
+    return mapped
 
 
 def process_single_pdf(pdf_path: str) -> List[Dict[str, Any]]:
@@ -728,6 +633,7 @@ def process_single_pdf(pdf_path: str) -> List[Dict[str, Any]]:
     Process a single PDF and extract all specifications.
     Returns a list of rows (one per sample).
     NOUGAT ONLY - no PyMuPDF fallback.
+    Uses only 2 LLM calls total for speed.
     """
     print(f"\n{'='*60}")
     print(f"Processing: {pdf_path}")
@@ -736,59 +642,44 @@ def process_single_pdf(pdf_path: str) -> List[Dict[str, Any]]:
     # Extract text using NOUGAT ONLY
     nougat_text = extract_with_nougat(pdf_path)
 
-    # DEBUG: Print first part of nougat output to see what we're working with
-    print("\n  === NOUGAT OUTPUT (first 3000 chars) ===")
-    print(nougat_text[:3000])
+    # DEBUG: Print first part of nougat output
+    print("\n  === NOUGAT OUTPUT (first 2000 chars) ===")
+    print(nougat_text[:2000])
     print("  === END NOUGAT OUTPUT ===\n")
 
-    # Get study metadata (uses LLM for sample counting)
-    print("\n  Extracting study metadata (using LLM reasoning)...")
+    # LLM CALL 1: Get study metadata (consolidated - title, year, author, sample count, standards)
+    print("\n  [LLM Call 1/2] Extracting study metadata...")
     study_metadata = extract_study_metadata(pdf_path, nougat_text)
     for key, value in study_metadata.items():
         print(f"    {key}: {value}")
 
-    # Identify samples using LLM-determined count
+    # LLM CALL 2: Extract ALL samples with ALL metrics in ONE call
     sample_count = study_metadata.get("Number of Sample Fabrics", 1)
-    print(f"\n  Identifying {sample_count} samples (from LLM reasoning)...")
-    samples = extract_samples_info(nougat_text, sample_count)
-    print(f"    LLM identified {len(samples)} samples")
-    for sample in samples:
-        print(f"      - {sample.get('sample_id')}: {sample.get('num_layers')} layer(s)")
+    print(f"\n  [LLM Call 2/2] Extracting {sample_count} samples with metrics...")
+    samples = extract_all_samples_with_metrics(nougat_text, sample_count)
+    print(f"    Extracted {len(samples)} samples")
 
-    # Get all headers
-    all_headers = get_all_column_headers()
-
-    # Extract metrics for each sample
+    # Build output rows - just map extracted data to schema (no more LLM calls)
     output_rows = []
     for idx, sample in enumerate(samples):
-        print(f"\n  Extracting metrics for sample {idx+1}/{len(samples)}: {sample.get('sample_id')}...")
+        sample_id = sample.get("sample_id", f"Sample {idx+1}")
+        print(f"    Sample {idx+1}: {sample_id}")
 
         # Start with study metadata
         row = {
             "Study Number": Path(pdf_path).stem,
             **study_metadata,
-            "Sample ID/Name": sample.get("sample_id"),
-            "Number of Fabric Layers": sample.get("num_layers"),
+            "Sample ID/Name": sample_id,
+            "Number of Fabric Layers": sample.get("num_layers", 1),
         }
 
-        # Add material and structure from sample identification
-        materials = sample.get("materials", {})
-        structure = sample.get("structure", {})
+        # Map extracted metrics to schema columns (instant, no LLM)
+        mapped_metrics = map_extracted_to_schema(sample)
+        row.update(mapped_metrics)
 
-        for layer_key, layer_name in [("inner", "Inner Layer"), ("middle", "Middle Layer"),
-                                       ("outer", "Outer Layer"), ("monolayer", "Monolayer")]:
-            if layer_key in materials:
-                row[f"Material: {layer_name}"] = materials[layer_key]
-            if layer_key in structure:
-                row[f"Structure: {layer_name}"] = structure[layer_key]
-
-        # Extract all metrics from Nougat text
-        metrics = extract_metrics_for_sample(nougat_text, sample, all_headers)
-        row.update(metrics)
-
-        # Count non-null metrics
-        non_null = sum(1 for v in metrics.values() if v and v != "null")
-        print(f"    Extracted {non_null} non-null metrics")
+        # Count extracted metrics
+        metric_count = len([k for k in mapped_metrics.keys() if k not in ["sample_id", "num_layers"]])
+        print(f"      → {metric_count} metrics mapped to schema")
 
         output_rows.append(row)
 
