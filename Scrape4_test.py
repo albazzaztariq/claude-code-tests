@@ -310,7 +310,8 @@ def extract_table_with_azure(pdf_path: str, table_number: int):
         print(f"    Camelot accuracy: {accuracy:.1f}%, Rows: {len(df)}, Cols: {len(df.columns)}")
 
         # Reject false positives: need decent accuracy AND multiple rows/cols
-        if accuracy < 30 or len(df) < 2 or len(df.columns) < 2:
+        # Require at least 3x3 table (3 rows, 3 columns) to ensure it's a real table
+        if accuracy < 30 or len(df) < 3 or len(df.columns) < 3:
             print(f"    ✗ Low accuracy or insufficient table structure - likely not a real table")
             print(f"    Skipping (Camelot false positive)")
             return None
@@ -351,9 +352,14 @@ def extract_table_with_azure(pdf_path: str, table_number: int):
         compressed_size = len(img_buffer.getvalue())
 
         # Save image to disk for debugging
+        # Extract study number from PDF filename (e.g., "Study3.pdf" → 3)
         pdf_dir = Path(pdf_path).parent
         pdf_name = Path(pdf_path).stem
-        debug_image_path = pdf_dir / f"{pdf_name}_table_{table_number}_extracted.jpg"
+        study_match = re.search(r'(\d+)', pdf_name)
+        study_number = study_match.group(1) if study_match else "unknown"
+
+        # Format: 1_study_{study_number}_table{table_number}.jpeg
+        debug_image_path = pdf_dir / f"1_study_{study_number}_table{table_number}.jpeg"
         with open(debug_image_path, 'wb') as f:
             f.write(img_buffer.getvalue())
         img_buffer.seek(0)  # Reset buffer position after writing
