@@ -11,6 +11,8 @@ import camelot
 import pytest
 from azure.ai.formrecognizer import DocumentAnalysisClient
 from azure.core.credentials import AzureKeyCredential
+from PIL import Image
+import io
 
 # ================== CONFIGURATION ==================
 OLLAMA_URL = "http://localhost:11434/api/generate"
@@ -282,35 +284,78 @@ def extract_table_row_count(pdf_path: str, table_number: int) -> int:
 
 def extract_table_with_azure(pdf_path: str, table_number: int):
     """
-    Use Azure Computer Vision (Document Intelligence) to extract tables from PDF.
+    Use Azure Document Intelligence to extract tables from PDF.
+    Extracts table area as compressed image to avoid file size limits.
     Returns tuple of (row_count, table_data) if found, None otherwise.
-    table_data is a list of lists representing rows and cells with ACTUAL CELL DATA.
     """
     try:
-        # Initialize Azure Document Intelligence client
+        # First, use Camelot to find where the table is located
+        print(f"    Finding table location with Camelot...")
+        tables_lattice = camelot.read_pdf(pdf_path, pages="all", flavor="lattice")
+        tables_stream = camelot.read_pdf(pdf_path, pages="all", flavor="stream")
+        all_tables = list(tables_lattice) + list(tables_stream)
+
+        if table_number > len(all_tables):
+            print(f"    Table {table_number} not found by Camelot")
+            return None
+
+        # Get the table and its location
+        camelot_table = all_tables[table_number - 1]
+        page_num = camelot_table.page - 1  # Camelot uses 1-indexed, fitz uses 0-indexed
+
+        # Get table bounding box from Camelot
+        # Camelot bbox format: (x1, y1, x2, y2) in PDF coordinates
+        table_bbox = camelot_table._bbox if hasattr(camelot_table, '_bbox') else None
+
+        # Open PDF with PyMuPDF to extract table area as image
+        doc = fitz.open(pdf_path)
+        page = doc[page_num]
+
+        # If we have bbox, use it; otherwise use full page
+        if table_bbox:
+            # Convert Camelot bbox to fitz rect
+            rect = fitz.Rect(table_bbox)
+        else:
+            # Use full page
+            rect = page.rect
+
+        # Render the table area as image with zoom for quality
+        zoom = 2.0  # 2x resolution
+        mat = fitz.Matrix(zoom, zoom)
+        pix = page.get_pixmap(matrix=mat, clip=rect)
+
+        # Convert to PIL Image
+        img_data = pix.tobytes("png")
+        img = Image.open(io.BytesIO(img_data))
+
+        # Compress as JPEG to reduce size
+        img_buffer = io.BytesIO()
+        img.convert('RGB').save(img_buffer, format='JPEG', quality=85, optimize=True)
+        img_buffer.seek(0)
+        compressed_size = len(img_buffer.getvalue())
+
+        print(f"    Table image extracted: {compressed_size / 1024:.1f} KB")
+        doc.close()
+
+        # Send compressed image to Azure
         credential = AzureKeyCredential(AZURE_VISION_KEY)
         client = DocumentAnalysisClient(
             endpoint=AZURE_VISION_ENDPOINT,
             credential=credential
         )
 
-        # Analyze document with prebuilt-layout model
-        with open(pdf_path, 'rb') as pdf_file:
-            poller = client.begin_analyze_document("prebuilt-layout", document=pdf_file)
-
+        poller = client.begin_analyze_document("prebuilt-layout", document=img_buffer)
         result = poller.result()
 
-        # DEBUG: Print what Azure found
-        print(f"    Azure found {len(result.tables) if result.tables else 0} total tables in document")
+        print(f"    Azure found {len(result.tables) if result.tables else 0} tables in extracted image")
 
-        # Check if the requested table exists
-        if result.tables and table_number <= len(result.tables):
-            table = result.tables[table_number - 1]
+        # Azure should find 1 table (the one we extracted)
+        if result.tables and len(result.tables) > 0:
+            table = result.tables[0]  # Use first table found in the image
 
-            # DEBUG: Show table structure
-            print(f"    Table {table_number}: {table.row_count} rows x {table.column_count} columns, {len(table.cells)} total cells")
+            print(f"    Table structure: {table.row_count} rows x {table.column_count} columns, {len(table.cells)} cells")
 
-            # Build table data structure - group cells by row
+            # Build table data structure
             rows_dict = {}
             for cell in table.cells:
                 row_idx = cell.row_index
@@ -318,23 +363,19 @@ def extract_table_with_azure(pdf_path: str, table_number: int):
                     rows_dict[row_idx] = {}
                 rows_dict[row_idx][cell.column_index] = cell.content
 
-            # Convert to list of lists (sorted by row, then column)
+            # Convert to list of lists
             table_data = []
             for row_idx in sorted(rows_dict.keys()):
                 row = []
                 for col_idx in sorted(rows_dict[row_idx].keys()):
-                    cell_content = rows_dict[row_idx][col_idx]
-                    row.append(cell_content)
+                    row.append(rows_dict[row_idx][col_idx])
                 table_data.append(row)
 
-            # DEBUG: Show first row of extracted data
             if table_data:
                 first_row_preview = " | ".join([str(cell)[:20] for cell in table_data[0]])
-                print(f"    First row data: {first_row_preview}")
+                print(f"    First row: {first_row_preview}")
 
-            # Calculate row count (excluding header)
             row_count = len(table_data) - 1 if len(table_data) > 0 else 0
-
             return (row_count, table_data)
         else:
             return None
