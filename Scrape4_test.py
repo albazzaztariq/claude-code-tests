@@ -759,7 +759,7 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
         
         # Check for "total of" + arabic number + group2
         total_of_arabic = re.search(
-            r"total\s+of\s+(\d+)\s+(?:different\s+)?(?:types?\s+of\s+)?(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)\b",
+            r"total\s+of\s+(\d+)\s+(?:different\s+)?(?:types?\s+of\s+)?(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?|jerseys?)\b",
             sentence_lower
         )
         if total_of_arabic:
@@ -775,7 +775,7 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
         
         # Check for "total of" + word number + group2 (CASE-INSENSITIVE)
         total_of_word = re.search(
-            rf"total\s+of\s+({word_pattern_check})\s+(?:different\s+)?(?:types?\s+of\s+)?(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)\b",
+            rf"total\s+of\s+({word_pattern_check})\s+(?:different\s+)?(?:types?\s+of\s+)?(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?|jerseys?)\b",
             sentence_lower
         )
         if total_of_word:
@@ -820,14 +820,14 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
         # STRICT pattern - number must be followed by Group 2 term with NO intervening words
         # Only whitespace allowed between number and Group 2 term
         if re.search(
-            r"(?<![0-9.])(\d+)(?![0-9.])\s+(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)\b",
+            r"(?<![0-9.])(\d+)(?![0-9.])\s+(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?|jerseys?)\b",
             sentence_lower
         ):
             has_number_before_group2_check = True
 
         # Check for word numbers IMMEDIATELY before Group 2 (CASE-INSENSITIVE)
         if re.search(
-            rf"\b({word_pattern_check})\s+(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)\b",
+            rf"\b({word_pattern_check})\s+(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?|jerseys?)\b",
             sentence_lower
         ):
             has_number_before_group2_check = True
@@ -837,7 +837,7 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
         # Allows: "four types of tri-layer fabrics" (handles hyphens)
         # Modifiers between "types of" and Group 2 are allowed for this pattern ONLY
         if re.search(
-            rf"\b({word_pattern_check})\s+(?:different\s+)?types?\s+of\s+(?:[\w-]+\s+){{0,6}}(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)\b",
+            rf"\b({word_pattern_check})\s+(?:different\s+)?types?\s+of\s+(?:[\w-]+\s+){{0,6}}(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?|jerseys?)\b",
             sentence_lower
         ):
             has_number_before_group2_check = True
@@ -847,7 +847,7 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
         # Allows: "4 types of tri-layer fabrics" (handles hyphens)
         # Modifiers between "types of" and Group 2 are allowed for this pattern ONLY
         if re.search(
-            r"(?<![0-9.])(\d+)(?![0-9.])\s+(?:different\s+)?types?\s+of\s+(?:[\w-]+\s+){{0,6}}(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)\b",
+            r"(?<![0-9.])(\d+)(?![0-9.])\s+(?:different\s+)?types?\s+of\s+(?:[\w-]+\s+){{0,6}}(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?|jerseys?)\b",
             sentence_lower
         ):
             has_number_before_group2_check = True
@@ -870,6 +870,8 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
             "textiles",
             "specimen",
             "specimens",
+            "jersey",
+            "jerseys",
         ]
         group2_found = [word for word in group2_words if word in sentence_lower]
         has_group2 = len(group2_found) > 0
@@ -936,10 +938,10 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
         # Number must be IMMEDIATELY before Group 2 term (no words in between)
         # IMPORTANT: Find ALL numbers in sentence, take the highest
         digit_patterns = [
-            r"total\s+of\s+(?<![0-9.])(\d+)(?![0-9.])\s+(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)",
-            r"(?<![0-9.])(\d+)(?![0-9.])\s+(?:different\s+)?types?\s+of\s+(?:[\w-]+\s+){0,6}(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)",
-            r"(?<![0-9.])(\d+)(?![0-9.])\s+(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)",
-            r"(?:tested|produced|used|analyzed|evaluated|studied|prepared|examined|knit|knitted|woven)\s+(?<![0-9.])(\d+)(?![0-9.])\s+(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)",
+            r"total\s+of\s+(?<![0-9.])(\d+)(?![0-9.])\s+(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?|jerseys?)",
+            r"(?<![0-9.])(\d+)(?![0-9.])\s+(?:different\s+)?types?\s+of\s+(?:[\w-]+\s+){0,6}(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?|jerseys?)",
+            r"(?<![0-9.])(\d+)(?![0-9.])\s+(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?|jerseys?)",
+            r"(?:tested|produced|used|analyzed|evaluated|studied|prepared|examined|knit|knitted|woven)\s+(?<![0-9.])(\d+)(?![0-9.])\s+(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?|jerseys?)",
         ]
 
         # Find ALL matching numbers in this sentence (don't break early)
@@ -1000,9 +1002,9 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
         # ONLY exception: "X different types of [Group2]" or "X types of [Group2]"
         # IMPORTANT: Find ALL numbers in sentence, take the highest
         word_patterns = [
-            rf"\b({word_pattern_check})\b\s+(?:different\s+)?types?\s+of\s+(?:[\w-]+\s+){{0,6}}(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)",
-            rf"\b({word_pattern_check})\b\s+(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)",
-            rf"\b({word_pattern_check})\b\s+(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)\s+of",
+            rf"\b({word_pattern_check})\b\s+(?:different\s+)?types?\s+of\s+(?:[\w-]+\s+){{0,6}}(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?|jerseys?)",
+            rf"\b({word_pattern_check})\b\s+(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?|jerseys?)",
+            rf"\b({word_pattern_check})\b\s+(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?|jerseys?)\s+of",
         ]
 
         # Find ALL matching numbers in this sentence (don't break early)
@@ -1042,7 +1044,7 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
         # IMPORTANT: Find ALL numbers in sentence, take the highest
         roman_pattern = "|".join(roman_to_num.keys())
         roman_patterns = [
-            rf"(?:^|\s)({roman_pattern})(?:\s+)(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?)\b",
+            rf"(?:^|\s)({roman_pattern})(?:\s+)(?:fabrics?|materials?|samples?|variants?|garments?|textiles?|specimens?|jerseys?)\b",
         ]
 
         # Find ALL matching numbers in this sentence (don't break early)
