@@ -24,18 +24,23 @@ from openpyxl.utils import get_column_letter
 # Fix for albumentations v1.4.0+ compatibility with nougat-ocr
 try:
     import albumentations as alb
+    from albumentations.augmentations.transforms import ImageCompression as _OriginalImageCompression
 
     # Monkeypatch ImageCompression to accept old API (quality as first positional arg)
-    _original_ImageCompression = alb.ImageCompression
-    class ImageCompression(_original_ImageCompression):
+    class ImageCompression(_OriginalImageCompression):
         def __init__(self, quality_or_type=95, p=0.5, **kwargs):
-            # If first arg is int, treat as quality bounds and default to 'jpeg'
+            # If first arg is int, treat as quality bounds and default to JPEG
             if isinstance(quality_or_type, int):
-                # New API: quality_lower, quality_upper, compression_type
-                super().__init__(quality_lower=quality_or_type, quality_upper=quality_or_type,
-                               compression_type='jpeg', p=p, **kwargs)
+                # New API: quality_lower, quality_upper, compression_type (as enum)
+                super().__init__(
+                    quality_lower=quality_or_type,
+                    quality_upper=quality_or_type,
+                    compression_type=_OriginalImageCompression.ImageCompressionType.JPEG,
+                    p=p,
+                    **kwargs
+                )
             else:
-                # If first arg is string, treat as compression_type (new API call)
+                # If first arg is already the enum or string, pass through
                 super().__init__(compression_type=quality_or_type, p=p, **kwargs)
     alb.ImageCompression = ImageCompression
 
