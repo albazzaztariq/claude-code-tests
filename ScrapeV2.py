@@ -43,17 +43,10 @@ try:
     # Monkeypatch GaussNoise to accept old API (std as single int)
     _original_GaussNoise = alb.GaussNoise
     class GaussNoise(_original_GaussNoise):
-        def __init__(self, std_or_limit=20, p=0.5, **kwargs):
-            # If first arg is int/float, convert to std_range tuple
-            # Old API used 0-255 scale, new API uses 0-1 normalized scale
-            if isinstance(std_or_limit, (int, float)):
-                # Normalize: divide by 255 to convert to 0-1 range
-                normalized = std_or_limit / 255.0
-                super().__init__(std_range=(0, normalized), p=p, **kwargs)
-            else:
-                # If already a tuple, normalize both values
-                normalized = (std_or_limit[0] / 255.0, std_or_limit[1] / 255.0)
-                super().__init__(std_range=normalized, p=p, **kwargs)
+        def __init__(self, *args, p=0.5, **kwargs):
+            # Strip old positional args, just use defaults
+            kwargs.pop('std_range', None)
+            super().__init__(p=p)
     alb.GaussNoise = GaussNoise
 
 except ImportError:
