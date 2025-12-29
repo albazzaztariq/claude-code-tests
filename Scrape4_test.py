@@ -334,11 +334,26 @@ def extract_table_with_nougat(pdf_path: str, table_number: int):
             with torch.no_grad():
                 output = model.inference(image_tensors=image_tensor)
 
-            if output and output[0]:
-                predictions.append(output[0])
-                print(f"    Page {page_idx + 1}: {len(output[0])} chars extracted")
+            # Handle different output formats from Nougat
+            text = None
+            if output is not None:
+                if isinstance(output, str):
+                    text = output
+                elif isinstance(output, dict):
+                    # Try common dict keys
+                    text = output.get('predictions', output.get('text', output.get('generated_text', '')))
+                    if isinstance(text, list) and len(text) > 0:
+                        text = text[0]
+                elif isinstance(output, (list, tuple)) and len(output) > 0:
+                    text = output[0]
+                else:
+                    print(f"    DEBUG: Unknown output type: {type(output)}, value: {str(output)[:200]}")
+
+            if text and len(str(text)) > 10:
+                predictions.append(str(text))
+                print(f"    Page {page_idx + 1}: {len(str(text))} chars extracted")
             else:
-                print(f"    Page {page_idx + 1}: no output")
+                print(f"    Page {page_idx + 1}: no output (got: {type(output)})")
 
         doc.close()
 
