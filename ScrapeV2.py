@@ -374,16 +374,20 @@ def extract_study_metadata(pdf_path: str, full_text: str) -> Dict[str, Any]:
     """Extract study-level metadata using regex and LLM."""
     metadata = {}
 
-    # Use existing functions for basic metadata
+    # Use existing PROVEN functions for basic metadata (from Scrape4_test.py)
     from Scrape4_test import (
         extract_title_with_formatting,
         extract_year_from_text,
         extract_first_author_with_formatting,
+        extract_sample_count_from_table,  # Use the proven regex logic!
     )
 
     metadata["Study Title"] = extract_title_with_formatting(pdf_path) or "Not found"
     metadata["Year of Publish"] = extract_year_from_text(full_text) or "Not found"
     metadata["Name of First-Listed Author"] = extract_first_author_with_formatting(pdf_path) or "Not found"
+
+    # Use the PROVEN regex-based sample count extraction
+    metadata["Number of Sample Fabrics"] = extract_sample_count_from_table(pdf_path, full_text)
 
     # Use LLM to extract testing standards used
     standards_prompt = f"""
@@ -403,9 +407,10 @@ TEXT (first 8000 chars):
     return metadata
 
 
-def extract_samples_info(full_text: str) -> List[Dict[str, Any]]:
+def extract_samples_info(full_text: str, expected_count: int) -> List[Dict[str, Any]]:
     """
     Use LLM to identify all samples in the study and their basic properties.
+    Uses the expected_count (from proven regex logic) to guide the LLM.
     Returns a list of sample dictionaries.
     """
 
@@ -417,18 +422,21 @@ IMPORTANT RULES:
 2. Each sample should have a unique ID from the paper (e.g., "S1", "Sample A", "Fabric 1")
 3. If samples aren't explicitly named, use "Sample 1", "Sample 2", etc.
 4. Determine the number of layers for each sample (1 = monolayer, 2 = bilayer, 3 = trilayer)
-5. Extract material composition for each layer"""
+5. Extract material composition for each layer
+6. You MUST return EXACTLY the number of samples specified - no more, no less."""
 
     extraction_prompt = f"""
 Analyze this textile research paper and identify ALL fabric samples tested.
 
+IMPORTANT: There are EXACTLY {expected_count} fabric samples in this study. You must identify all {expected_count} of them.
+
 For each sample, extract:
-1. sample_id: The name/ID used in the paper
-2. num_layers: Number of fabric layers (1, 2, or 3)
+1. sample_id: The name/ID used in the paper (look in tables for sample names like S1, F1, Sample 1, Fabric A, etc.)
+2. num_layers: Number of fabric layers (1 = monolayer, 2 = bilayer, 3 = trilayer)
 3. materials: Dictionary with layer materials, e.g., {{"inner": "cotton", "outer": "polyester"}} or {{"monolayer": "cotton/polyester blend"}}
 4. structure: Dictionary with layer structures, e.g., {{"inner": "woven", "outer": "knit"}} or {{"monolayer": "woven"}}
 
-Return as a JSON array. Example:
+Return as a JSON array with EXACTLY {expected_count} samples. Example:
 [
   {{
     "sample_id": "S1",
@@ -447,7 +455,7 @@ Return as a JSON array. Example:
 PAPER TEXT:
 {full_text[:15000]}
 
-Return ONLY the JSON array, no explanation:"""
+Return ONLY the JSON array with exactly {expected_count} samples, no explanation:"""
 
     response = call_llm(extraction_prompt, system_prompt)
 
@@ -457,13 +465,22 @@ Return ONLY the JSON array, no explanation:"""
         json_match = re.search(r'\[[\s\S]*\]', response)
         if json_match:
             samples = json.loads(json_match.group())
+            # Verify we got the expected count
+            if len(samples) != expected_count:
+                print(f"  Warning: LLM returned {len(samples)} samples, expected {expected_count}")
+                # If LLM returned wrong count, create placeholder samples
+                if len(samples) < expected_count:
+                    for i in range(len(samples) + 1, expected_count + 1):
+                        samples.append({"sample_id": f"Sample {i}", "num_layers": 1, "materials": {}, "structure": {}})
+                elif len(samples) > expected_count:
+                    samples = samples[:expected_count]
             return samples
     except json.JSONDecodeError as e:
         print(f"Failed to parse samples JSON: {e}")
         print(f"Response was: {response[:500]}")
 
-    # Fallback: return single unknown sample
-    return [{"sample_id": "Sample 1", "num_layers": 1, "materials": {}, "structure": {}}]
+    # Fallback: return expected number of placeholder samples
+    return [{"sample_id": f"Sample {i}", "num_layers": 1, "materials": {}, "structure": {}} for i in range(1, expected_count + 1)]
 
 
 def extract_metrics_for_sample(full_text: str, sample: Dict[str, Any], all_headers: List[str]) -> Dict[str, Any]:
@@ -572,10 +589,11 @@ def process_single_pdf(pdf_path: str) -> List[Dict[str, Any]]:
     for key, value in study_metadata.items():
         print(f"    {key}: {value}")
 
-    # Identify samples
-    print("\n  Identifying samples...")
-    samples = extract_samples_info(full_text)
-    print(f"    Found {len(samples)} samples")
+    # Identify samples using the PROVEN sample count
+    sample_count = study_metadata.get("Number of Sample Fabrics", 1)
+    print(f"\n  Identifying {sample_count} samples (from proven regex logic)...")
+    samples = extract_samples_info(full_text, sample_count)
+    print(f"    LLM identified {len(samples)} samples")
     for sample in samples:
         print(f"      - {sample.get('sample_id')}: {sample.get('num_layers')} layer(s)")
 
