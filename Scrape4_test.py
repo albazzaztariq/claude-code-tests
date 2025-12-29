@@ -334,7 +334,16 @@ def extract_table_with_azure(pdf_path: str, table_number: int):
         img_buffer.seek(0)
         compressed_size = len(img_buffer.getvalue())
 
+        # Save image to disk for debugging
+        pdf_dir = Path(pdf_path).parent
+        pdf_name = Path(pdf_path).stem
+        debug_image_path = pdf_dir / f"{pdf_name}_table_{table_number}_extracted.jpg"
+        with open(debug_image_path, 'wb') as f:
+            f.write(img_buffer.getvalue())
+        img_buffer.seek(0)  # Reset buffer position after writing
+
         print(f"    Table image extracted: {compressed_size / 1024:.1f} KB")
+        print(f"    Saved to: {debug_image_path}")
         doc.close()
 
         # Send compressed image to Azure
