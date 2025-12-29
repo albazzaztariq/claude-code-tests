@@ -309,47 +309,102 @@ def extract_table_with_azure(pdf_path: str, table_number: int):
 
         print(f"    Camelot accuracy: {accuracy:.1f}%, Rows: {len(df)}, Cols: {len(df.columns)}")
 
-        # Reject false positives: need HIGH accuracy AND multiple rows/cols
-        # Require at least 3x3 table (3 rows, 3 columns) to ensure it's a real table
+        camelot_failed = False
+
+        # Check if Camelot failed to properly detect the table
         if accuracy < 60 or len(df) < 3 or len(df.columns) < 3:
-            print(f"    ✗ Low accuracy or insufficient table structure - likely not a real table")
-            print(f"    Skipping (Camelot false positive)")
-            return None
-
-        # Check if table has actual data (at least some cells with numbers)
-        # Real tables have numeric data, not just text or empty cells
-        all_values = df.values.flatten()
-        numeric_cells = sum(1 for val in all_values if str(val).strip() and any(c.isdigit() for c in str(val)))
-        total_cells = len(all_values)
-        numeric_ratio = numeric_cells / total_cells if total_cells > 0 else 0
-
-        print(f"    Table has {numeric_cells}/{total_cells} cells with numbers ({numeric_ratio*100:.1f}%)")
-
-        # Require at least 20% of cells to have numeric content
-        if numeric_ratio < 0.2:
-            print(f"    ✗ Too few numeric cells - likely not a data table")
-            print(f"    Skipping (text block or figure, not a data table)")
-            return None
-
-        print(f"    ✓ Verified as real data table")
-
-        page_num = camelot_table.page - 1  # Camelot uses 1-indexed, fitz uses 0-indexed
-
-        # Get table bounding box from Camelot
-        # Camelot bbox format: (x1, y1, x2, y2) in PDF coordinates
-        table_bbox = camelot_table._bbox if hasattr(camelot_table, '_bbox') else None
-
-        # Open PDF with PyMuPDF to extract table area as image
-        doc = fitz.open(pdf_path)
-        page = doc[page_num]
-
-        # If we have bbox, use it; otherwise use full page
-        if table_bbox:
-            # Convert Camelot bbox to fitz rect
-            rect = fitz.Rect(table_bbox)
+            print(f"    ⚠ Camelot has low accuracy or insufficient table structure")
+            camelot_failed = True
         else:
-            # Use full page
-            rect = page.rect
+            # Check if table has actual data (at least some cells with numbers)
+            # Real tables have numeric data, not just text or empty cells
+            all_values = df.values.flatten()
+            numeric_cells = sum(1 for val in all_values if str(val).strip() and any(c.isdigit() for c in str(val)))
+            total_cells = len(all_values)
+            numeric_ratio = numeric_cells / total_cells if total_cells > 0 else 0
+
+            print(f"    Table has {numeric_cells}/{total_cells} cells with numbers ({numeric_ratio*100:.1f}%)")
+
+            # Require at least 20% of cells to have numeric content
+            if numeric_ratio < 0.2:
+                print(f"    ⚠ Too few numeric cells")
+                camelot_failed = True
+
+        # If Camelot failed, try searching for "Table X" in the PDF and extract that area
+        if camelot_failed:
+            print(f"    → Falling back to text search for 'Table {table_number}'")
+            doc = fitz.open(pdf_path)
+
+            # Search all pages for "Table {table_number}"
+            table_found = False
+            for page_idx in range(len(doc)):
+                page = doc[page_idx]
+                text = page.get_text()
+
+                # Look for "Table X" in the text
+                if re.search(rf'\bTable\s+{table_number}\b', text, re.IGNORECASE):
+                    print(f"    ✓ Found 'Table {table_number}' on page {page_idx + 1}")
+
+                    # Search for the text location to get approximate position
+                    search_results = page.search_for(f"Table {table_number}")
+
+                    if search_results:
+                        # Get the position of "Table X" text
+                        table_caption_rect = search_results[0]
+
+                        # Extract a large area below the caption (likely contains the table)
+                        # Take from caption down to 60% of page height
+                        page_rect = page.rect
+                        extraction_rect = fitz.Rect(
+                            page_rect.x0,  # Left edge of page
+                            table_caption_rect.y0,  # Start at table caption
+                            page_rect.x1,  # Right edge of page
+                            min(table_caption_rect.y0 + 400, page_rect.y1)  # 400 points below or bottom of page
+                        )
+
+                        rect = extraction_rect
+                        page_num = page_idx
+                        table_found = True
+                        print(f"    → Extracting area around 'Table {table_number}' caption")
+                        break
+
+            doc.close()
+
+            if not table_found:
+                print(f"    ✗ Could not find 'Table {table_number}' text in PDF")
+                return None
+
+            # Reopen for extraction
+            doc = fitz.open(pdf_path)
+            page = doc[page_num]
+        else:
+            print(f"    ✓ Verified as real data table")
+            page_num = camelot_table.page - 1  # Camelot uses 1-indexed, fitz uses 0-indexed
+
+            # Get table bounding box from Camelot
+            # Camelot bbox format: (x1, y1, x2, y2) in PDF coordinates
+            table_bbox = camelot_table._bbox if hasattr(camelot_table, '_bbox') else None
+
+            # Open PDF with PyMuPDF to extract table area as image
+            doc = fitz.open(pdf_path)
+            page = doc[page_num]
+
+            # If we have bbox, use it; otherwise use full page
+            if table_bbox:
+                # Convert Camelot bbox to fitz rect
+                rect = fitz.Rect(table_bbox)
+            else:
+                # Use full page
+                rect = page.rect
+
+        # Verify the extracted area contains "Table {table_number}" text
+        text_in_area = page.get_text("text", clip=rect)
+        if not re.search(rf'\bTable\s+{table_number}\b', text_in_area, re.IGNORECASE):
+            print(f"    ✗ Extracted area doesn't contain 'Table {table_number}' - wrong region")
+            doc.close()
+            return None
+
+        print(f"    ✓ Verified area contains 'Table {table_number}' text")
 
         # Render the table area as image with zoom for quality
         zoom = 2.0  # 2x resolution
