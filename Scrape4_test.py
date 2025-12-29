@@ -551,6 +551,7 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
     ]
 
     table_fallback_count = None
+    extracted_tables = set()  # Track which tables we've already extracted
 
     for i, sentence in enumerate(sentences):
         sentence_lower = sentence.lower()
@@ -572,6 +573,12 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
 
         if has_group2 and table_match:
             table_num = int(table_match.group(1))
+
+            # Skip if we've already extracted this table
+            if table_num in extracted_tables:
+                print(f"\n    ⊗ Skipping Table {table_num} (already extracted)")
+                continue
+
             print(f"\n    ✓ Found Group 2 term + Table {table_num}")
             print(f"    Sentence {i}: '{sentence.strip()[:300]}...'")
             group2_terms_list = ", ".join(group2_found_here)
@@ -580,6 +587,8 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
 
             # Try to extract and count rows from the specified table
             table_count = extract_table_row_count(pdf_path, table_num)
+            extracted_tables.add(table_num)  # Mark this table as extracted
+
             if table_count and not table_fallback_count:
                 table_fallback_count = table_count
                 print(f"    ✓ Extracted {table_count} rows from Table {table_num} (stored as fallback)")
