@@ -661,9 +661,15 @@ def process_single_pdf(pdf_path: str) -> List[Dict[str, Any]]:
 
     # Build output rows - just map extracted data to schema (no more LLM calls)
     output_rows = []
+    print("\n  === EXTRACTED DATA ===")
     for idx, sample in enumerate(samples):
         sample_id = sample.get("sample_id", f"Sample {idx+1}")
-        print(f"    Sample {idx+1}: {sample_id}")
+        print(f"\n  Sample {idx+1}: {sample_id}")
+
+        # Show raw extracted data
+        for key, value in sample.items():
+            if key != "sample_id" and value is not None:
+                print(f"    {key}: {value}")
 
         # Start with study metadata
         row = {
@@ -677,12 +683,9 @@ def process_single_pdf(pdf_path: str) -> List[Dict[str, Any]]:
         mapped_metrics = map_extracted_to_schema(sample)
         row.update(mapped_metrics)
 
-        # Count extracted metrics
-        metric_count = len([k for k in mapped_metrics.keys() if k not in ["sample_id", "num_layers"]])
-        print(f"      → {metric_count} metrics mapped to schema")
-
         output_rows.append(row)
 
+    print("\n  === END EXTRACTED DATA ===")
     return output_rows
 
 
