@@ -336,55 +336,15 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
     # This handles both "word. Next" and "word.\nNext" patterns
     sentences = re.split(r'[.!?](?=\s+[A-Z])', search_text)
     print(f"    Split text into {len(sentences)} sentences")
-    
+
     # ==================================================================
-    # PRIORITY 0: SAMPLE NUMBER COLUMN - SOURCE OF TRUTH
+    # PRIORITY 0: SAMPLE NUMBER COLUMN - DISABLED (too many false positives)
     # ==================================================================
-    print("\n    PRIORITY 0: Looking for tables with Sample Number columns...")
-    print("    Searching for column headers: 'Sample No.', 'S. No', 'S. Number', 'Sample Number'")
+    # DISABLED - Camelot extracts tables incorrectly, causing false matches
+    # Using other detection methods instead
+    print("\n    PRIORITY 0: Sample number column detection DISABLED")
+    print("    (Too many false positives with Camelot table extraction)")
 
-    sample_column_headers = [
-        "sample no.", "sample no", "sample number",
-        "s. no.", "s. no", "s.no.", "s.no",
-        "s. number"
-    ]
-
-    # Try to find a table with sample number column header
-    try:
-        # Try CAMELOT
-        tables_lattice = camelot.read_pdf(pdf_path, pages="all", flavor="lattice")
-        tables_stream = camelot.read_pdf(pdf_path, pages="all", flavor="stream")
-        all_tables = list(tables_lattice) + list(tables_stream)
-
-        for idx, table in enumerate(all_tables):
-            df = table.df
-            if len(df) == 0:
-                continue
-
-            # Check if any column header matches our sample number patterns
-            # Use STRICT matching: header must START with pattern or be exact match
-            header_row = df.iloc[0].astype(str).str.lower().str.strip()
-            for col_idx, header in enumerate(header_row):
-                # Check if header starts with any of our patterns OR is exact match
-                if any(header.startswith(sample_header) or header == sample_header for sample_header in sample_column_headers):
-                    rows = len(df) - 1  # Exclude header
-                    print(f"\n    ✓✓✓ FOUND SAMPLE NUMBER COLUMN ✓✓✓")
-                    print(f"    Table {idx + 1}, Column '{df.iloc[0, col_idx]}' matches sample number pattern")
-                    print(f"    Rows in this table: {rows}")
-                    print(f"    First column values:")
-                    for row_idx, val in enumerate(df.iloc[:, col_idx]):
-                        print(f"      Row {row_idx}: {val}")
-
-                    if rows > 0:
-                        print("\n    ═══════════════════════════════════════════════")
-                        print(f"    DECISION: SAMPLE NUMBER COLUMN = {rows}")
-                        print("    THIS IS THE SOURCE OF TRUTH - RETURNING NOW")
-                        print("    ═══════════════════════════════════════════════\n")
-                        return rows
-    except Exception as e:
-        print(f"    ERROR searching for sample number columns: {e}")
-
-    print("    Result: NO sample number column found")
 
     # Number word to digit mapping - EVERY NUMBER 1-50 (lowercase only)
     # We convert sentences to lowercase before searching, so only lowercase keys needed
