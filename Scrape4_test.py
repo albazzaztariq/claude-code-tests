@@ -491,12 +491,13 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
     # ===== TABLE FALLBACK: Group 2 term + "table" =====
     # If a sentence has a Group 2 term + "table", parse the table number and store as fallback
     # Don't return immediately - keep looking for explicit counts
+    # RESTRICTED to 6 specific terms to avoid false triggers
     print("\n    TABLE FALLBACK: Checking for Group 2 term + 'table'...")
 
     group2_words = [
-        "fabric", "fabrics", "material", "materials", "variant", "variants",
-        "garment", "garments", "sample", "samples", "textile", "textiles",
-        "specimen", "specimens",
+        "fabric", "fabrics",
+        "garment", "garments",
+        "sample", "samples",
     ]
 
     table_fallback_count = None
