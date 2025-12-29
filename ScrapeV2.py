@@ -20,37 +20,7 @@ from openpyxl import Workbook
 from openpyxl.styles import Font, Alignment, PatternFill
 from openpyxl.utils import get_column_letter
 
-# Nougat OCR for table extraction
-# Fix for albumentations v1.4.0+ compatibility with nougat-ocr
-# COPIED EXACTLY FROM SCRAPE4_TEST.PY
-try:
-    import albumentations as alb
-
-    # Monkeypatch ImageCompression to accept old API (quality as first positional arg)
-    _original_ImageCompression = alb.ImageCompression
-    class ImageCompression(_original_ImageCompression):
-        def __init__(self, quality_or_type=95, p=0.5, **kwargs):
-            # If first arg is int, treat as quality bounds and default to 'jpeg'
-            if isinstance(quality_or_type, int):
-                # New API: quality_lower, quality_upper, compression_type
-                super().__init__(quality_lower=quality_or_type, quality_upper=quality_or_type,
-                               compression_type=_original_ImageCompression.ImageCompressionType.JPEG, p=p, **kwargs)
-            else:
-                # If first arg is string, treat as compression_type (new API call)
-                super().__init__(compression_type=quality_or_type, p=p, **kwargs)
-    alb.ImageCompression = ImageCompression
-
-    # Monkeypatch GaussNoise to accept old API (std as single int)
-    _original_GaussNoise = alb.GaussNoise
-    class GaussNoise(_original_GaussNoise):
-        def __init__(self, *args, p=0.5, **kwargs):
-            # Strip old positional args, just use defaults
-            kwargs.pop('std_range', None)
-            super().__init__(p=p)
-    alb.GaussNoise = GaussNoise
-
-except ImportError:
-    pass  # albumentations not installed, skip patch
+# No albumentations patches needed for 1.3.1
 
 try:
     from nougat import NougatModel
