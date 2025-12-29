@@ -24,44 +24,34 @@ from openpyxl.utils import get_column_letter
 # Fix for albumentations v1.4.0+ compatibility with nougat-ocr
 try:
     import albumentations as alb
-    from albumentations.augmentations.transforms import ImageCompression as _OriginalImageCompression
+    from albumentations.augmentations.transforms import ImageCompression as _original_ImageCompression
 
-    # Monkeypatch ImageCompression to accept old API (quality as first positional arg)
-    class ImageCompression(_OriginalImageCompression):
+    class ImageCompression(_original_ImageCompression):
         def __init__(self, quality_or_type=95, p=0.5, **kwargs):
-            # If first arg is int, treat as quality bounds and default to JPEG
             if isinstance(quality_or_type, int):
-                # New API: quality_lower, quality_upper, compression_type (as enum)
                 super().__init__(
                     quality_lower=quality_or_type,
                     quality_upper=quality_or_type,
-                    compression_type=_OriginalImageCompression.ImageCompressionType.JPEG,
+                    compression_type=_original_ImageCompression.ImageCompressionType.JPEG,
                     p=p,
                     **kwargs
                 )
             else:
-                # If first arg is already the enum or string, pass through
                 super().__init__(compression_type=quality_or_type, p=p, **kwargs)
     alb.ImageCompression = ImageCompression
 
-    # Monkeypatch GaussNoise to accept old API (std as single int)
     _original_GaussNoise = alb.GaussNoise
     class GaussNoise(_original_GaussNoise):
-        def __init__(self, std_or_limit=20, p=0.5, **kwargs):
-            # If first arg is int/float, convert to std_range tuple
-            # Old API used 0-255 scale, new API uses 0-1 normalized scale
-            if isinstance(std_or_limit, (int, float)):
-                # Normalize: divide by 255 to convert to 0-1 range
-                normalized = std_or_limit / 255.0
-                super().__init__(std_range=(0, normalized), p=p, **kwargs)
+        def __init__(self, *args, **kwargs):
+            if args and isinstance(args[0], (int, float)):
+                kwargs.setdefault('p', 0.5 if len(args) < 2 else args[1])
+                super().__init__(**kwargs)
             else:
-                # If already a tuple, normalize both values
-                normalized = (std_or_limit[0] / 255.0, std_or_limit[1] / 255.0)
-                super().__init__(std_range=normalized, p=p, **kwargs)
+                super().__init__(*args, **kwargs)
     alb.GaussNoise = GaussNoise
 
 except ImportError:
-    pass  # albumentations not installed, skip patch
+    pass
 
 try:
     from nougat import NougatModel
