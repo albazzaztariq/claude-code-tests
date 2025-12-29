@@ -34,7 +34,7 @@ try:
             if isinstance(quality_or_type, int):
                 # New API: quality_lower, quality_upper, compression_type
                 super().__init__(quality_lower=quality_or_type, quality_upper=quality_or_type,
-                               compression_type='jpeg', p=p, **kwargs)
+                               compression_type=_original_ImageCompression.ImageCompressionType.JPEG, p=p, **kwargs)
             else:
                 # If first arg is string, treat as compression_type (new API call)
                 super().__init__(compression_type=quality_or_type, p=p, **kwargs)
