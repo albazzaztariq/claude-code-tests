@@ -215,15 +215,32 @@ def extract_table_row_count(pdf_path: str, table_number: int) -> int:
     """
     Extract row count from a specific table number in the PDF.
     Returns the number of data rows (excluding header) if found, None otherwise.
-    Uses ONLY Google Cloud Vision API for table extraction.
+    Tries: Camelot, Google Vision API (for comparison).
     """
     print(f"\n    --- Extracting Table {table_number} ---")
 
     best_count = None
     best_method = None
 
-    # ONLY USING GOOGLE CLOUD VISION API
-    # Camelot and PDFPlumber disabled due to poor performance
+    # Try CAMELOT
+    print(f"\n    Trying CAMELOT...")
+    try:
+        tables_lattice = camelot.read_pdf(pdf_path, pages="all", flavor="lattice")
+        tables_stream = camelot.read_pdf(pdf_path, pages="all", flavor="stream")
+        all_camelot_tables = list(tables_lattice) + list(tables_stream)
+
+        if table_number <= len(all_camelot_tables):
+            table = all_camelot_tables[table_number - 1]
+            df = table.df
+            rows = len(df) - 1  # Exclude header
+            print(f"    Camelot: Found Table {table_number} with {rows} data rows")
+            if rows > 0 and not best_count:
+                best_count = rows
+                best_method = "Camelot"
+        else:
+            print(f"    Camelot: Table {table_number} not found (only {len(all_camelot_tables)} tables)")
+    except Exception as e:
+        print(f"    Camelot ERROR: {e}")
 
     # Try GOOGLE CLOUD VISION API
     print(f"\n    Trying GOOGLE CLOUD VISION API...")
@@ -470,6 +487,16 @@ def extract_sample_count_from_table(pdf_path: str, full_text: str) -> int:
 
     for i, sentence in enumerate(sentences):
         sentence_lower = sentence.lower()
+
+        # OPTIMIZATION: Only process sentences that contain numbers
+        # Skip sentences without any numbers (arabic, word, or roman)
+        has_any_number = (
+            re.search(r'\d', sentence_lower) or  # Arabic numerals
+            re.search(rf'\b({word_pattern_check})\b', sentence_lower) or  # Word numbers
+            re.search(rf'\b({"|".join(roman_to_num.keys())})\b', sentence_lower)  # Roman numerals
+        )
+        if not has_any_number:
+            continue  # Skip sentences without any numbers
 
         # Check if sentence has a Group 2 term AND "table"
         group2_found_here = [word for word in group2_words if word in sentence_lower]
