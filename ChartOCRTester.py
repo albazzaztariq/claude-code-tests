@@ -211,7 +211,7 @@ def test_paddleocr(pdf_path: str, page_num: int) -> Dict[str, Any]:
         img_array = np.array(img)
 
         # Test with threshold=0.2 (lower to catch combo chart+table elements)
-        ld = LayoutDetection(threshold=0.2)
+        ld = LayoutDetection(threshold=0.2, use_gpu=True)
         result = ld.predict(img_array)
         boxes = result[0]['boxes'] if result else []
 
@@ -809,12 +809,12 @@ def run_comprehensive_paddleocr_test(save_images: bool = True, save_json: bool =
     print("=" * 80)
 
     # Initialize models once - two thresholds for multi-pass
-    print("\nInitializing PaddleOCR models...")
+    print("\nInitializing PaddleOCR models (GPU + CPU)...")
     start_init = time.time()
-    ld_high = LayoutDetection(threshold=0.4)  # High confidence pass
-    ld_low = LayoutDetection(threshold=0.3)   # Rescue pass for tables/charts
-    ocr = PaddleOCR(lang='en')
-    print(f"Models loaded in {time.time() - start_init:.1f}s")
+    ld_high = LayoutDetection(threshold=0.4, use_gpu=True)  # High confidence pass
+    ld_low = LayoutDetection(threshold=0.3, use_gpu=True)   # Rescue pass for tables/charts
+    ocr = PaddleOCR(lang='en', use_gpu=True, use_angle_cls=True)
+    print(f"Models loaded in {time.time() - start_init:.1f}s (GPU enabled)")
 
     all_results = {}
     total_elements = {"table": 0, "chart": 0, "figure": 0, "image": 0}

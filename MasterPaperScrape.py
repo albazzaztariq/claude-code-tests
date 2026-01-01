@@ -23,10 +23,17 @@ import re
 import html
 import time
 import os
+import sys
+import threading
 from datetime import datetime
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import xml.etree.ElementTree as ET
+
+# Add scihub_downloader to path for non-OA paper downloads
+SCIHUB_PATH = Path(__file__).parent / "scihub_downloader" / "scihub"
+if SCIHUB_PATH.exists():
+    sys.path.insert(0, str(SCIHUB_PATH))
 
 # =============================================================================
 # CONFIGURATION
@@ -836,6 +843,95 @@ def download_oa_papers(papers: list[dict], download_dir: Path, csv_filepath: Pat
     return downloaded
 
 
+def download_scihub_paper(doi: str, filepath: Path) -> bool:
+    """Download a paper from SciHub using DOI."""
+    try:
+        from scihub import SciHub
+        sh = SciHub()
+        result = sh.fetch(doi)
+        if result and 'pdf' in result and not result.get('err'):
+            with open(filepath, 'wb') as f:
+                f.write(result['pdf'])
+            return True
+        return False
+    except Exception as e:
+        return False
+
+
+def download_non_oa_papers(papers: list[dict], download_dir: Path, csv_filepath: Path, count: int, progress_lock: threading.Lock = None) -> int:
+    """Download non-OA papers via SciHub and update CSV status."""
+    # Filter papers with DOI but no OA URL
+    pending = [p for p in papers if p.get("status", "pending") == "pending" and p.get("doi") and not p.get("pdf_url")]
+
+    print(f"\n  [SciHub] Non-OA papers with DOI pending: {len(pending):,}")
+
+    if not pending:
+        print("  [SciHub] No papers to download.")
+        return 0
+
+    to_download = pending[:count]
+    print(f"  [SciHub] Attempting {len(to_download)} papers via Sci-Hub...")
+
+    download_dir.mkdir(parents=True, exist_ok=True)
+    downloaded = 0
+
+    for i, paper in enumerate(to_download, 1):
+        study_num = paper.get("study_number", i)
+        doi = paper.get("doi", "")
+        title_slug = re.sub(r'[^\w\s-]', '', paper.get("title", "")[:50]).strip().replace(' ', '_')
+        filename = f"{study_num:04d}_{title_slug}.pdf"
+        filepath = download_dir / filename
+
+        print(f"  [SciHub] [{i}/{len(to_download)}] Study #{study_num} (DOI: {doi[:30]}...)...", end=" ")
+
+        if download_scihub_paper(doi, filepath):
+            paper["status"] = "downloaded"
+            if progress_lock:
+                with progress_lock:
+                    update_paper_status_in_excel(csv_filepath, [study_num], "downloaded")
+            else:
+                update_paper_status_in_excel(csv_filepath, [study_num], "downloaded")
+            downloaded += 1
+            print("OK")
+        else:
+            print("FAILED")
+
+        # Rate limit to avoid captchas
+        time.sleep(1)
+
+    print(f"\n  [SciHub] Downloaded: {downloaded}/{len(to_download)}")
+    return downloaded
+
+
+def parallel_download_all(oa_papers: list[dict], non_oa_papers: list[dict],
+                          download_dir: Path, csv_filepath: Path,
+                          oa_count: int, non_oa_count: int) -> tuple[int, int]:
+    """Download OA and non-OA papers in parallel threads."""
+    progress_lock = threading.Lock()
+    oa_result = [0]
+    non_oa_result = [0]
+
+    def download_oa_thread():
+        oa_result[0] = download_oa_papers(oa_papers, download_dir, csv_filepath, oa_count)
+
+    def download_non_oa_thread():
+        non_oa_result[0] = download_non_oa_papers(non_oa_papers, download_dir, csv_filepath, non_oa_count, progress_lock)
+
+    # Start both threads
+    oa_thread = threading.Thread(target=download_oa_thread, name="OA-Downloader")
+    non_oa_thread = threading.Thread(target=download_non_oa_thread, name="SciHub-Downloader")
+
+    print("\n  Starting parallel download (OA + SciHub)...")
+    oa_thread.start()
+    non_oa_thread.start()
+
+    # Wait for both to complete
+    oa_thread.join()
+    non_oa_thread.join()
+
+    return oa_result[0], non_oa_result[0]
+
+
 # =============================================================================
 # FULL-TEXT SEARCH
 # =============================================================================
@@ -1208,40 +1304,73 @@ def main():
     print(f"{'='*60}")
     save_oa_split_excel(oa_papers, no_oa_papers, csv_path)
 
-    # STEP 7: Download
-    step7_download(oa_papers, csv_path, timestamp_str)
+    # STEP 7: Download (OA + non-OA via SciHub in parallel)
+    step7_download(oa_papers, no_oa_papers, csv_path, timestamp_str)
 
 
-def step7_download(oa_papers: list[dict], csv_path: Path, timestamp_str: str):
-    """Step 7: Download OA papers."""
+def step7_download(oa_papers: list[dict], non_oa_papers: list[dict], csv_path: Path, timestamp_str: str):
+    """Step 7: Download OA papers (direct) and non-OA papers (via SciHub) in parallel."""
     print(f"\n{'='*60}")
-    print("STEP 7: DOWNLOAD OA PAPERS")
+    print("STEP 7: DOWNLOAD PAPERS (OA + SciHub parallel)")
     print(f"{'='*60}")
 
-    pending = [p for p in oa_papers if p.get("status", "pending") == "pending" and p.get("pdf_url")]
-    print(f"\n  OA papers remaining to download: {len(pending):,}")
+    # Count pending for both types
+    oa_pending = [p for p in oa_papers if p.get("status", "pending") == "pending" and p.get("pdf_url")]
+    non_oa_pending = [p for p in non_oa_papers if p.get("status", "pending") == "pending" and p.get("doi") and not p.get("pdf_url")]
 
-    if not pending:
+    print(f"\n  OA papers (direct download): {len(oa_pending):,}")
+    print(f"  Non-OA papers (via SciHub):  {len(non_oa_pending):,}")
+    print(f"  Total pending:               {len(oa_pending) + len(non_oa_pending):,}")
+
+    if not oa_pending and not non_oa_pending:
         print("  No papers to download.")
         return
 
     download_dir = BASE_DIR / f"{timestamp_str} Papers Dump"
 
     while True:
-        print(f"\n  How many papers to download? (max {len(pending)})")
-        try:
-            count = int(input("> ").strip())
-        except ValueError:
-            count = 10
+        # Ask for OA count
+        if oa_pending:
+            print(f"\n  How many OA papers to download? (max {len(oa_pending)}, 0 to skip)")
+            try:
+                oa_count = int(input("  OA > ").strip())
+            except ValueError:
+                oa_count = 10
+        else:
+            oa_count = 0
 
-        downloaded = download_oa_papers(oa_papers, download_dir, csv_path, count)
+        # Ask for non-OA count
+        if non_oa_pending:
+            print(f"\n  How many non-OA papers to download via SciHub? (max {len(non_oa_pending)}, 0 to skip)")
+            try:
+                non_oa_count = int(input("  SciHub > ").strip())
+            except ValueError:
+                non_oa_count = 10
+        else:
+            non_oa_count = 0
 
-        # Update pending count
-        pending = [p for p in oa_papers if p.get("status", "pending") == "pending" and p.get("pdf_url")]
-        print(f"\n  Remaining: {len(pending):,}")
+        if oa_count == 0 and non_oa_count == 0:
+            print("  Skipping downloads.")
+            return
 
-        if not pending:
-            print("  All OA papers downloaded!")
+        # Run parallel downloads
+        oa_downloaded, non_oa_downloaded = parallel_download_all(
+            oa_papers, non_oa_papers, download_dir, csv_path, oa_count, non_oa_count
+        )
+
+        print(f"\n  === BATCH COMPLETE ===")
+        print(f"  OA downloaded:     {oa_downloaded}")
+        print(f"  SciHub downloaded: {non_oa_downloaded}")
+
+        # Update pending counts
+        oa_pending = [p for p in oa_papers if p.get("status", "pending") == "pending" and p.get("pdf_url")]
+        non_oa_pending = [p for p in non_oa_papers if p.get("status", "pending") == "pending" and p.get("doi") and not p.get("pdf_url")]
+
+        print(f"\n  Remaining OA:     {len(oa_pending):,}")
+        print(f"  Remaining SciHub: {len(non_oa_pending):,}")
+
+        if not oa_pending and not non_oa_pending:
+            print("  All papers downloaded!")
             break
 
         cont = input("\n  Continue downloading? (Y/N): ").strip().upper()
