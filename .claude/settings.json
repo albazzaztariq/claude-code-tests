@@ -1,0 +1,36 @@
+{
+    "$schema": "https://json.schemastore.org/claude-code-settings.json",
+    "hooks": {
+        "Stop": [
+            {
+                "matcher": "",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "powershell -Command \"New-BurntToastNotification -Text 'Claude Code', 'Task complete - ready for input'\""
+                    }
+                ]
+            }
+        ],
+        "Notification": [
+            {
+                "matcher": "idle_prompt",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "powershell -Command \"New-BurntToastNotification -Text 'Claude Code', 'Waiting for your input'\""
+                    }
+                ]
+            },
+            {
+                "matcher": "permission_prompt",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "powershell -Command \"New-BurntToastNotification -Text 'Claude Code', 'Permission needed'\""
+                    }
+                ]
+            }
+        ]
+    }
+}
