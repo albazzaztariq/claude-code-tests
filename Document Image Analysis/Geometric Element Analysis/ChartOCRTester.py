@@ -211,7 +211,7 @@ def test_paddleocr(pdf_path: str, page_num: int) -> Dict[str, Any]:
         img_array = np.array(img)
 
         # Test with threshold=0.2 (lower to catch combo chart+table elements)
-        ld = LayoutDetection(threshold=0.2, use_gpu=True)
+        ld = LayoutDetection(threshold=0.2, device="gpu")
         result = ld.predict(img_array)
         boxes = result[0]['boxes'] if result else []
 
@@ -473,11 +473,13 @@ def test_grobid(pdf_path: str, page_num: int) -> Dict[str, Any]:
 
 
 # ================== COMPREHENSIVE TEST FUNCTION ==================
+SKIP_OCR = True  # Skip OCR on elements, just count object types per page
+
 COMPREHENSIVE_TEST_PAGES = {
-    "1.pdf": [1, 7, 9, 11, 13, 14],  # Page 1 for metadata
-    "2.pdf": [4, 5, 7, 8, 9],
+    # "1.pdf": [7, 9, 11, 13, 14],  # Test pages with known chart/fig counts
+    # "2.pdf": [4, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17],
     "3.pdf": [3, 4, 5, 6, 7, 8],
-    "4.pdf": [4, 6, 7, 8, 9],
+    # "4.pdf": [4, 6, 7, 8, 9],
 }
 
 # Crop folder base path
@@ -803,17 +805,23 @@ def run_comprehensive_paddleocr_test(save_images: bool = True, save_json: bool =
     os.environ['DISABLE_MODEL_SOURCE_CHECK'] = 'True'
     from paddleocr import LayoutDetection, PaddleOCR
 
+    # Calculate total pages being tested
+    total_pages = sum(len(pages) for pages in COMPREHENSIVE_TEST_PAGES.values())
+    pdf_list = ", ".join(COMPREHENSIVE_TEST_PAGES.keys())
+
     print("=" * 80)
-    print("COMPREHENSIVE PADDLEOCR TEST - All 21 Pages")
-    print("  Multi-pass detection (0.3 + 0.2) with duplicate removal")
+    print(f"PADDLEOCR LAYOUT DETECTION - {total_pages} Pages")
+    print(f"  PDFs: {pdf_list}")
+    print("  Multi-pass detection (0.4 + 0.25 threshold) with duplicate removal")
+    print("  Render scale: 900 DPI (3x)")
     print("=" * 80)
 
     # Initialize models once - two thresholds for multi-pass
-    print("\nInitializing PaddleOCR models (GPU + CPU)...")
+    print("\nInitializing PaddleOCR models (GPU)...")
     start_init = time.time()
-    ld_high = LayoutDetection(threshold=0.4, use_gpu=True)  # High confidence pass
-    ld_low = LayoutDetection(threshold=0.3, use_gpu=True)   # Rescue pass for tables/charts
-    ocr = PaddleOCR(lang='en', use_gpu=True, use_angle_cls=True)
+    ld_high = LayoutDetection(threshold=0.4, device="gpu")  # High confidence pass
+    ld_low = LayoutDetection(threshold=0.25, device="gpu")  # Rescue pass
+    ocr = PaddleOCR(lang='en', device="gpu")
     print(f"Models loaded in {time.time() - start_init:.1f}s (GPU enabled)")
 
     all_results = {}
@@ -843,9 +851,9 @@ def run_comprehensive_paddleocr_test(save_images: bool = True, save_json: bool =
             print(f"\n  Page {page_num}...")
             start_page = time.time()
 
-            # Render page
+            # Render page at 3x scale (900 DPI)
             page = pdf[page_num - 1]
-            bitmap = page.render(scale=300/72)  # 300 DPI
+            bitmap = page.render(scale=900/72)  # 900 DPI (3x)
             img = bitmap.to_pil()
             img_array = np.array(img)
 
@@ -883,7 +891,23 @@ def run_comprehensive_paddleocr_test(save_images: bool = True, save_json: bool =
             # Track saved element counts per type for naming
             saved_type_counts = {}
 
+            # Progress tracking for ETA
+            num_boxes = len(boxes)
+            element_times = []
+            ocr_start_page = time.time()
+
+            # SKIP_OCR mode: just count elements, no OCR
+            if SKIP_OCR:
+                print(f"    [SKIP_OCR] Counting {num_boxes} elements (no OCR)")
+                pdf_results[page_num] = {
+                    "layout_counts": type_counts,
+                    "elements": [],
+                    "total_time": round(time.time() - start_page, 2),
+                }
+                continue
+
             for i, box in enumerate(boxes):
+                element_start = time.time()
                 label = box['label'].lower()
                 score = box.get('score', 0)
                 coord = box.get('coordinate', [])
@@ -893,6 +917,15 @@ def run_comprehensive_paddleocr_test(save_images: bool = True, save_json: bool =
 
                 x1, y1, x2, y2 = int(coord[0]), int(coord[1]), int(coord[2]), int(coord[3])
                 cropped = img.crop((x1, y1, x2, y2))
+
+                # Progress logging with ETA
+                if element_times:
+                    avg_time = sum(element_times) / len(element_times)
+                    remaining = num_boxes - i
+                    eta = avg_time * remaining
+                    print(f"    [{i+1}/{num_boxes}] {label} (ETA: {eta:.0f}s)", end="\r")
+                else:
+                    print(f"    [{i+1}/{num_boxes}] {label}...", end="\r")
 
                 # Run OCR on element FIRST (before saving)
                 ocr_start = time.time()
@@ -921,6 +954,8 @@ def run_comprehensive_paddleocr_test(save_images: bool = True, save_json: bool =
                     if label == 'figure_title':
                         is_valid, filter_reason = is_valid_figure_title(texts)
                         if not is_valid:
+                            element_times.append(time.time() - element_start)
+                            print(" " * 60, end="\r")
                             print(f"      [{i+1}] {label} ({score:.2f}) - DISCARDED: {filter_reason}")
                             continue  # Skip this element - don't save or add to results
 
@@ -962,9 +997,16 @@ def run_comprehensive_paddleocr_test(save_images: bool = True, save_json: bool =
                     }
                     page_elements.append(element_data)
 
+                    # Track element time for ETA
+                    element_times.append(time.time() - element_start)
+
+                    # Clear progress line and print result
+                    print(" " * 60, end="\r")
                     print(f"      [{i+1}] {label} ({score:.2f}) - {len(texts)} texts ({ocr_time:.1f}s): {text_preview}")
 
                 except Exception as e:
+                    element_times.append(time.time() - element_start)
+                    print(" " * 60, end="\r")
                     print(f"      [{i+1}] {label} - OCR ERROR: {e}")
                     page_elements.append({
                         "index": i + 1,
@@ -989,6 +1031,103 @@ def run_comprehensive_paddleocr_test(save_images: bool = True, save_json: bool =
     for elem_type, count in total_elements.items():
         if count > 0:
             print(f"  - {elem_type}: {count}")
+
+    # ASCII Table Summary - counts per page with Expected vs Actual
+    print("\n" + "=" * 100)
+    print("DETECTION RESULTS BY PAGE (E=Expected, A=Actual)")
+    print("=" * 100)
+
+    # Ground truth - expected counts per page: (pdf, page) -> {table, chart, fig_title}
+    # Based on manual review
+    EXPECTED_COUNTS = {
+        # 1.pdf
+        ("1.pdf", 7):  {"table": 0, "chart": 2, "figure_title": 1},
+        ("1.pdf", 9):  {"table": 0, "chart": 3, "figure_title": 1},
+        ("1.pdf", 11): {"table": 0, "chart": 1, "figure_title": 1},
+        ("1.pdf", 13): {"table": 0, "chart": 0, "figure_title": 1},
+        ("1.pdf", 14): {"table": 0, "chart": 3, "figure_title": 1},
+        # 2.pdf
+        ("2.pdf", 4):  {"table": 1, "chart": 0, "figure_title": 3},
+        ("2.pdf", 7):  {"table": 0, "chart": 1, "figure_title": 1},
+        ("2.pdf", 8):  {"table": 0, "chart": 0, "figure_title": 1},  # quasi-table discardable
+        ("2.pdf", 9):  {"table": 0, "chart": 1, "figure_title": 1},
+        ("2.pdf", 11): {"table": 0, "chart": 1, "figure_title": 1},
+        ("2.pdf", 12): {"table": 0, "chart": 2, "figure_title": 2},
+        ("2.pdf", 13): {"table": 0, "chart": 1, "figure_title": 1},
+        ("2.pdf", 14): {"table": 0, "chart": 2, "figure_title": 2},
+        ("2.pdf", 15): {"table": 0, "chart": 2, "figure_title": 2},
+        ("2.pdf", 16): {"table": 0, "chart": 2, "figure_title": 2},
+        ("2.pdf", 17): {"table": 0, "chart": 2, "figure_title": 2},
+        # 3.pdf
+        ("3.pdf", 3):  {"table": 1, "chart": 0, "figure_title": 1},
+        ("3.pdf", 4):  {"table": 2, "chart": 0, "figure_title": 1},
+        ("3.pdf", 5):  {"table": 2, "chart": 0, "figure_title": 2},
+        ("3.pdf", 6):  {"table": 1, "chart": 2, "figure_title": 3},
+        ("3.pdf", 7):  {"table": 1, "chart": 0, "figure_title": 1},
+        ("3.pdf", 8):  {"table": 1, "chart": 0, "figure_title": 2},
+    }
+
+    # Primary columns with E/A pairs, then monitor columns
+    primary_cols = [("table", "table"), ("chart", "chart"), ("fig_title", "figure_title")]
+    monitor_cols = [("image", "image"), ("formula", "formula")]
+
+    # Print header with E/A sub-columns for primary cols
+    # Use abbreviations: tbl=table, cht=chart, fig=fig_title
+    abbrev = {"table": "tbl", "chart": "cht", "fig_title": "fig"}
+    header = f"{'Page':<10}"
+    for col_name, _ in primary_cols:
+        ab = abbrev[col_name]
+        header += f"{ab+'E':<6}{ab+'A':<6}"
+    header += " ||| "
+    for col_name, _ in monitor_cols:
+        header += f"{col_name:<10}"
+    print(header)
+    print("-" * len(header))
+
+    # Track totals for E and A
+    totals_e = {"table": 0, "chart": 0, "fig_title": 0}
+    totals_a = {"table": 0, "chart": 0, "fig_title": 0}
+    totals_monitor = {"image": 0, "formula": 0}
+
+    # Print each PDF's pages
+    for pdf_name, pdf_results in all_results.items():
+        pdf_num = pdf_name.replace(".pdf", "")
+        for page_num in sorted(pdf_results.keys()):
+            page_data = pdf_results[page_num]
+            counts = page_data.get("layout_counts", {})
+            expected = EXPECTED_COUNTS.get((pdf_name, page_num), {})
+
+            row = f"{pdf_num}-{page_num:<7}"
+            for col_name, actual_key in primary_cols:
+                exp = expected.get(actual_key, 0)
+                act = counts.get(actual_key, 0)
+                totals_e[col_name] += exp
+                totals_a[col_name] += act
+                # Mark mismatches with *
+                marker = "*" if exp != act else ""
+                row += f"{exp:<6}{act}{marker:<5}"
+            row += " ||| "
+            for col_name, actual_key in monitor_cols:
+                act = counts.get(actual_key, 0)
+                totals_monitor[col_name] += act
+                row += f"{act:<10}"
+            print(row)
+
+    print("-" * len(header))
+
+    # Print totals row
+    total_row = f"{'TOTAL':<10}"
+    for col_name, _ in primary_cols:
+        total_row += f"{totals_e[col_name]:<6}{totals_a[col_name]:<6}"
+    total_row += " ||| "
+    for col_name, _ in monitor_cols:
+        total_row += f"{totals_monitor[col_name]:<10}"
+    print(total_row)
+    print("=" * len(header))
+    print("* = mismatch between expected and actual")
+
+    # Note about text folder
+    print("\nNote: 'text' type elements saved to 'Text OCR crops' subfolder")
 
     # Save JSON
     if save_json:

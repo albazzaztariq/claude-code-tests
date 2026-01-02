@@ -42,11 +42,50 @@ if SCIHUB_PATH.exists():
 BATCH_SIZE = 500  # For Crossref/OpenAlex
 PUBMED_BATCH_SIZE = 200
 
+# =============================================================================
+# PRESET MODE - Set to True to run non-interactively with preset parameters
+# =============================================================================
+PRESET_MODE = False  # Set to False for interactive mode
+
+PRESET = {
+    "initial_option": "1",  # 1=New Search, 2=Continue downloading, 3=Search full-texts
+    "search_mode": "4",     # 1-4, see menu options
+    "max_results": 0,       # 0 = unlimited
+
+    # CrossRef keywords (comma-separated)
+    "crossref_keywords": "textile, textiles, fabric, fabrics, garment, garments, wicking, moisture, drying time, drying times, drying rate, drying rates, drying curve, drying curves, drying test, drying tests",
+
+    # PubMed/OpenAlex abstract search (comma-separated, multi-word = exact phrase)
+    "abstract_search": "moisture wicking, thermophysiological, moisture management, wicking, textile, textiles, fabric, fabrics, garment, garments",
+
+    # OpenAlex full-text search (comma-separated)
+    "fulltext_search": "AATCC TM199, AATCC 199, AATCC 200, AATCC 201, ISO 13029, ISO 17617, AATCC TM200, AATCC TM201, GB/T 38473, JIS L 1096, ASTM D2654, moisture management, moisture wicking, drying rates, drying rate, drying times, drying time, drying curve, drying curves, drying test, drying tests",
+
+    # Step 4: 1=Filter OA now, 2=Continue to subquery
+    "step4_option": "1",  # Skip subquery, go straight to OA filter
+
+    # Subquery (only used if step4_option="2")
+    "subquery": "",
+
+    # Download settings
+    "oa_download_count": 0,      # 0 = skip downloads
+    "non_oa_download_count": 0,  # 0 = skip downloads
+}
+
+
+def get_input(prompt: str, preset_key: str = None, default: str = "") -> str:
+    """Get input from user or preset config."""
+    if PRESET_MODE and preset_key and preset_key in PRESET:
+        value = str(PRESET[preset_key])
+        print(f"{prompt} [PRESET: {value[:50]}{'...' if len(value) > 50 else ''}]")
+        return value
+    return input(prompt).strip() or default
+
 HEADERS = {
     "User-Agent": "MultiAPISearchTool/1.0 (mailto:textile.research.query@gmail.com)"
 }
 
-BASE_DIR = Path(r"C:\Users\azt12\OneDrive\Documents\Wrestling Robe\Materials Science - Wickability\Studies for Analysis by LLM AI\API Queries")
+BASE_DIR = Path(r"C:\Users\azt12\OneDrive\Documents\Wrestling Robe\Materials Science - Wickability\Studies for Analysis by LLM AI\ScrapedResearch")
 
 # =============================================================================
 # UTILITY FUNCTIONS
@@ -84,10 +123,52 @@ def normalize_title(title: str) -> str:
 
 
 def get_timestamp_str(dt: datetime = None) -> str:
-    """Get timestamp string in MM-DD-HHmm format."""
+    """Get timestamp string in MM-DD-YY-HHmm format (e.g., 01-01-26-0439)."""
     if dt is None:
         dt = datetime.now()
-    return dt.strftime("%m-%d-%H%M")
+    return dt.strftime("%m-%d-%y-%H%M")
+
+
+def setup_query_folders(timestamp_str: str) -> dict:
+    """Create query folder structure and return paths dict.
+
+    Structure:
+        ScrapedResearch/
+        └── MM-DD-YY-HHmm Query/
+            ├── Query Parameters/
+            │   └── MM-DD-YY-HHmm Query Parameters.txt
+            ├── Downloaded Papers/
+            │   ├── OA Papers/
+            │   └── Non-OA Papers/
+            ├── MM-DD-YY-HHmm Paper API Query.xlsx
+            ├── MM-DD-YY-HHmm BACKUP.json
+            └── MM-DD-YY-HHmm Full-Text Search.xlsx
+    """
+    query_folder = BASE_DIR / f"{timestamp_str} Query"
+    params_folder = query_folder / "Query Parameters"
+    download_folder = query_folder / "Downloaded Papers"
+    oa_folder = download_folder / "OA Papers"
+    non_oa_folder = download_folder / "Non-OA Papers"
+
+    # Create all directories
+    for folder in [query_folder, params_folder, oa_folder, non_oa_folder]:
+        folder.mkdir(parents=True, exist_ok=True)
+
+    return {
+        "query_folder": query_folder,
+        "params_folder": params_folder,
+        "download_folder": download_folder,
+        "oa_folder": oa_folder,
+        "non_oa_folder": non_oa_folder,
+        "params_file": params_folder / f"{timestamp_str} Query Parameters.txt",
+        "excel_file": query_folder / f"{timestamp_str} Paper API Query.xlsx",
+        "backup_file": query_folder / f"{timestamp_str} BACKUP.json",
+        "fulltext_file": query_folder / f"{timestamp_str} Full-Text Search.xlsx",
+    }
+
+
+# Global to hold current query paths (set when query starts)
+QUERY_PATHS = {}
 
 
 # =============================================================================
@@ -661,6 +742,37 @@ def save_papers_csv(papers: list[dict], filepath: Path, with_status: bool = True
     print(f"  Saved {len(papers):,} papers to: {filepath}")
 
 
+def sanitize_for_excel(text):
+    """Remove all characters illegal in XML 1.0 (which openpyxl/Excel uses).
+
+    XML 1.0 legal characters are:
+    - #x9 (tab), #xA (newline), #xD (carriage return)
+    - #x20-#xD7FF (includes all standard printable chars and unicode)
+    - #xE000-#xFFFD
+    - #x10000-#x10FFFF
+
+    Illegal characters that must be removed:
+    - 0x00-0x08 (C0 control chars)
+    - 0x0B-0x0C (vertical tab, form feed)
+    - 0x0E-0x1F (C0 control chars)
+    - 0x7F (DEL)
+    - 0x80-0x9F (C1 control chars - common in Windows text!)
+    - 0xD800-0xDFFF (surrogate pairs)
+    - 0xFFFE-0xFFFF (non-characters)
+    """
+    if not isinstance(text, str):
+        return text
+
+    # Build pattern for all illegal XML 1.0 characters
+    # C0 controls (except tab, LF, CR), DEL, C1 controls, surrogates, non-chars
+    illegal_pattern = (
+        r'[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F'  # C0/C1 control chars + DEL
+        r'\uD800-\uDFFF'  # Surrogate pairs
+        r'\uFFFE\uFFFF]'  # Non-characters
+    )
+    return re.sub(illegal_pattern, '', text)
+
+
 def save_oa_split_excel(oa_papers: list[dict], no_oa_papers: list[dict], filepath: Path):
     """Save papers to Excel with OA and No OA worksheets."""
     try:
@@ -678,14 +790,14 @@ def save_oa_split_excel(oa_papers: list[dict], no_oa_papers: list[dict], filepat
             for row, paper in enumerate(papers, 2):
                 ws.cell(row=row, column=1, value=paper.get("study_number", ""))
                 ws.cell(row=row, column=2, value=paper.get("status", "pending"))
-                ws.cell(row=row, column=3, value=paper.get("sources", ""))
-                ws.cell(row=row, column=4, value=paper.get("author", ""))
-                ws.cell(row=row, column=5, value=paper.get("title", ""))
+                ws.cell(row=row, column=3, value=sanitize_for_excel(paper.get("sources", "")))
+                ws.cell(row=row, column=4, value=sanitize_for_excel(paper.get("author", "")))
+                ws.cell(row=row, column=5, value=sanitize_for_excel(paper.get("title", "")))
                 ws.cell(row=row, column=6, value=paper.get("year", ""))
                 ws.cell(row=row, column=7, value=paper.get("doi", ""))
                 ws.cell(row=row, column=8, value=paper.get("doi_url", ""))
                 ws.cell(row=row, column=9, value=paper.get("pdf_url", "") or "")
-                ws.cell(row=row, column=10, value=(paper.get("abstract", "") or "")[:32000])
+                ws.cell(row=row, column=10, value=sanitize_for_excel((paper.get("abstract", "") or "")[:32000]))
 
                 # Apply color based on status
                 status = paper.get("status", "pending")
@@ -904,18 +1016,18 @@ def download_non_oa_papers(papers: list[dict], download_dir: Path, csv_filepath:
 
 
 def parallel_download_all(oa_papers: list[dict], non_oa_papers: list[dict],
-                          download_dir: Path, csv_filepath: Path,
+                          oa_folder: Path, non_oa_folder: Path, csv_filepath: Path,
                           oa_count: int, non_oa_count: int) -> tuple[int, int]:
-    """Download OA and non-OA papers in parallel threads."""
+    """Download OA and non-OA papers in parallel threads to separate folders."""
     progress_lock = threading.Lock()
     oa_result = [0]
     non_oa_result = [0]
 
     def download_oa_thread():
-        oa_result[0] = download_oa_papers(oa_papers, download_dir, csv_filepath, oa_count)
+        oa_result[0] = download_oa_papers(oa_papers, oa_folder, csv_filepath, oa_count)
 
     def download_non_oa_thread():
-        non_oa_result[0] = download_non_oa_papers(non_oa_papers, download_dir, csv_filepath, non_oa_count, progress_lock)
+        non_oa_result[0] = download_non_oa_papers(non_oa_papers, non_oa_folder, csv_filepath, non_oa_count, progress_lock)
 
     # Start both threads
     oa_thread = threading.Thread(target=download_oa_thread, name="OA-Downloader")
@@ -1037,6 +1149,8 @@ def search_fulltext_papers(papers: list[dict], pdf_dir: Path, search_terms: list
 # =============================================================================
 
 def main():
+    global QUERY_PATHS  # Declare global at start of function
+
     print("=" * 70)
     print("MULTI-API ACADEMIC PAPER SEARCH TOOL")
     print("Crossref + OpenAlex + PubMed")
@@ -1047,48 +1161,59 @@ def main():
     print("STEP 1: SELECT OPTION")
     print("=" * 60)
     print("\n  1: New Search")
-    print("  2: Continue downloading from CSV")
-    print("  3: Search full-texts")
+    print("  2: Continue downloading from existing query")
+    print("  3: Search full-texts of downloaded papers")
 
-    initial_option = input("\nSelect option (1-3): ").strip()
+    initial_option = get_input("\nSelect option (1-3): ", "initial_option")
 
     if initial_option == "2":
         # Skip to Step 7 - Continue downloading
         print("\n" + "-" * 40)
-        print("Enter the CSV/Excel filename (in API Queries folder):")
-        csv_name = input("> ").strip()
-        csv_path = BASE_DIR / csv_name
+        print("Enter the query folder name (e.g., '01-01-26-0439 Query'):")
+        folder_name = input("> ").strip()
+        query_folder = BASE_DIR / folder_name
 
+        if not query_folder.exists():
+            print(f"Folder not found: {query_folder}")
+            return
+
+        # Extract timestamp and set up paths
+        timestamp_str = folder_name.replace(" Query", "")
+        QUERY_PATHS = setup_query_folders(timestamp_str)
+
+        csv_path = QUERY_PATHS["excel_file"]
         if not csv_path.exists():
-            print(f"File not found: {csv_path}")
+            print(f"Excel file not found: {csv_path}")
             return
 
         oa_papers, no_oa_papers = load_papers_from_excel(csv_path)
-        timestamp_str = csv_name.split(" ")[0]  # Extract timestamp from filename
 
         # Go to Step 7
-        step7_download(oa_papers, csv_path, timestamp_str)
+        step7_download(oa_papers, no_oa_papers, csv_path, timestamp_str)
         return
 
     elif initial_option == "3":
         # Skip to Step 8 - Search full-texts
         print("\n" + "-" * 40)
-        print("Enter the Papers Dump folder name (in API Queries folder):")
+        print("Enter the query folder name (e.g., '01-01-26-0439 Query'):")
         folder_name = input("> ").strip()
-        pdf_dir = BASE_DIR / folder_name
+        query_folder = BASE_DIR / folder_name
 
-        if not pdf_dir.exists():
-            print(f"Folder not found: {pdf_dir}")
+        if not query_folder.exists():
+            print(f"Folder not found: {query_folder}")
             return
 
-        # Find matching CSV
-        timestamp_str = folder_name.split(" ")[0]
-        csv_files = list(BASE_DIR.glob(f"{timestamp_str}*.xlsx"))
-        if not csv_files:
-            print(f"No matching CSV found for timestamp {timestamp_str}")
+        # Extract timestamp and set up paths
+        timestamp_str = folder_name.replace(" Query", "")
+        QUERY_PATHS = setup_query_folders(timestamp_str)
+
+        csv_path = QUERY_PATHS["excel_file"]
+        pdf_dir = QUERY_PATHS["oa_folder"]  # Search in OA papers folder
+
+        if not csv_path.exists():
+            print(f"Excel file not found: {csv_path}")
             return
 
-        csv_path = csv_files[0]
         oa_papers, no_oa_papers = load_papers_from_excel(csv_path)
 
         # Go to Step 8
@@ -1098,6 +1223,10 @@ def main():
     # Continue with new search (option 1)
     query_start_time = datetime.now()
     timestamp_str = get_timestamp_str(query_start_time)
+
+    # Set up query folder structure
+    QUERY_PATHS = setup_query_folders(timestamp_str)
+    print(f"\n  Query folder: {QUERY_PATHS['query_folder']}")
 
     # STEP 2: Master Query
     print("\n" + "=" * 60)
@@ -1114,7 +1243,7 @@ def main():
     print("     PubMed and OpenAlex (exact phrase and keywords, abstract) +")
     print("     OpenAlex (exact phrase and keywords, full-text)\n")
 
-    option = input("Select option (1-4): ").strip()
+    option = get_input("Select option (1-4): ", "search_mode")
     if option not in ["1", "2", "3", "4"]:
         print("Invalid option. Defaulting to 1.")
         option = "1"
@@ -1122,7 +1251,7 @@ def main():
     # Get max results
     print("\nMax results per API? (default: 10000, 0 for unlimited)")
     try:
-        max_input = input("> ").strip()
+        max_input = get_input("> ", "max_results")
         max_results = int(max_input) if max_input else 10000
         if max_results == 0:
             max_results = None
@@ -1195,17 +1324,17 @@ def main():
         print("\n" + "-" * 40)
         print("CrossRef (keywords, best match, abstract):")
         print("Enter your search terms as a comma-separated list")
-        crossref_kw = input("> ").strip()
+        crossref_kw = get_input("> ", "crossref_keywords")
 
         print("\n" + "-" * 40)
         print("PubMed and OpenAlex (exact phrase and keywords, abstract):")
         print("Enter your search terms as a comma-separated list with more than one term meaning exact phrase")
-        abstract_input = input("> ").strip()
+        abstract_input = get_input("> ", "abstract_search")
 
         print("\n" + "-" * 40)
         print("OpenAlex (exact phrase and keywords, full-text):")
         print("Enter your search terms as a comma-separated list with more than one term meaning exact phrase")
-        oa_ft_input = input("> ").strip()
+        oa_ft_input = get_input("> ", "fulltext_search")
 
         query_for_filename = crossref_kw or abstract_input or oa_ft_input
 
@@ -1245,7 +1374,7 @@ def main():
     print("\n  1: Filter by OA/non-OA now and save CSV (then download)")
     print("  2: Continue to subquery first")
 
-    step4_option = input("\nSelect option (1-2): ").strip()
+    step4_option = get_input("\nSelect option (1-2): ", "step4_option")
 
     if step4_option == "1":
         # Go directly to OA filtering and save
@@ -1261,7 +1390,7 @@ def main():
         print("  - Multi-word = exact phrase")
         print("\nExample: moisture OR wicking AND transport OR flux AND AATCC TM199")
 
-        subquery = input("\nSubquery: ").strip()
+        subquery = get_input("\nSubquery: ", "subquery")
 
         if subquery:
             filtered = filter_by_subquery(unique_papers, subquery)
@@ -1294,15 +1423,31 @@ def main():
     print(f"\n  Open Access: {len(oa_papers):,}")
     print(f"  Not Open Access: {len(no_oa_papers):,}")
 
-    # Save to Excel
-    BASE_DIR.mkdir(parents=True, exist_ok=True)
-    csv_filename = f"{timestamp_str} Paper API Query.xlsx"
-    csv_path = BASE_DIR / csv_filename
+    # Use QUERY_PATHS for file locations
+    csv_path = QUERY_PATHS["excel_file"]
+    backup_path = QUERY_PATHS["backup_file"]
 
     print(f"\n{'='*60}")
     print("SAVING RESULTS")
     print(f"{'='*60}")
-    save_oa_split_excel(oa_papers, no_oa_papers, csv_path)
+
+    # BACKUP: Save JSON first to prevent data loss
+    import json
+    try:
+        with open(backup_path, 'w', encoding='utf-8') as f:
+            json.dump({"oa": oa_papers, "no_oa": no_oa_papers}, f, ensure_ascii=False, indent=2)
+        print(f"  JSON backup saved: {backup_path}")
+    except Exception as e:
+        print(f"  WARNING: JSON backup failed: {e}")
+
+    # Now save Excel (with fallback to CSV if it fails)
+    try:
+        save_oa_split_excel(oa_papers, no_oa_papers, csv_path)
+    except Exception as e:
+        print(f"  ERROR saving Excel: {e}")
+        print("  Falling back to CSV...")
+        save_papers_csv(oa_papers, csv_path.with_suffix('.csv').with_stem(csv_path.stem + '_OA'))
+        save_papers_csv(no_oa_papers, csv_path.with_suffix('.csv').with_stem(csv_path.stem + '_NoOA'))
 
     # STEP 7: Download (OA + non-OA via SciHub in parallel)
     step7_download(oa_papers, no_oa_papers, csv_path, timestamp_str)
@@ -1326,14 +1471,16 @@ def step7_download(oa_papers: list[dict], non_oa_papers: list[dict], csv_path: P
         print("  No papers to download.")
         return
 
-    download_dir = BASE_DIR / f"{timestamp_str} Papers Dump"
-
+    first_iteration = True
     while True:
         # Ask for OA count
         if oa_pending:
             print(f"\n  How many OA papers to download? (max {len(oa_pending)}, 0 to skip)")
             try:
-                oa_count = int(input("  OA > ").strip())
+                if first_iteration:
+                    oa_count = int(get_input("  OA > ", "oa_download_count"))
+                else:
+                    oa_count = int(input("  OA > ").strip())
             except ValueError:
                 oa_count = 10
         else:
@@ -1343,19 +1490,26 @@ def step7_download(oa_papers: list[dict], non_oa_papers: list[dict], csv_path: P
         if non_oa_pending:
             print(f"\n  How many non-OA papers to download via SciHub? (max {len(non_oa_pending)}, 0 to skip)")
             try:
-                non_oa_count = int(input("  SciHub > ").strip())
+                if first_iteration:
+                    non_oa_count = int(get_input("  SciHub > ", "non_oa_download_count"))
+                else:
+                    non_oa_count = int(input("  SciHub > ").strip())
             except ValueError:
                 non_oa_count = 10
         else:
             non_oa_count = 0
 
+        first_iteration = False
+
         if oa_count == 0 and non_oa_count == 0:
             print("  Skipping downloads.")
             return
 
-        # Run parallel downloads
+        # Run parallel downloads (separate folders for OA and Non-OA)
         oa_downloaded, non_oa_downloaded = parallel_download_all(
-            oa_papers, non_oa_papers, download_dir, csv_path, oa_count, non_oa_count
+            oa_papers, non_oa_papers,
+            QUERY_PATHS["oa_folder"], QUERY_PATHS["non_oa_folder"],
+            csv_path, oa_count, non_oa_count
         )
 
         print(f"\n  === BATCH COMPLETE ===")
@@ -1418,8 +1572,7 @@ def step8_fulltext_search(oa_papers: list[dict], pdf_dir: Path, csv_path: Path, 
     print(f"\n  Searching for: {search_terms}")
 
     # Create output file
-    output_filename = f"{timestamp_str} Full-Text Search.xlsx"
-    output_path = BASE_DIR / output_filename
+    output_path = QUERY_PATHS["fulltext_file"]
 
     search_fulltext_papers(oa_papers, pdf_dir, search_terms, output_path, csv_path)
 
