@@ -39,8 +39,10 @@ if SCIHUB_PATH.exists():
 # CONFIGURATION
 # =============================================================================
 
-BATCH_SIZE = 500  # For Crossref/OpenAlex
-PUBMED_BATCH_SIZE = 200
+# Optimized batch sizes per API (using max allowed)
+CROSSREF_BATCH_SIZE = 1000   # Max allowed by CrossRef
+OPENALEX_BATCH_SIZE = 200    # Max allowed by OpenAlex
+PUBMED_BATCH_SIZE = 10000    # Max allowed by PubMed
 
 # =============================================================================
 # PRESET MODE - Set to True to run non-interactively with preset parameters
@@ -188,7 +190,7 @@ def crossref_search(query: str, max_results: int = None) -> list[dict]:
 
     while True:
         batch_num += 1
-        params = {"query": query, "rows": BATCH_SIZE, "cursor": cursor}
+        params = {"query": query, "rows": CROSSREF_BATCH_SIZE, "cursor": cursor}
 
         try:
             response = requests.get(API_URL, params=params, headers=HEADERS, timeout=120)
@@ -293,10 +295,14 @@ def openalex_search(query: str, max_results: int = None, search_type: str = "def
 
     while True:
         batch_num += 1
-        params = {"per_page": min(BATCH_SIZE, 200), "cursor": cursor}
+        params = {"per_page": OPENALEX_BATCH_SIZE, "cursor": cursor}
 
-        if search_type == "abstract":
+        if search_type == "title":
+            params["filter"] = f"title.search:{query}"
+        elif search_type == "abstract":
             params["filter"] = f"title_and_abstract.search:{query}"
+        elif search_type == "fulltext":
+            params["filter"] = f"fulltext.search:{query}"
         else:
             params["search"] = query
 
@@ -724,6 +730,50 @@ def build_exact_keywords_query(input_str: str, api: str) -> str:
         return " OR ".join(terms_formatted)
 
 
+def build_api_query(terms: str, api: str, region: str) -> str:
+    """Build API query for specific search region (title, abstract, fulltext).
+
+    Args:
+        terms: Comma-separated search terms (multi-word = exact phrase)
+        api: "crossref", "openalex", or "pubmed"
+        region: "title", "abstract", or "fulltext"
+
+    Returns:
+        Formatted query string for the API
+    """
+    parsed = parse_exact_and_keywords(terms)
+    if not parsed:
+        return ""
+
+    terms_formatted = []
+    for item in parsed:
+        term = item["term"]
+        if item["type"] == "phrase":
+            terms_formatted.append(f'"{term}"')
+        else:
+            terms_formatted.append(term)
+
+    if api == "pubmed":
+        if region == "title":
+            field = "[Title]"
+        elif region == "abstract":
+            field = "[Abstract]"
+        else:  # title_abstract (fallback)
+            field = "[Title/Abstract]"
+        return " OR ".join(f"{t}{field}" for t in terms_formatted)
+
+    elif api == "crossref":
+        # CrossRef doesn't support field-specific search, just return terms
+        # The calling code will handle this as "best match"
+        return " OR ".join(terms_formatted)
+
+    elif api == "openalex":
+        # OpenAlex handles region in the API call, just return formatted terms
+        return " OR ".join(terms_formatted)
+
+    return " OR ".join(terms_formatted)
+
+
 # =============================================================================
 # CSV/EXCEL HANDLING WITH ROW COLORS
 # =============================================================================
@@ -1145,6 +1195,171 @@ def search_fulltext_papers(papers: list[dict], pdf_dir: Path, search_terms: list
 
 
 # =============================================================================
+# INTERACTIVE QUERY BUILDER
+# =============================================================================
+
+API_INFO = {
+    "1": {"name": "OpenAlex", "key": "openalex", "regions": ["title", "abstract", "fulltext"]},
+    "2": {"name": "PubMed", "key": "pubmed", "regions": ["title", "abstract"]},
+    "3": {"name": "CrossRef", "key": "crossref", "regions": ["title", "abstract"]},
+}
+
+SEARCH_TERMS_HELP = (
+    "in a comma-separated list, with exact phrases separated by commas\n"
+    '(e.g. "yarn filament count, fabric, moisture wicking" will search for the exact\n'
+    'phrases "yarn filament count" and "moisture wicking" and the single keyword "fabric")'
+)
+
+CROSSREF_NOTE = (
+    '\nNOTE: CrossRef only does "best match" searching, which may equate to single-keyword searching'
+)
+
+
+def build_queries_interactive() -> tuple[list[dict], str]:
+    """Interactive prompt flow for building API queries.
+
+    Returns:
+        tuple: (list of query dicts, query string for filename)
+            Each query dict has: api, region, terms, query
+    """
+    queries = []
+
+    # STEP 2a: Select APIs
+    print("\n" + "=" * 60)
+    print("STEP 2: SELECT APIs TO SEARCH")
+    print("=" * 60)
+    print("\nEnter ID(s) of API(s) to search in a comma-separated list:")
+    print("  1. OpenAlex")
+    print("  2. PubMed")
+    print("  3. CrossRef")
+
+    api_input = input("\n> ").strip()
+    if not api_input:
+        print("No APIs selected. Exiting.")
+        return [], ""
+
+    api_ids = [x.strip() for x in api_input.split(",") if x.strip() in API_INFO]
+    if not api_ids:
+        print("Invalid API selection. Exiting.")
+        return [], ""
+
+    query_for_filename = ""
+
+    # For each selected API (in order entered)
+    for api_id in api_ids:
+        api = API_INFO[api_id]
+        api_name = api["name"]
+        api_key = api["key"]
+        available_regions = api["regions"]
+
+        # STEP 2b: Select search regions for this API
+        print("\n" + "-" * 50)
+        print(f"{api_name} Query: Enter ID(s) of search region(s) in a comma-separated list:")
+        for i, region in enumerate(available_regions, 1):
+            print(f"  {i}. {region.capitalize()}")
+
+        region_input = input("\n> ").strip()
+        if not region_input:
+            print(f"  Skipping {api_name} (no regions selected)")
+            continue
+
+        region_ids = [x.strip() for x in region_input.split(",")]
+
+        # STEP 2c: Get search terms for each region
+        for region_id in region_ids:
+            try:
+                region_idx = int(region_id) - 1
+                if 0 <= region_idx < len(available_regions):
+                    region = available_regions[region_idx]
+                else:
+                    print(f"  Invalid region ID: {region_id}, skipping")
+                    continue
+            except ValueError:
+                print(f"  Invalid region ID: {region_id}, skipping")
+                continue
+
+            print(f"\n{api_name} Query: ({region.capitalize()}) Enter search term(s)")
+            print(SEARCH_TERMS_HELP)
+
+            if api_key == "crossref":
+                print(CROSSREF_NOTE)
+
+            terms = input("\n> ").strip()
+            if not terms:
+                print(f"  No terms entered for {api_name} {region}, skipping")
+                continue
+
+            # Build the query
+            query_str = build_api_query(terms, api_key, region)
+
+            queries.append({
+                "api": api_key,
+                "api_name": api_name,
+                "region": region,
+                "terms": terms,
+                "query": query_str,
+            })
+
+            # Use first non-empty terms for filename
+            if not query_for_filename:
+                query_for_filename = terms[:50]
+
+    return queries, query_for_filename
+
+
+def execute_queries_parallel(queries: list[dict], max_results: int = None) -> list[dict]:
+    """Execute API queries in parallel using ThreadPoolExecutor.
+
+    Args:
+        queries: List of query dicts from build_queries_interactive()
+        max_results: Maximum results per API call
+
+    Returns:
+        Combined list of all papers from all queries
+    """
+    all_papers = []
+
+    if not queries:
+        return all_papers
+
+    print("\n" + "=" * 60)
+    print("EXECUTING QUERIES IN PARALLEL")
+    print("=" * 60)
+    print(f"\n  Queries to execute: {len(queries)}")
+    for q in queries:
+        print(f"    - {q['api_name']} ({q['region']}): {q['terms'][:40]}...")
+
+    def run_query(query_info: dict) -> list[dict]:
+        """Execute a single query and return results."""
+        api = query_info["api"]
+        region = query_info["region"]
+        query_str = query_info["query"]
+
+        if api == "crossref":
+            return crossref_search(query_str, max_results)
+        elif api == "openalex":
+            return openalex_search(query_str, max_results, region)
+        elif api == "pubmed":
+            return pubmed_search(query_str, max_results)
+        return []
+
+    # Execute in parallel
+    with ThreadPoolExecutor(max_workers=3) as executor:
+        futures = {executor.submit(run_query, q): q for q in queries}
+
+        for future in as_completed(futures):
+            query_info = futures[future]
+            try:
+                results = future.result()
+                all_papers.extend(results)
+                print(f"\n  Completed: {query_info['api_name']} ({query_info['region']}) - {len(results):,} papers")
+            except Exception as e:
+                print(f"\n  Error in {query_info['api_name']} ({query_info['region']}): {e}")
+
+    return all_papers
+
+
+# =============================================================================
 # MAIN
 # =============================================================================
 
@@ -1153,7 +1368,7 @@ def main():
 
     print("=" * 70)
     print("MULTI-API ACADEMIC PAPER SEARCH TOOL")
-    print("Crossref + OpenAlex + PubMed")
+    print("OpenAlex + PubMed + CrossRef")
     print("=" * 70)
 
     # STEP 1: Initial Menu
@@ -1228,28 +1443,10 @@ def main():
     QUERY_PATHS = setup_query_folders(timestamp_str)
     print(f"\n  Query folder: {QUERY_PATHS['query_folder']}")
 
-    # STEP 2: Master Query
-    print("\n" + "=" * 60)
-    print("STEP 2: MASTER QUERY (API Search)")
-    print("=" * 60)
-    print("\nSelect search mode:\n")
-    print("  1: All APIs (keywords, best match, abstract)")
-    print("  2: CrossRef (keywords, best match, abstract) +")
-    print("     PubMed and OpenAlex (exact phrase and keywords, abstract)")
-    print("  3: CrossRef (keywords, best match, abstract) +")
-    print("     PubMed (exact phrase and keywords, abstract) +")
-    print("     OpenAlex (exact phrase and keywords, full-text)")
-    print("  4: CrossRef (keywords, best match, abstract) +")
-    print("     PubMed and OpenAlex (exact phrase and keywords, abstract) +")
-    print("     OpenAlex (exact phrase and keywords, full-text)\n")
-
-    option = get_input("Select option (1-4): ", "search_mode")
-    if option not in ["1", "2", "3", "4"]:
-        print("Invalid option. Defaulting to 1.")
-        option = "1"
-
-    # Get max results
-    print("\nMax results per API? (default: 10000, 0 for unlimited)")
+    # STEP 2: Interactive Query Builder
+    # Get max results first
+    print("\n" + "-" * 40)
+    print("Max results per API? (default: 10000, 0 for unlimited)")
     try:
         max_input = get_input("> ", "max_results")
         max_results = int(max_input) if max_input else 10000
@@ -1258,93 +1455,15 @@ def main():
     except ValueError:
         max_results = 10000
 
-    # Execute queries based on option
-    all_papers = []
-    query_for_filename = ""
+    # Build queries interactively
+    queries, query_for_filename = build_queries_interactive()
 
-    if option == "1":
-        print("\n" + "-" * 40)
-        print("All APIs (keywords, best match, abstract):")
-        print("Enter your search terms as a comma-separated list")
-        keywords = input("> ").strip()
-        if not keywords:
-            print("No query provided. Exiting.")
-            return
-        query_for_filename = keywords
+    if not queries:
+        print("No queries to execute. Exiting.")
+        return
 
-        all_papers.extend(crossref_search(build_keywords_query(keywords, "crossref"), max_results))
-        all_papers.extend(openalex_search(build_keywords_query(keywords, "openalex"), max_results))
-        all_papers.extend(pubmed_search(build_keywords_query(keywords, "pubmed"), max_results))
-
-    elif option == "2":
-        print("\n" + "-" * 40)
-        print("CrossRef (keywords, best match, abstract):")
-        print("Enter your search terms as a comma-separated list")
-        crossref_kw = input("> ").strip()
-
-        print("\n" + "-" * 40)
-        print("PubMed and OpenAlex (exact phrase and keywords, abstract):")
-        print("Enter your search terms as a comma-separated list with more than one term meaning exact phrase")
-        pm_oa_input = input("> ").strip()
-
-        query_for_filename = crossref_kw or pm_oa_input
-
-        if crossref_kw:
-            all_papers.extend(crossref_search(build_keywords_query(crossref_kw, "crossref"), max_results))
-        if pm_oa_input:
-            all_papers.extend(pubmed_search(build_exact_keywords_query(pm_oa_input, "pubmed"), max_results))
-            all_papers.extend(openalex_search(build_exact_keywords_query(pm_oa_input, "openalex"), max_results, "abstract"))
-
-    elif option == "3":
-        print("\n" + "-" * 40)
-        print("CrossRef (keywords, best match, abstract):")
-        print("Enter your search terms as a comma-separated list")
-        crossref_kw = input("> ").strip()
-
-        print("\n" + "-" * 40)
-        print("PubMed (exact phrase and keywords, abstract):")
-        print("Enter your search terms as a comma-separated list with more than one term meaning exact phrase")
-        pm_input = input("> ").strip()
-
-        print("\n" + "-" * 40)
-        print("OpenAlex (exact phrase and keywords, full-text):")
-        print("Enter your search terms as a comma-separated list with more than one term meaning exact phrase")
-        oa_ft_input = input("> ").strip()
-
-        query_for_filename = crossref_kw or pm_input or oa_ft_input
-
-        if crossref_kw:
-            all_papers.extend(crossref_search(build_keywords_query(crossref_kw, "crossref"), max_results))
-        if pm_input:
-            all_papers.extend(pubmed_search(build_exact_keywords_query(pm_input, "pubmed"), max_results))
-        if oa_ft_input:
-            all_papers.extend(openalex_search(build_exact_keywords_query(oa_ft_input, "openalex"), max_results, "fulltext"))
-
-    elif option == "4":
-        print("\n" + "-" * 40)
-        print("CrossRef (keywords, best match, abstract):")
-        print("Enter your search terms as a comma-separated list")
-        crossref_kw = get_input("> ", "crossref_keywords")
-
-        print("\n" + "-" * 40)
-        print("PubMed and OpenAlex (exact phrase and keywords, abstract):")
-        print("Enter your search terms as a comma-separated list with more than one term meaning exact phrase")
-        abstract_input = get_input("> ", "abstract_search")
-
-        print("\n" + "-" * 40)
-        print("OpenAlex (exact phrase and keywords, full-text):")
-        print("Enter your search terms as a comma-separated list with more than one term meaning exact phrase")
-        oa_ft_input = get_input("> ", "fulltext_search")
-
-        query_for_filename = crossref_kw or abstract_input or oa_ft_input
-
-        if crossref_kw:
-            all_papers.extend(crossref_search(build_keywords_query(crossref_kw, "crossref"), max_results))
-        if abstract_input:
-            all_papers.extend(pubmed_search(build_exact_keywords_query(abstract_input, "pubmed"), max_results))
-            all_papers.extend(openalex_search(build_exact_keywords_query(abstract_input, "openalex"), max_results, "abstract"))
-        if oa_ft_input:
-            all_papers.extend(openalex_search(build_exact_keywords_query(oa_ft_input, "openalex"), max_results, "fulltext"))
+    # Execute queries in parallel
+    all_papers = execute_queries_parallel(queries, max_results)
 
     # STEP 3: Filter and assign study numbers
     print(f"\n{'='*60}")
