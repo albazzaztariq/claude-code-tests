@@ -1,6 +1,6 @@
 """
-OCR Tool Comparison - Accuracy by Object Type
-==============================================
+F2TBench - Figure-to-Text Benchmark (Accuracy by Object Type)
+==============================================================
 Run 2 tools at a time by commenting/uncommenting sections below.
 
 Tools:
@@ -11,7 +11,7 @@ Tools:
 
 Usage:
   - Uncomment the tools you want to test in TOOLS_TO_RUN below
-  - Run: python OCR_Comparison.py
+  - Run: python F2TBench.py
 """
 
 import os
@@ -537,7 +537,7 @@ def main():
         all_accuracy[tool] = calculate_accuracy(results, tool)
 
     # Save results
-    with open(BASE_DIR / "ocr_comparison_results.json", "w") as f:
+    with open(BASE_DIR / "f2tbench_results.json", "w") as f:
         json.dump(all_results, f, indent=2, default=str)
 
     # Print accuracy table
