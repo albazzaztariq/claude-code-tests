@@ -1,20 +1,24 @@
 """
-Multi-API Academic Paper Search Tool
+ScholarSweep - Multi-API Academic Paper Search Tool
 Searches Crossref, OpenAlex, and PubMed APIs, filters, downloads, and searches full-text.
 
 FLOW:
 Step 1: Initial menu (New Search / Continue Downloading / Search Full-texts)
-Step 2: Master Query (4 API search options)
+Step 2: Select APIs (CrossRef, OpenAlex, PubMed - multi-select)
+Step 2b: Journal filter (ONE prompt, applies to all selected APIs)
+Step 2c: Per-API search configuration:
+         - Select field: Title, Abstract, or Full-text
+         - CrossRef/PubMed Full-text: "(Run locally, API search unavailable)"
+         - Enter search terms (comma-separated, multi-word = exact phrase)
 Step 3: In-memory filtering (remove no-abstract, deduplicate, assign study numbers)
 Step 4: Option (Filter OA now OR continue to subquery)
 Step 5: Subquery (local AND/OR filtering on abstracts)
-Step 6: Filter by OA/non-OA, save CSV
+Step 6: Filter by OA/non-OA, save Excel
 Step 7: Download OA papers
-Step 8: Search full-text of downloaded papers
-Step 9: Full-text search results
+Step 8: Search full-text of downloaded papers (local PDF search)
 
 Usage:
-    python multi_api_search.py
+    python ScholarSweep.py
 """
 
 import requests
@@ -48,6 +52,30 @@ RESET = "[0m"
 
 # Memory-efficient mode: streams writes instead of holding all in RAM
 MEMORY_EFFICIENT_MODE = False
+
+# =============================================================================
+# EXCEL SAVE WITH RETRY (handles file-open errors)
+# =============================================================================
+
+def save_workbook_with_retry(workbook, filepath, max_retries=3):
+    """
+    Save Excel workbook with retry logic for PermissionError.
+    Handles case where user has file open in Excel.
+    """
+    for attempt in range(max_retries):
+        try:
+            workbook.save(filepath)
+            return True
+        except PermissionError:
+            if attempt < max_retries - 1:
+                print(f"\n  ERROR: Cannot write to {filepath.name}")
+                print(f"         File may be open in Excel. Please close it.")
+                input(f"         Press Enter to retry ({max_retries - attempt - 1} attempts left)...")
+            else:
+                print(f"\n  FAILED: Could not write to {filepath.name} after {max_retries} attempts.")
+                print(f"         Changes not saved.")
+                return False
+    return False
 
 # =============================================================================
 # TEXTILE/MATERIALS SCIENCE JOURNAL LIST (528 entries)
@@ -992,7 +1020,9 @@ def openalex_search(query: str, max_results: int = None, search_type: str = "def
         batch_num += 1
         params = {"per_page": min(BATCH_SIZE, 200), "cursor": cursor}
 
-        if search_type == "abstract":
+        if search_type == "title":
+            params["filter"] = f"title.search:{query}"
+        elif search_type == "abstract":
             params["filter"] = f"title_and_abstract.search:{query}"
         elif search_type == "fulltext":
             params["filter"] = f"fulltext.search:{query}"
@@ -1528,8 +1558,8 @@ def save_oa_split_excel(oa_papers: list[dict], no_oa_papers: list[dict], filepat
         ws2 = wb.create_sheet()
         write_sheet(ws2, no_oa_papers, "No OA")
 
-        wb.save(filepath)
-        print(f"  Saved to: {filepath}")
+        if save_workbook_with_retry(wb, filepath):
+            print(f"  Saved to: {filepath}")
         print(f"    OA worksheet: {len(oa_papers):,} papers")
         print(f"    No OA worksheet: {len(no_oa_papers):,} papers")
 
@@ -1594,7 +1624,7 @@ def update_paper_status_in_excel(filepath: Path, study_numbers: list[int], new_s
                         for col in range(1, 11):
                             ws.cell(row=row, column=col).fill = fill
 
-        wb.save(filepath)
+        save_workbook_with_retry(wb, filepath)
 
     except Exception as e:
         print(f"  Error updating Excel: {e}")
@@ -1827,8 +1857,8 @@ def search_fulltext_papers(papers: list[dict], pdf_dir: Path, search_terms: list
         ws.column_dimensions['D'].width = 35
         ws.column_dimensions['E'].width = 60
 
-        wb.save(output_filepath)
-        print(f"\n  Saved search results to: {output_filepath}")
+        if save_workbook_with_retry(wb, output_filepath):
+            print(f"\n  Saved search results to: {output_filepath}")
 
     except Exception as e:
         print(f"  Error in full-text search: {e}")
@@ -1917,144 +1947,178 @@ def main():
     QUERY_PATHS = setup_query_folders(timestamp_str)
     print(f"\n  Query folder: {QUERY_PATHS['query_folder']}")
 
-    # STEP 2: Master Query
+    # STEP 2: Select APIs
     print("\n" + "=" * 60)
-    print("STEP 2: MASTER QUERY (API Search)")
+    print("STEP 2: SELECT APIs")
     print("=" * 60)
-    print("\nSelect search mode:\n")
-    print("  1: All APIs (keywords, best match, abstract)")
-    print("  2: CrossRef (keywords, best match, abstract) +")
-    print("     PubMed and OpenAlex (exact phrase and keywords, abstract)")
-    print("  3: CrossRef (keywords, best match, abstract) +")
-    print("     PubMed (exact phrase and keywords, abstract) +")
-    print("     OpenAlex (exact phrase and keywords, full-text)")
-    print("  4: CrossRef (keywords, best match, abstract) +")
-    print("     PubMed and OpenAlex (exact phrase and keywords, abstract) +")
-    print("     OpenAlex (exact phrase and keywords, full-text)\n")
+    print("\nWhich APIs do you want to search?")
+    print("  1: CrossRef")
+    print("  2: OpenAlex")
+    print("  3: PubMed")
+    print("\nEnter numbers separated by commas (e.g., '1,2,3' for all):")
 
-    option = get_input("Select option (1-4): ", "search_mode")
-    if option not in ["1", "2", "3", "4"]:
-        print("Invalid option. Defaulting to 1.")
-        option = "1"
+    api_input = get_input("> ", "api_selection") if PRESET_MODE else input("> ").strip()
+    if not api_input:
+        api_input = "1,2,3"  # Default to all
+
+    selected_apis = [x.strip() for x in api_input.split(",")]
+    use_crossref = "1" in selected_apis
+    use_openalex = "2" in selected_apis
+    use_pubmed = "3" in selected_apis
+
+    if not (use_crossref or use_openalex or use_pubmed):
+        print("No valid APIs selected. Defaulting to all.")
+        use_crossref = use_openalex = use_pubmed = True
+
+    print(f"\n  Selected: {', '.join(filter(None, ['CrossRef' if use_crossref else '', 'OpenAlex' if use_openalex else '', 'PubMed' if use_pubmed else '']))}")
 
     # Get max results
-    print("\nMax results per API? (default: 10000, 0 for unlimited)")
+    print("\n" + "-" * 40)
+    print("Max results per API? (default: 10000, 0 for unlimited)")
     try:
-        max_input = get_input("> ", "max_results")
+        max_input = get_input("> ", "max_results") if PRESET_MODE else input("> ").strip()
         max_results = int(max_input) if max_input else 10000
         if max_results == 0:
             max_results = None
     except ValueError:
         max_results = 10000
 
-    # Journal filter selection
+    # STEP 2b: Journal filter (ONE prompt for all APIs)
+    print("\n" + "=" * 60)
+    print("STEP 2b: JOURNAL FILTER (applies to all selected APIs)")
+    print("=" * 60)
     selected_journals = interactive_journal_selection()
     journal_filter_crossref = build_crossref_journal_filter(selected_journals) if selected_journals else ""
     journal_filter_openalex = build_openalex_journal_filter(selected_journals) if selected_journals else ""
-    
-    # Execute queries based on option
-    all_papers = []
+
+    # STEP 2c: Per-API search configuration
+    print("\n" + "=" * 60)
+    print("STEP 2c: CONFIGURE SEARCH FOR EACH API")
+    print("=" * 60)
+
+    api_configs = {}  # {api_name: {"field": str, "terms": str}}
+    local_fulltext_apis = []  # APIs that need local full-text filtering
     query_for_filename = ""
 
-    if option == "1":
+    # CrossRef configuration
+    if use_crossref:
         print("\n" + "-" * 40)
-        print("All APIs (keywords, best match, abstract):")
-        print("Enter your search terms as a comma-separated list")
-        keywords = input("> ").strip()
-        if not keywords:
-            print("No query provided. Exiting.")
-            return
-        query_for_filename = keywords
+        print("CROSSREF - Select search field:")
+        print("  1: Title")
+        print("  2: Abstract")
+        print("  3: Full-text (Run locally, API search unavailable)")
+        field_choice = input("Select (1-3): ").strip() or "2"
 
-        all_papers.extend(crossref_search(build_keywords_query(keywords, "crossref"), max_results, journal_filter_crossref))
-        all_papers.extend(openalex_search(build_keywords_query(keywords, "openalex"), max_results, "default", journal_filter_openalex))
-        pubmed_results = pubmed_search(build_keywords_query(keywords, "pubmed"), max_results)
+        field_map = {"1": "title", "2": "abstract", "3": "fulltext"}
+        field = field_map.get(field_choice, "abstract")
+
+        if field == "fulltext":
+            local_fulltext_apis.append("crossref")
+            print("  NOTE: CrossRef will search by abstract, then filter full-text locally after download.")
+
+        print(f"\nEnter search terms for CrossRef ({field}):")
+        print("  (comma-separated, multi-word = exact phrase)")
+        terms = input("> ").strip()
+
+        if terms:
+            api_configs["crossref"] = {"field": field, "terms": terms}
+            if not query_for_filename:
+                query_for_filename = terms
+
+    # OpenAlex configuration
+    if use_openalex:
+        print("\n" + "-" * 40)
+        print("OPENALEX - Select search field:")
+        print("  1: Title")
+        print("  2: Abstract")
+        print("  3: Full-text")
+        field_choice = input("Select (1-3): ").strip() or "2"
+
+        field_map = {"1": "title", "2": "abstract", "3": "fulltext"}
+        field = field_map.get(field_choice, "abstract")
+
+        print(f"\nEnter search terms for OpenAlex ({field}):")
+        print("  (comma-separated, multi-word = exact phrase)")
+        terms = input("> ").strip()
+
+        if terms:
+            api_configs["openalex"] = {"field": field, "terms": terms}
+            if not query_for_filename:
+                query_for_filename = terms
+
+    # PubMed configuration
+    if use_pubmed:
+        print("\n" + "-" * 40)
+        print("PUBMED - Select search field:")
+        print("  1: Title")
+        print("  2: Abstract")
+        print("  3: Full-text (Run locally, API search unavailable)")
+        field_choice = input("Select (1-3): ").strip() or "2"
+
+        field_map = {"1": "title", "2": "abstract", "3": "fulltext"}
+        field = field_map.get(field_choice, "abstract")
+
+        if field == "fulltext":
+            local_fulltext_apis.append("pubmed")
+            print("  NOTE: PubMed will search by abstract, then filter full-text locally after download.")
+
+        print(f"\nEnter search terms for PubMed ({field}):")
+        print("  (comma-separated, multi-word = exact phrase)")
+        terms = input("> ").strip()
+
+        if terms:
+            api_configs["pubmed"] = {"field": field, "terms": terms}
+            if not query_for_filename:
+                query_for_filename = terms
+
+    if not api_configs:
+        print("\nNo search terms provided for any API. Exiting.")
+        return
+
+    # Store local fulltext terms for later filtering
+    local_fulltext_terms = []
+    if local_fulltext_apis:
+        for api in local_fulltext_apis:
+            if api in api_configs:
+                local_fulltext_terms.extend([t.strip() for t in api_configs[api]["terms"].split(",")])
+        local_fulltext_terms = list(set(local_fulltext_terms))  # Dedupe
+        print(f"\n  Will filter locally for full-text terms: {local_fulltext_terms}")
+
+    # Execute queries
+    print("\n" + "=" * 60)
+    print("EXECUTING API SEARCHES")
+    print("=" * 60)
+
+    all_papers = []
+
+    # CrossRef search
+    if "crossref" in api_configs:
+        config = api_configs["crossref"]
+        # CrossRef only supports keyword search, we'll search abstract and filter locally if needed
+        query = build_exact_keywords_query(config["terms"], "crossref") if " " in config["terms"] else build_keywords_query(config["terms"], "crossref")
+        all_papers.extend(crossref_search(query, max_results, journal_filter_crossref))
+
+    # OpenAlex search
+    if "openalex" in api_configs:
+        config = api_configs["openalex"]
+        query = build_exact_keywords_query(config["terms"], "openalex")
+        search_type = config["field"] if config["field"] in ["abstract", "fulltext"] else "default"
+        if config["field"] == "title":
+            search_type = "title"
+        all_papers.extend(openalex_search(query, max_results, search_type, journal_filter_openalex))
+
+    # PubMed search
+    if "pubmed" in api_configs:
+        config = api_configs["pubmed"]
+        query = build_exact_keywords_query(config["terms"], "pubmed")
+        # Add field restriction for title-only search
+        if config["field"] == "title":
+            query = f"({query})[Title]"
+        pubmed_results = pubmed_search(query, max_results)
         if selected_journals:
             pubmed_results = filter_papers_by_journal(pubmed_results, selected_journals)
             print(f"  After journal filter: {len(pubmed_results):,} papers")
         all_papers.extend(pubmed_results)
-
-    elif option == "2":
-        print("\n" + "-" * 40)
-        print("CrossRef (keywords, best match, abstract):")
-        print("Enter your search terms as a comma-separated list")
-        crossref_kw = input("> ").strip()
-
-        print("\n" + "-" * 40)
-        print("PubMed and OpenAlex (exact phrase and keywords, abstract):")
-        print("Enter your search terms as a comma-separated list with more than one term meaning exact phrase")
-        pm_oa_input = input("> ").strip()
-
-        query_for_filename = crossref_kw or pm_oa_input
-
-        if crossref_kw:
-            all_papers.extend(crossref_search(build_keywords_query(crossref_kw, "crossref"), max_results, journal_filter_crossref))
-        if pm_oa_input:
-            pubmed_results = pubmed_search(build_exact_keywords_query(pm_oa_input, "pubmed"), max_results)
-            if selected_journals:
-                pubmed_results = filter_papers_by_journal(pubmed_results, selected_journals)
-                print(f"  After journal filter: {len(pubmed_results):,} papers")
-            all_papers.extend(pubmed_results)
-            all_papers.extend(openalex_search(build_exact_keywords_query(pm_oa_input, "openalex"), max_results, "abstract", journal_filter_openalex))
-
-    elif option == "3":
-        print("\n" + "-" * 40)
-        print("CrossRef (keywords, best match, abstract):")
-        print("Enter your search terms as a comma-separated list")
-        crossref_kw = input("> ").strip()
-
-        print("\n" + "-" * 40)
-        print("PubMed (exact phrase and keywords, abstract):")
-        print("Enter your search terms as a comma-separated list with more than one term meaning exact phrase")
-        pm_input = input("> ").strip()
-
-        print("\n" + "-" * 40)
-        print("OpenAlex (exact phrase and keywords, full-text):")
-        print("Enter your search terms as a comma-separated list with more than one term meaning exact phrase")
-        oa_ft_input = input("> ").strip()
-
-        query_for_filename = crossref_kw or pm_input or oa_ft_input
-
-        if crossref_kw:
-            all_papers.extend(crossref_search(build_keywords_query(crossref_kw, "crossref"), max_results, journal_filter_crossref))
-        if pm_input:
-            pubmed_results = pubmed_search(build_exact_keywords_query(pm_input, "pubmed"), max_results)
-            if selected_journals:
-                pubmed_results = filter_papers_by_journal(pubmed_results, selected_journals)
-                print(f"  After journal filter: {len(pubmed_results):,} papers")
-            all_papers.extend(pubmed_results)
-        if oa_ft_input:
-            all_papers.extend(openalex_search(build_exact_keywords_query(oa_ft_input, "openalex"), max_results, "fulltext", journal_filter_openalex))
-
-    elif option == "4":
-        print("\n" + "-" * 40)
-        print("CrossRef (keywords, best match, abstract):")
-        print("Enter your search terms as a comma-separated list")
-        crossref_kw = get_input("> ", "crossref_keywords")
-
-        print("\n" + "-" * 40)
-        print("PubMed and OpenAlex (exact phrase and keywords, abstract):")
-        print("Enter your search terms as a comma-separated list with more than one term meaning exact phrase")
-        abstract_input = get_input("> ", "abstract_search")
-
-        print("\n" + "-" * 40)
-        print("OpenAlex (exact phrase and keywords, full-text):")
-        print("Enter your search terms as a comma-separated list with more than one term meaning exact phrase")
-        oa_ft_input = get_input("> ", "fulltext_search")
-
-        query_for_filename = crossref_kw or abstract_input or oa_ft_input
-
-        if crossref_kw:
-            all_papers.extend(crossref_search(build_keywords_query(crossref_kw, "crossref"), max_results, journal_filter_crossref))
-        if abstract_input:
-            pubmed_results = pubmed_search(build_exact_keywords_query(abstract_input, "pubmed"), max_results)
-            if selected_journals:
-                pubmed_results = filter_papers_by_journal(pubmed_results, selected_journals)
-                print(f"  After journal filter: {len(pubmed_results):,} papers")
-            all_papers.extend(pubmed_results)
-            all_papers.extend(openalex_search(build_exact_keywords_query(abstract_input, "openalex"), max_results, "abstract", journal_filter_openalex))
-        if oa_ft_input:
-            all_papers.extend(openalex_search(build_exact_keywords_query(oa_ft_input, "openalex"), max_results, "fulltext", journal_filter_openalex))
 
     # STEP 3: Filter and assign study numbers
     print(f"\n{'='*60}")
