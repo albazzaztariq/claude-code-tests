@@ -337,357 +337,342 @@
 337	Fabric Density: Middle Layer
 338	Fabric Density: Outer Layer
 339	Fabric Density: Monolayer
-340	Tensile Strength or Breaking Strength for Each Layer (specify units, typically N or lbf, and specify direction, e.g. warp or weft)
-341	Tensile Strength: Inner Layer
-342	Tensile Strength: Middle Layer
-343	Tensile Strength: Outer Layer
-344	Tensile Strength: Monolayer
-345	Elongation at Break for Each Layer (specify units, typically % or mm)
-346	Elongation at Break: Inner Layer
-347	Elongation at Break: Middle Layer
-348	Elongation at Break: Outer Layer
-349	Elongation at Break: Monolayer
-350	Tear Strength for Each Layer (specify units, typically N or lbf, and specify direction)
-351	Tear Strength: Inner Layer
-352	Tear Strength: Middle Layer
-353	Tear Strength: Outer Layer
-354	Tear Strength: Monolayer
-355	Bottom Spreading Speed OR Spreading Speed Bottom (SSb or Sᵦ) for Each Layer
-356	Bottom Spreading Speed OR Spreading Speed Bottom (SSb or Sᵦ): Inner Layer
-357	Bottom Spreading Speed OR Spreading Speed Bottom (SSb or Sᵦ): Middle Layer
-358	Bottom Spreading Speed OR Spreading Speed Bottom (SSb or Sᵦ): Outer Layer
-359	Bottom Spreading Speed OR Spreading Speed Bottom (SSb or Sᵦ): Monolayer
-360	Spreading Speed (SS or S) for Each Layer
-361	Spreading Speed (SS or S): Inner Layer
-362	Spreading Speed (SS or S): Middle Layer
-363	Spreading Speed (SS or S): Outer Layer
-364	Spreading Speed (SS or S): Monolayer
-365	Maximum Wetted Radius Bottom (MWRB or MRb or Rᵦ) AND Maximum Wetted Radius Top (MWRT or MRt or Rₜ) for Each Layer
-366	Maximum Wetted Radius Bottom OR Max Bottom Wetted Radius (MWRB or MRb or Rᵦ): Inner Layer
-367	Maximum Wetted Radius Bottom OR Max Bottom Wetted Radius (MWRB or MRb or Rᵦ): Middle Layer
-368	Maximum Wetted Radius Bottom OR Max Bottom Wetted Radius (MWRB or MRb or Rᵦ): Outer Layer
-369	Maximum Wetted Radius Bottom OR Max Bottom Wetted Radius (MWRB or MRb or Rᵦ): Monolayer
-370	Maximum Wetted Radius Top Layer OR Max Top Wetted Radius (MWRT or MRt or Rₜ): Inner Layer
-371	Maximum Wetted Radius Top Layer OR Max Top Wetted Radius (MWRT or MRt or Rₜ): Middle Layer
-372	Maximum Wetted Radius Top Layer OR Max Top Wetted Radius (MWRT or MRt or Rₜ): Outer Layer
-373	Maximum Wetted Radius Top Layer OR Max Top Wetted Radius (MWRT or MRt or Rₜ): Monolayer
-374	Accumulative One-Way Transport Index (AOTI or R) for Each Layer
-375	Accumulative One-Way Transport Index (AOTI or R): Inner Layer
-376	Accumulative One-Way Transport Index (AOTI or R): Middle Layer
-377	Accumulative One-Way Transport Index (AOTI or R): Outer Layer
-378	Accumulative One-Way Transport Index (AOTI or R): Monolayer
-379	One Way Transport Capability (OWTC or R) for Each Layer
-380	One Way Transport Capability (OWTC or R): Inner Layer
-381	One Way Transport Capability (OWTC or R): Middle Layer
-382	One Way Transport Capability (OWTC or R): Outer Layer
-383	One Way Transport Capability (OWTC or R): Monolayer
-384	Overall Moisture Management Capacity/Capability (OMMC) for Each Layer
-385	Overall Moisture Management Capacity/Capability (OMMC): Inner Layer
-386	Overall Moisture Management Capacity/Capability (OMMC): Middle Layer
-387	Overall Moisture Management Capacity/Capability (OMMC): Outer Layer
-388	Overall Moisture Management Capacity/Capability (OMMC): Monolayer
-389	JIS TESTING/STANDARDS (LEAVE THIS COLUMN BLANK)
-390	Wetting Time Top (WTT or WT‑J), Wetting Time Bottom (WTB or WT‑J), Wetting Time Average (WTAvg or WTAvg‑J) and Wetting Time (WT or WT‑J) for Each Layer
-391	Wetting Time Bottom (WTB or WT‑J): Inner Layer
-392	Wetting Time Bottom (WTB or WT‑J): Middle Layer
-393	Wetting Time Bottom (WTB or WT‑J): Outer Layer
-394	Wetting Time Bottom (WTB or WT‑J): Monolayer
-395	Wetting Time Top (WTT or WT‑J): Inner Layer
-396	Wetting Time Top (WTT or WT‑J): Middle Layer
-397	Wetting Time Top (WTT or WT‑J): Outer Layer
-398	Wetting Time Top (WTT or WT‑J): Monolayer
-399	Wetting Time (WT or WT‑J): Inner Layer
-400	Wetting Time (WT or WT‑J): Middle Layer
-401	Wetting Time (WT or WT‑J): Outer Layer
-402	Wetting Time (WT or WT‑J): Monolayer
-403	Absorption Rate Bottom (ARB or BAR or AR‑J) and Absorption Rate Top (ART or TAR or AR‑J) for Each Layer
-404	Absorption Rate Bottom (ARB or AR‑J): Inner Layer
-405	Absorption Rate Bottom (ARB or AR‑J): Middle Layer
-406	Absorption Rate Bottom (ARB or AR‑J): Outer Layer
-407	Absorption Rate Bottom (ARB or AR‑J): Monolayer
-408	Bottom Absorption Rate (BAR or AR‑J): Inner Layer
-409	Bottom Absorption Rate (BAR or AR‑J): Middle Layer
-410	Bottom Absorption Rate (BAR or AR‑J): Outer Layer
-411	Bottom Absorption Rate (BAR or AR‑J): Monolayer
-412	Absorption Rate Top Layer (ART or AR‑J): Inner Layer
-413	Absorption Rate Top Layer (ART or AR‑J): Middle Layer
-414	Absorption Rate Top Layer (ART or AR‑J): Outer Layer
-415	Absorption Rate Top Layer (ART or AR‑J): Monolayer
-416	Top Absorption Rate (TAR or AR‑J): Inner Layer
-417	Top Absorption Rate (TAR or AR‑J): Middle Layer
-418	Top Absorption Rate (TAR or AR‑J): Outer Layer
-419	Top Absorption Rate (TAR or AR‑J): Monolayer
-420	Spreading Speed Top (SSt or SS‑J) and Spreading Speed Bottom (SSb or SS‑J) for Each Layer
-421	Top Spreading Speed or Spreading Speed Top (SSt or SS‑J): Inner Layer
-422	Top Spreading Speed or Spreading Speed Top (SSt or SS‑J): Middle Layer
-423	Top Spreading Speed or Spreading Speed Top (SSt or SS‑J): Outer Layer
-424	Top Spreading Speed or Spreading Speed Top (SSt or SS‑J): Monolayer
-425	Bottom Spreading Speed or Spreading Speed Bottom (SSb or SS‑J): Inner Layer
-426	Bottom Spreading Speed or Spreading Speed Bottom (SSb or SS‑J): Middle Layer
-427	Bottom Spreading Speed or Spreading Speed Bottom (SSb or SS‑J): Outer Layer
-428	Bottom Spreading Speed or Spreading Speed Bottom (SSb or SS‑J): Monolayer
-429	Spreading Speed (SS or SS‑J) for Each Layer
-430	Spreading Speed (SS or SS‑J): Inner Layer
-431	Spreading Speed (SS or SS‑J): Middle Layer
-432	Spreading Speed (SS or SS‑J): Outer Layer
-433	Spreading Speed (SS or SS‑J): Monolayer
-434	Vertical Wicking Height vs Time (Vertical Wicking Height), or Vertical Wicking Radius vs Time (Vertical Wicking Rate), or Vertical Wicking Area vs Time (Vertical Wicking Area) for Each Layer (VWH or VWR or VWA or VWH‑J)
-435	Vertical Wicking Height/Radius/Area vs Time (VWH or VWR or VWA or VWH‑J): Inner Layer
-436	Vertical Wicking Height/Radius/Area vs Time (VWH or VWR or VWA or VWH‑J): Middle Layer
-437	Vertical Wicking Height/Radius/Area vs Time (VWH or VWR or VWA or VWH‑J): Outer Layer
-438	Vertical Wicking Height/Radius/Area vs Time (VWH or VWR or VWA or VWH‑J): Monolayer
-439	Horizontal Wicking Height vs Time (Horizontal Wicking Height), or Horizontal Wicking Radius vs Time (Horizontal Wicking Rate), or Horizontal Wicking Area vs Time (Horizontal Wicking Area) for Each Layer (HWH or HWR or HWA or HWH‑J)
-440	Horizontal Wicking Height/Radius/Area vs Time (HWH or HWR or HWA or HWH‑J): Inner Layer
-441	Horizontal Wicking Height/Radius/Area vs Time (HWH or HWR or HWA or HWH‑J): Middle Layer
-442	Horizontal Wicking Height/Radius/Area vs Time (HWH or HWR or HWA or HWH‑J): Outer Layer
-443	Horizontal Wicking Height/Radius/Area vs Time (HWH or HWR or HWA or HWH‑J): Monolayer
-444	Drying Time to Reach Specified Moisture Content or Drying Time to Target Moisture (DT or DT‑J) for Each Layer (write both the time and the moisture content level that was specified as the target)
-445	Drying Time (DT or DT‑J): Inner Layer (write both the time and the moisture content level that was specified as the target)
-446	Drying Time (DT or DT‑J): Middle Layer
-447	Drying Time (DT or DT‑J): Outer Layer
-448	Drying Time (DT or DT‑J): Monolayer
-449	Drying Rate (DR or DR‑J) for Each Layer (in %/min)
-450	Drying Rate (DR or DR‑J): Inner Layer
-451	Drying Rate (DR or DR‑J): Middle Layer
-452	Drying Rate (DR or DR‑J): Outer Layer
-453	Drying Rate (DR or DR‑J): Monolayer
-454	Drying Index (DI or QDI or DI‑J) or Quick-Dry Index (QDI or DI‑J) for Each Layer (Be sure to write the index scale, e.g. "80 on a scale from 0-100")
-455	Drying Index (DI or QDI or DI‑J): Inner Layer
-456	Drying Index (DI or QDI or DI‑J): Middle Layer
-457	Drying Index (DI or QDI or DI‑J): Outer Layer
-458	Drying Index (DI or QDI or DI‑J): Monolayer
-459	Contact Angle (CA or CA‑J) for Each Layer
-460	Contact Angle (CA or CA‑J): Inner Layer
-461	Contact Angle (CA or CA‑J): Middle Layer
-462	Contact Angle (CA or CA‑J): Outer Layer
-463	Contact Angle (CA or CA‑J): Monolayer
-464	Moisture Regain (MR or MR‑J) for Each Layer (in % of Oven-Dry Mass)
-465	Moisture Regain (MR or MR‑J): Inner Layer
-466	Moisture Regain (MR or MR‑J): Middle Layer
-467	Moisture Regain (MR or MR‑J): Outer Layer
-468	Moisture Regain (MR or MR‑J): Monolayer
-469	Moisture Content (MC or MC‑J) for Each Layer (in % of Total Mass)
-470	Moisture Content (MC or MC‑J): Inner Layer
-471	Moisture Content (MC or MC‑J): Middle Layer
-472	Moisture Content (MC or MC‑J): Outer Layer
-473	Moisture Content (MC or MC‑J): Monolayer
-474	Time to Complete Wetting (TCW or TCW‑J) for Each Layer (in seconds)
-475	Time to Complete Wetting (TCW or TCW‑J): Inner Layer
-476	Time to Complete Wetting (TCW or TCW‑J): Middle Layer
-477	Time to Complete Wetting (TCW or TCW‑J): Outer Layer
-478	Time to Complete Wetting (TCW or TCW‑J): Monolayer
-479	Evaporative Heat Flux (EHF or EHF‑J) for Each Layer (in W/m²)
-480	Evaporative Heat Flux (EHF or EHF‑J): Inner Layer
-481	Evaporative Heat Flux (EHF or EHF‑J): Middle Layer
-482	Evaporative Heat Flux (EHF or EHF‑J): Outer Layer
-483	Evaporative Heat Flux (EHF or EHF‑J): Monolayer
-484	Thermal Resistance (Rct or Rct‑J) for Each Layer (in m²·K/W)
-485	Thermal Resistance (Rct or Rct‑J): Inner Layer
-486	Thermal Resistance (Rct or Rct‑J): Middle Layer
-487	Thermal Resistance (Rct or Rct‑J): Outer Layer
-488	Thermal Resistance (Rct or Rct‑J): Monolayer
-489	Water Vapor Resistance (Ret or Ret‑J) for Each Layer (in Pa·m²/W)
-490	Water Vapor Resistance (Ret or Ret‑J): Inner Layer
-491	Water Vapor Resistance (Ret or Ret‑J): Middle Layer
-492	Water Vapor Resistance (Ret or Ret‑J): Outer Layer
-493	Water Vapor Resistance (Ret or Ret‑J): Monolayer
-494	Water Vapour Transmission Rate (WVTR or WVTR‑J) for Each Layer (in g/m²·24 h; specify JIS L 1099 method A/B/C)
-495	Water Vapour Transmission Rate (WVTR or WVTR‑J): Inner Layer
-496	Water Vapour Transmission Rate (WVTR or WVTR‑J): Middle Layer
-497	Water Vapour Transmission Rate (WVTR or WVTR‑J): Outer Layer
-498	Water Vapour Transmission Rate (WVTR or WVTR‑J): Monolayer
-499	Water Vapour Permeability (WVP or WVP‑J) for Each Layer (JIS L 1099)
-500	Water Vapour Permeability (WVP or WVP‑J): Inner Layer
-501	Water Vapour Permeability (WVP or WVP‑J): Middle Layer
-502	Water Vapour Permeability (WVP or WVP‑J): Outer Layer
-503	Water Vapour Permeability (WVP or WVP‑J): Monolayer
-504	Water Vapour Permeability (WVP or WVP‑J) for Each Layer (same JIS test data expressed as permeability)
-505	Water Vapour Permeability (WVP or WVP‑J): Inner Layer
-506	Water Vapour Permeability (WVP or WVP‑J): Middle Layer
-507	Water Vapour Permeability (WVP or WVP‑J): Outer Layer
-508	Water Vapour Permeability (WVP or WVP‑J): Monolayer
-509	Water Vapour Permeability Coefficient (WVPC or WVPC‑J) for Each Layer (permeability coefficient, e.g. g·m/m²·h·Pa)
-510	Water Vapour Permeability Coefficient (WVPC or WVPC‑J): Inner Layer
-511	Water Vapour Permeability Coefficient (WVPC or WVPC‑J): Middle Layer
-512	Water Vapour Permeability Coefficient (WVPC or WVPC‑J): Outer Layer
-513	Water Vapour Permeability Coefficient (WVPC or WVPC‑J): Monolayer
-514	Water Vapour Permeability Index (WVPindex or WVPindex‑J) for Each Layer (dimensionless index if reported)
-515	Water Vapour Permeability Index (WVPindex or WVPindex‑J): Inner Layer
-516	Water Vapour Permeability Index (WVPindex or WVPindex‑J): Middle Layer
-517	Water Vapour Permeability Index (WVPindex or WVPindex‑J): Outer Layer
-518	Water Vapour Permeability Index (WVPindex or WVPindex‑J): Monolayer
-519	Remaining Moisture Content (RMC or RMC‑J) for Each Layer (in % of Initial Moisture)
-520	Remaining Moisture Content (RMC or RMC‑J): Inner Layer
-521	Remaining Moisture Content (RMC or RMC‑J): Middle Layer
-522	Remaining Moisture Content (RMC or RMC‑J): Outer Layer
-523	Remaining Moisture Content (RMC or RMC‑J): Monolayer
-524	Absorption / Absorbent Capacity (AC or AC‑J) for Each Layer (in % of Oven-Dry Mass)
-525	Absorption / Absorbent Capacity (AC or AC‑J): Inner Layer
-526	Absorption / Absorbent Capacity (AC or AC‑J): Middle Layer
-527	Absorption / Absorbent Capacity (AC or AC‑J): Outer Layer
-528	Absorption / Absorbent Capacity (AC or AC‑J): Monolayer
-529	Absorption Time / Sink Time (AT or AT‑J) for Each Layer (in seconds)
-530	Absorption Time / Sink Time (AT or AT‑J): Inner Layer
-531	Absorption Time / Sink Time (AT or AT‑J): Middle Layer
-532	Absorption Time / Sink Time (AT or AT‑J): Outer Layer
-533	Absorption Time / Sink Time (AT or AT‑J): Monolayer
-534	Liquid Absorption (LA or LA‑J, g or % of Oven-Dry Mass) for Each Layer (specify which units are being used)
-535	Liquid Absorption (LA or LA‑J, g or % of Oven-Dry Mass): Inner Layer
-536	Liquid Absorption (LA or LA‑J, g or % of Oven-Dry Mass): Middle Layer
-537	Liquid Absorption (LA or LA‑J, g or % of Oven-Dry Mass): Outer Layer
-538	Liquid Absorption (LA or LA‑J, g or % of Oven-Dry Mass): Monolayer
-539	Moisture Content vs Time (MMT‑MC(t) or MC(t)‑J) for Each Layer
-540	Moisture Content vs Time (MMT‑MC(t) or MC(t)‑J): Inner Layer
-541	Moisture Content vs Time (MMT‑MC(t) or MC(t)‑J): Middle Layer
-542	Moisture Content vs Time (MMT‑MC(t) or MC(t)‑J): Outer Layer
-543	Moisture Content vs Time (MMT‑MC(t) or MC(t)‑J): Monolayer
-544	Surface Temperature Recovery Time (STR or STR‑J) for Each Layer (in seconds or minutes)
-545	Surface Temperature Recovery Time (STR or STR‑J): Inner Layer
-546	Surface Temperature Recovery Time (STR or STR‑J): Middle Layer
-547	Surface Temperature Recovery Time (STR or STR‑J): Outer Layer
-548	Surface Temperature Recovery Time (STR or STR‑J): Monolayer
-549	EN AND/OR ISO TESTING/STANDARDS (LEAVE THIS COLUMN BLANK)
-550	Heat Flux (q″ or HF or HF‑ISO) for Each Layer (instantaneous or steady heat flux from guarded hotplate/manikin; in W/m²)
-551	Heat Flux (q″ or HF or HF‑ISO): Inner Layer
-552	Heat Flux (q″ or HF or HF‑ISO): Middle Layer
-553	Heat Flux (q″ or HF or HF‑ISO): Outer Layer
-554	Heat Flux (q″ or HF or HF‑ISO): Monolayer
-555	Thermal Diffusivity (α or α‑ISO) for Each Layer (from transient methods; in m²/s; again a general property, tagged ISO for convenience)
-556	Thermal Diffusivity (α or α‑ISO): Inner Layer
-557	Thermal Diffusivity (α or α‑ISO): Middle Layer
-558	Thermal Diffusivity (α or α‑ISO): Outer Layer
-559	Thermal Diffusivity (α or α‑ISO): Monolayer
-560	Thermal Conductivity (k or k‑ISO) for Each Layer (from guarded hot plate / similar; in W/m·K; treated as ISO/EN‑type general property, not body‑specific to moisture tests)
-561	Thermal Conductivity (k or k‑ISO): Inner Layer
-562	Thermal Conductivity (k or k‑ISO): Middle Layer
-563	Thermal Conductivity (k or k‑ISO): Outer Layer
-564	Thermal Conductivity (k or k‑ISO): Monolayer
-565	Hydrostatic Pressure / Hydrostatic Head (HP or HH or HP‑ISO or HP‑EN) for Each Layer (ISO 811 / EN 20811‑type; cm water or kPa)
-566	Hydrostatic Pressure / Hydrostatic Head (HP or HH or HP‑ISO or HP‑EN): Inner Layer
-567	Hydrostatic Pressure / Hydrostatic Head (HP or HH or HP‑ISO or HP‑EN): Middle Layer
-568	Hydrostatic Pressure / Hydrostatic Head (HP or HH or HP‑ISO or HP‑EN): Outer Layer
-569	Hydrostatic Pressure / Hydrostatic Head (HP or HH or HP‑ISO or HP‑EN): Monolayer
-570	Water Resistance (WR or WR‑ISO or WR‑EN) for Each Layer (ISO / EN water resistance methods; specify test used and units)
-571	Water Resistance (WR or WR‑ISO or WR‑EN): Inner Layer
-572	Water Resistance (WR or WR‑ISO or WR‑EN): Middle Layer
-573	Water Resistance (WR or WR‑ISO or WR‑EN): Outer Layer
-574	Water Resistance (WR or WR‑ISO or WR‑EN): Monolayer
-575	Air Permeability (AP or AP‑ISO or AP‑EN) for Each Layer (ISO 9237 / EN ISO 9237‑type; in cm³/cm²·s or L/m²·s, specify units)
-576	Air Permeability (AP or AP‑ISO or AP‑EN): Inner Layer
-577	Air Permeability (AP or AP‑ISO or AP‑EN): Middle Layer
-578	Air Permeability (AP or AP‑ISO or AP‑EN): Outer Layer
-579	Air Permeability (AP or AP‑ISO or AP‑EN): Monolayer
-580	Drying Time to Reach Specified Moisture Content or Drying Time to Target Moisture for Each Layer (DT or DT‑ISO or DT‑EN) (write both the time and the moisture content level that was specified as the target)
-581	Drying Time (DT or DT‑ISO or DT‑EN): Inner Layer (List the Time along with the Specified/Target Moisture Content)
-582	Drying Time (DT or DT‑ISO or DT‑EN): Middle Layer
-583	Drying Time (DT or DT‑ISO or DT‑EN): Outer Layer
-584	Drying Time (DT or DT‑ISO or DT‑EN): Monolayer
-585	Drying Rate for Each Layer (DR or DR‑ISO or DR‑EN) (in %/min or equivalent drying % per unit time)
-586	Drying Rate (DR or DR‑ISO or DR‑EN): Inner Layer
-587	Drying Rate (DR or DR‑ISO or DR‑EN): Middle Layer
-588	Drying Rate (DR or DR‑ISO or DR‑EN): Outer Layer
-589	Drying Rate (DR or DR‑ISO or DR‑EN): Monolayer
-590	Remaining Moisture Content for Each Layer (RMC or RMC‑ISO or RMC‑EN) (in % of Initial Moisture)
-591	Remaining Moisture Content (RMC or RMC‑ISO or RMC‑EN): Inner Layer
-592	Remaining Moisture Content (RMC or RMC‑ISO or RMC‑EN): Middle Layer
-593	Remaining Moisture Content (RMC or RMC‑ISO or RMC‑EN): Outer Layer
-594	Remaining Moisture Content (RMC or RMC‑ISO or RMC‑EN): Monolayer
-595	Thermal Resistance for Each Layer (Rct or Rct‑ISO or Rct‑EN) (in m²·K/W)
-596	Thermal Resistance (Rct or Rct‑ISO or Rct‑EN): Inner Layer
-597	Thermal Resistance (Rct or Rct‑ISO or Rct‑EN): Middle Layer
-598	Thermal Resistance (Rct or Rct‑ISO or Rct‑EN): Outer Layer
-599	Thermal Resistance (Rct or Rct‑ISO or Rct‑EN): Monolayer
-600	Water Vapour Permeability (WVP or WVP‑ISO) for Each Layer (ISO/EN ISO MVTR‑type methods)
-601	Water Vapour Permeability (WVP or WVP‑ISO): Inner Layer
-602	Water Vapour Permeability (WVP or WVP‑ISO): Middle Layer
-603	Water Vapour Permeability (WVP or WVP‑ISO): Outer Layer
-604	Water Vapour Permeability (WVP or WVP‑ISO): Monolayer
-605	Water Vapor Resistance for Each Layer (Ret or Ret‑ISO or Ret‑EN) (in Pa·m²/W)
-606	Water Vapor Resistance (Ret or Ret‑ISO or Ret‑EN): Inner Layer
-607	Water Vapor Resistance (Ret or Ret‑ISO or Ret‑EN): Middle Layer
-608	Water Vapor Resistance (Ret or Ret‑ISO or Ret‑EN): Outer Layer
-609	Water Vapor Resistance (Ret or Ret‑ISO or Ret‑EN): Monolayer
-610	Evaporative Heat Flux / Evaporative Heat Loss for Each Layer (EHF or EHF‑ISO or EHF‑EN) (in W/m²)
-611	Evaporative Heat Flux (EHF or EHF‑ISO or EHF‑EN): Inner Layer
-612	Evaporative Heat Flux (EHF or EHF‑ISO or EHF‑EN): Middle Layer
-613	Evaporative Heat Flux (EHF or EHF‑ISO or EHF‑EN): Outer Layer
-614	Evaporative Heat Flux (EHF or EHF‑ISO or EHF‑EN): Monolayer
-615	ASTM TESTING/STANDARDS
-616	Qualitative Absorbency Rating (QAR or QAR‑AATCC or QAR‑ASTM) for Each Layer (grade or descriptive rating from drop/sink absorbency tests; specify scale)
-617	Qualitative Absorbency Rating (QAR or QAR‑AATCC or QAR‑ASTM): Inner Layer
-618	Qualitative Absorbency Rating (QAR or QAR‑AATCC or QAR‑ASTM): Middle Layer
-619	Qualitative Absorbency Rating (QAR or QAR‑AATCC or QAR‑ASTM): Outer Layer
-620	Qualitative Absorbency Rating (QAR or QAR‑AATCC or QAR‑ASTM): Monolayer
-621	Thermal Absorptivity / Contact Cool Feeling (qmax or Qmax or Qmax‑J or Qmax‑GB or Qmax‑ASTM) for Each Layer (JIS L 1927, GB/T 35263, ASTM D7984‑type; in W/m²·s½)
-622	Thermal Absorptivity / Contact Cool Feeling (qmax or Qmax or Qmax‑J or Qmax‑GB or Qmax‑ASTM): Inner Layer
-623	Thermal Absorptivity / Contact Cool Feeling (qmax or Qmax or Qmax‑J or Qmax‑GB or Qmax‑ASTM): Middle Layer
-624	Thermal Absorptivity / Contact Cool Feeling (qmax or Qmax or Qmax‑J or Qmax‑GB or Qmax‑ASTM): Outer Layer
-625	Thermal Absorptivity / Contact Cool Feeling (qmax or Qmax or Qmax‑J or Qmax‑GB or Qmax‑ASTM): Monolayer
-626	Hydrostatic Pressure / Hydrostatic Head (HP or HH or HP‑ASTM) for Each Layer (AATCC 127‑style; in cm water or kPa, specify units)
-627	Hydrostatic Pressure / Hydrostatic Head (HP or HH or HP‑ASTM): Inner Layer
-628	Hydrostatic Pressure / Hydrostatic Head (HP or HH or HP‑ASTM): Middle Layer
-629	Hydrostatic Pressure / Hydrostatic Head (HP or HH or HP‑ASTM): Outer Layer
-630	Hydrostatic Pressure / Hydrostatic Head (HP or HH or HP‑ASTM): Monolayer
-631	Water Resistance (WR or WR‑ASTM) for Each Layer (AATCC 35/22‑style spray or rain tests; specify rating or % wet‑through)
-632	Water Resistance (WR or WR‑ASTM): Inner Layer
-633	Water Resistance (WR or WR‑ASTM): Middle Layer
-634	Water Resistance (WR or WR‑ASTM): Outer Layer
-635	Water Resistance (WR or WR‑ASTM): Monolayer
-636	Air Permeability (AP or AP‑ASTM) for Each Layer (ASTM D737‑type; in cm³/cm²·s or L/m²·s, specify units)
-637	Air Permeability (AP or AP‑ASTM): Inner Layer
-638	Air Permeability (AP or AP‑ASTM): Middle Layer
-639	Air Permeability (AP or AP‑ASTM): Outer Layer
-640	Air Permeability (AP or AP‑ASTM): Monolayer
-641	Moisture Vapor Transmission Rate or Water Vapor Transmission Rate (MVTR or WVTR or MVTR‑ASTM or WVTR‑ASTM) for Each Layer (ASTM E96/E96‑type; in g/m²·24 h, specify method: desiccant or water)
-642	Moisture Vapor Transmission Rate or Water Vapor Transmission Rate (MVTR or WVTR or MVTR‑ASTM or WVTR‑ASTM): Inner Layer
-643	Moisture Vapor Transmission Rate or Water Vapor Transmission Rate (MVTR or WVTR or MVTR‑ASTM or WVTR‑ASTM): Middle Layer
-644	Moisture Vapor Transmission Rate or Water Vapor Transmission Rate (MVTR or WVTR or MVTR‑ASTM or WVTR‑ASTM): Outer Layer
-645	Moisture Vapor Transmission Rate or Water Vapor Transmission Rate (MVTR or WVTR or MVTR‑ASTM or WVTR‑ASTM): Monolayer
-646	Water Vapour Permeability (WVP or WVP‑ASTM) for Each Layer (ASTM E96‑style)
-647	Water Vapour Permeability (WVP or WVP‑ASTM): Inner Layer
-648	Water Vapour Permeability (WVP or WVP‑ASTM): Middle Layer
-649	Water Vapour Permeability (WVP or WVP‑ASTM): Outer Layer
-650	Water Vapour Permeability (WVP or WVP‑ASTM): Monolayer
-651	Water Vapor Permeability Coefficient (WVPC or WVPC‑ASTM) for Each Layer
-652	Water Vapor Permeability Coefficient (WVPC or WVPC‑ASTM): Inner Layer
-653	Water Vapor Permeability Coefficient (WVPC or WVPC‑ASTM): Middle Layer
-654	Water Vapor Permeability Coefficient (WVPC or WVPC‑ASTM): Outer Layer
-655	Water Vapor Permeability Coefficient (WVPC or WVPC‑ASTM): Monolayer
-656	Water Absorbency / Water Absorption (% pick‑up) (WA or WA‑ASTM) for Each Layer (specify % on oven‑dry mass or % on total mass)
-657	Water Absorbency / Water Absorption (WA or WA‑ASTM): Inner Layer
-658	Water Absorbency / Water Absorption (WA or WA‑ASTM): Middle Layer
-659	Water Absorbency / Water Absorption (WA or WA‑ASTM): Outer Layer
-660	Water Absorbency / Water Absorption (WA or WA‑ASTM): Monolayer
-661	Water Absorption Time / Sink Time (AT or AT‑ASTM) for Each Layer (in seconds)
-662	Water Absorption Time / Sink Time (AT or AT‑ASTM): Inner Layer
-663	Water Absorption Time / Sink Time (AT or AT‑ASTM): Middle Layer
-664	Water Absorption Time / Sink Time (AT or AT‑ASTM): Outer Layer
-665	Water Absorption Time / Sink Time (AT or AT‑ASTM): Monolayer
-666	Liquid Absorption Capacity (AC or AC‑ASTM) for Each Layer (in % of Oven‑Dry Mass or g/m²; specify units)
-667	Liquid Absorption Capacity (AC or AC‑ASTM): Inner Layer
-668	Liquid Absorption Capacity (AC or AC‑ASTM): Middle Layer
-669	Liquid Absorption Capacity (AC or AC‑ASTM): Outer Layer
-670	Liquid Absorption Capacity (AC or AC‑ASTM): Monolayer
-671	Thermal Resistance (Rct) for Each Layer
-672	Thermal Resistance (Rct): Inner Layer
-673	Thermal Resistance (Rct): Middle Layer
-674	Thermal Resistance (Rct): Outer Layer
-675	Thermal Resistance (Rct): Monolayer
-676	Evaporative Resistance (Ret) for Each Layer
-677	Evaporative Resistance (Ret): Inner Layer
-678	Evaporative Resistance (Ret): Middle Layer
-679	Evaporative Resistance (Ret): Outer Layer
-680	Evaporative Resistance (Ret): Monolayer
-681	WRITE IN THE FOLLOWING COLUMNS IF THESE METRICS OR NOT FROM AATCC OR GB/T OR JIS OR ISO OR EN
-682	Qualitative Absorbency Rating
-683	Air Permeability (AP)
-684	Thermal Conductivity
-685	Thermal Diffusivity
-686	Water Resistance
-687	Hydrostatic Pressure
-688	Heat Flux
-689	Thermal Absorptivity (Qmax)
-690	Remaining Moisture Content (RMC)
-691	Capillary Pressure (CP or Pcap) in N/m2
-692	SMF
-693	PMI
+340	Bottom Spreading Speed OR Spreading Speed Bottom (SSb or Sᵦ) for Each Layer
+341	Bottom Spreading Speed OR Spreading Speed Bottom (SSb or Sᵦ): Inner Layer
+342	Bottom Spreading Speed OR Spreading Speed Bottom (SSb or Sᵦ): Middle Layer
+343	Bottom Spreading Speed OR Spreading Speed Bottom (SSb or Sᵦ): Outer Layer
+344	Bottom Spreading Speed OR Spreading Speed Bottom (SSb or Sᵦ): Monolayer
+345	Spreading Speed (SS or S) for Each Layer
+346	Spreading Speed (SS or S): Inner Layer
+347	Spreading Speed (SS or S): Middle Layer
+348	Spreading Speed (SS or S): Outer Layer
+349	Spreading Speed (SS or S): Monolayer
+350	Maximum Wetted Radius Bottom (MWRB or MRb or Rᵦ) AND Maximum Wetted Radius Top (MWRT or MRt or Rₜ) for Each Layer
+351	Maximum Wetted Radius Bottom OR Max Bottom Wetted Radius (MWRB or MRb or Rᵦ): Inner Layer
+352	Maximum Wetted Radius Bottom OR Max Bottom Wetted Radius (MWRB or MRb or Rᵦ): Middle Layer
+353	Maximum Wetted Radius Bottom OR Max Bottom Wetted Radius (MWRB or MRb or Rᵦ): Outer Layer
+354	Maximum Wetted Radius Bottom OR Max Bottom Wetted Radius (MWRB or MRb or Rᵦ): Monolayer
+355	Maximum Wetted Radius Top Layer OR Max Top Wetted Radius (MWRT or MRt or Rₜ): Inner Layer
+356	Maximum Wetted Radius Top Layer OR Max Top Wetted Radius (MWRT or MRt or Rₜ): Middle Layer
+357	Maximum Wetted Radius Top Layer OR Max Top Wetted Radius (MWRT or MRt or Rₜ): Outer Layer
+358	Maximum Wetted Radius Top Layer OR Max Top Wetted Radius (MWRT or MRt or Rₜ): Monolayer
+359	Accumulative One-Way Transport Index (AOTI or R) for Each Layer
+360	Accumulative One-Way Transport Index (AOTI or R): Inner Layer
+361	Accumulative One-Way Transport Index (AOTI or R): Middle Layer
+362	Accumulative One-Way Transport Index (AOTI or R): Outer Layer
+363	Accumulative One-Way Transport Index (AOTI or R): Monolayer
+364	One Way Transport Capability (OWTC or R) for Each Layer
+365	One Way Transport Capability (OWTC or R): Inner Layer
+366	One Way Transport Capability (OWTC or R): Middle Layer
+367	One Way Transport Capability (OWTC or R): Outer Layer
+368	One Way Transport Capability (OWTC or R): Monolayer
+369	Overall Moisture Management Capacity/Capability (OMMC) for Each Layer
+370	Overall Moisture Management Capacity/Capability (OMMC): Inner Layer
+371	Overall Moisture Management Capacity/Capability (OMMC): Middle Layer
+372	Overall Moisture Management Capacity/Capability (OMMC): Outer Layer
+373	Overall Moisture Management Capacity/Capability (OMMC): Monolayer
+374	JIS TESTING/STANDARDS (LEAVE THIS COLUMN BLANK)
+375	Wetting Time Top (WTT or WT‑J), Wetting Time Bottom (WTB or WT‑J), Wetting Time Average (WTAvg or WTAvg‑J) and Wetting Time (WT or WT‑J) for Each Layer
+376	Wetting Time Bottom (WTB or WT‑J): Inner Layer
+377	Wetting Time Bottom (WTB or WT‑J): Middle Layer
+378	Wetting Time Bottom (WTB or WT‑J): Outer Layer
+379	Wetting Time Bottom (WTB or WT‑J): Monolayer
+380	Wetting Time Top (WTT or WT‑J): Inner Layer
+381	Wetting Time Top (WTT or WT‑J): Middle Layer
+382	Wetting Time Top (WTT or WT‑J): Outer Layer
+383	Wetting Time Top (WTT or WT‑J): Monolayer
+384	Wetting Time (WT or WT‑J): Inner Layer
+385	Wetting Time (WT or WT‑J): Middle Layer
+386	Wetting Time (WT or WT‑J): Outer Layer
+387	Wetting Time (WT or WT‑J): Monolayer
+388	Absorption Rate Bottom (ARB or BAR or AR‑J) and Absorption Rate Top (ART or TAR or AR‑J) for Each Layer
+389	Absorption Rate Bottom (ARB or AR‑J): Inner Layer
+390	Absorption Rate Bottom (ARB or AR‑J): Middle Layer
+391	Absorption Rate Bottom (ARB or AR‑J): Outer Layer
+392	Absorption Rate Bottom (ARB or AR‑J): Monolayer
+393	Bottom Absorption Rate (BAR or AR‑J): Inner Layer
+394	Bottom Absorption Rate (BAR or AR‑J): Middle Layer
+395	Bottom Absorption Rate (BAR or AR‑J): Outer Layer
+396	Bottom Absorption Rate (BAR or AR‑J): Monolayer
+397	Absorption Rate Top Layer (ART or AR‑J): Inner Layer
+398	Absorption Rate Top Layer (ART or AR‑J): Middle Layer
+399	Absorption Rate Top Layer (ART or AR‑J): Outer Layer
+400	Absorption Rate Top Layer (ART or AR‑J): Monolayer
+401	Top Absorption Rate (TAR or AR‑J): Inner Layer
+402	Top Absorption Rate (TAR or AR‑J): Middle Layer
+403	Top Absorption Rate (TAR or AR‑J): Outer Layer
+404	Top Absorption Rate (TAR or AR‑J): Monolayer
+405	Spreading Speed Top (SSt or SS‑J) and Spreading Speed Bottom (SSb or SS‑J) for Each Layer
+406	Top Spreading Speed or Spreading Speed Top (SSt or SS‑J): Inner Layer
+407	Top Spreading Speed or Spreading Speed Top (SSt or SS‑J): Middle Layer
+408	Top Spreading Speed or Spreading Speed Top (SSt or SS‑J): Outer Layer
+409	Top Spreading Speed or Spreading Speed Top (SSt or SS‑J): Monolayer
+410	Bottom Spreading Speed or Spreading Speed Bottom (SSb or SS‑J): Inner Layer
+411	Bottom Spreading Speed or Spreading Speed Bottom (SSb or SS‑J): Middle Layer
+412	Bottom Spreading Speed or Spreading Speed Bottom (SSb or SS‑J): Outer Layer
+413	Bottom Spreading Speed or Spreading Speed Bottom (SSb or SS‑J): Monolayer
+414	Spreading Speed (SS or SS‑J) for Each Layer
+415	Spreading Speed (SS or SS‑J): Inner Layer
+416	Spreading Speed (SS or SS‑J): Middle Layer
+417	Spreading Speed (SS or SS‑J): Outer Layer
+418	Spreading Speed (SS or SS‑J): Monolayer
+419	Vertical Wicking Height vs Time (Vertical Wicking Height), or Vertical Wicking Radius vs Time (Vertical Wicking Rate), or Vertical Wicking Area vs Time (Vertical Wicking Area) for Each Layer (VWH or VWR or VWA or VWH‑J)
+420	Vertical Wicking Height/Radius/Area vs Time (VWH or VWR or VWA or VWH‑J): Inner Layer
+421	Vertical Wicking Height/Radius/Area vs Time (VWH or VWR or VWA or VWH‑J): Middle Layer
+422	Vertical Wicking Height/Radius/Area vs Time (VWH or VWR or VWA or VWH‑J): Outer Layer
+423	Vertical Wicking Height/Radius/Area vs Time (VWH or VWR or VWA or VWH‑J): Monolayer
+424	Horizontal Wicking Height vs Time (Horizontal Wicking Height), or Horizontal Wicking Radius vs Time (Horizontal Wicking Rate), or Horizontal Wicking Area vs Time (Horizontal Wicking Area) for Each Layer (HWH or HWR or HWA or HWH‑J)
+425	Horizontal Wicking Height/Radius/Area vs Time (HWH or HWR or HWA or HWH‑J): Inner Layer
+426	Horizontal Wicking Height/Radius/Area vs Time (HWH or HWR or HWA or HWH‑J): Middle Layer
+427	Horizontal Wicking Height/Radius/Area vs Time (HWH or HWR or HWA or HWH‑J): Outer Layer
+428	Horizontal Wicking Height/Radius/Area vs Time (HWH or HWR or HWA or HWH‑J): Monolayer
+429	Drying Time to Reach Specified Moisture Content or Drying Time to Target Moisture (DT or DT‑J) for Each Layer (write both the time and the moisture content level that was specified as the target)
+430	Drying Time (DT or DT‑J): Inner Layer (write both the time and the moisture content level that was specified as the target)
+431	Drying Time (DT or DT‑J): Middle Layer
+432	Drying Time (DT or DT‑J): Outer Layer
+433	Drying Time (DT or DT‑J): Monolayer
+434	Drying Rate (DR or DR‑J) for Each Layer (in %/min)
+435	Drying Rate (DR or DR‑J): Inner Layer
+436	Drying Rate (DR or DR‑J): Middle Layer
+437	Drying Rate (DR or DR‑J): Outer Layer
+438	Drying Rate (DR or DR‑J): Monolayer
+439	Drying Index (DI or QDI or DI‑J) or Quick-Dry Index (QDI or DI‑J) for Each Layer (Be sure to write the index scale, e.g. "80 on a scale from 0-100")
+440	Drying Index (DI or QDI or DI‑J): Inner Layer
+441	Drying Index (DI or QDI or DI‑J): Middle Layer
+442	Drying Index (DI or QDI or DI‑J): Outer Layer
+443	Drying Index (DI or QDI or DI‑J): Monolayer
+444	Contact Angle (CA or CA‑J) for Each Layer
+445	Contact Angle (CA or CA‑J): Inner Layer
+446	Contact Angle (CA or CA‑J): Middle Layer
+447	Contact Angle (CA or CA‑J): Outer Layer
+448	Contact Angle (CA or CA‑J): Monolayer
+449	Moisture Regain (MR or MR‑J) for Each Layer (in % of Oven-Dry Mass)
+450	Moisture Regain (MR or MR‑J): Inner Layer
+451	Moisture Regain (MR or MR‑J): Middle Layer
+452	Moisture Regain (MR or MR‑J): Outer Layer
+453	Moisture Regain (MR or MR‑J): Monolayer
+454	Moisture Content (MC or MC‑J) for Each Layer (in % of Total Mass)
+455	Moisture Content (MC or MC‑J): Inner Layer
+456	Moisture Content (MC or MC‑J): Middle Layer
+457	Moisture Content (MC or MC‑J): Outer Layer
+458	Moisture Content (MC or MC‑J): Monolayer
+459	Time to Complete Wetting (TCW or TCW‑J) for Each Layer (in seconds)
+460	Time to Complete Wetting (TCW or TCW‑J): Inner Layer
+461	Time to Complete Wetting (TCW or TCW‑J): Middle Layer
+462	Time to Complete Wetting (TCW or TCW‑J): Outer Layer
+463	Time to Complete Wetting (TCW or TCW‑J): Monolayer
+464	Evaporative Heat Flux (EHF or EHF‑J) for Each Layer (in W/m²)
+465	Evaporative Heat Flux (EHF or EHF‑J): Inner Layer
+466	Evaporative Heat Flux (EHF or EHF‑J): Middle Layer
+467	Evaporative Heat Flux (EHF or EHF‑J): Outer Layer
+468	Evaporative Heat Flux (EHF or EHF‑J): Monolayer
+469	Thermal Resistance (Rct or Rct‑J) for Each Layer (in m²·K/W)
+470	Thermal Resistance (Rct or Rct‑J): Inner Layer
+471	Thermal Resistance (Rct or Rct‑J): Middle Layer
+472	Thermal Resistance (Rct or Rct‑J): Outer Layer
+473	Thermal Resistance (Rct or Rct‑J): Monolayer
+474	Water Vapor Resistance (Ret or Ret‑J) for Each Layer (in Pa·m²/W)
+475	Water Vapor Resistance (Ret or Ret‑J): Inner Layer
+476	Water Vapor Resistance (Ret or Ret‑J): Middle Layer
+477	Water Vapor Resistance (Ret or Ret‑J): Outer Layer
+478	Water Vapor Resistance (Ret or Ret‑J): Monolayer
+479	Water Vapour Transmission Rate (WVTR or WVTR‑J) for Each Layer (in g/m²·24 h; specify JIS L 1099 method A/B/C)
+480	Water Vapour Transmission Rate (WVTR or WVTR‑J): Inner Layer
+481	Water Vapour Transmission Rate (WVTR or WVTR‑J): Middle Layer
+482	Water Vapour Transmission Rate (WVTR or WVTR‑J): Outer Layer
+483	Water Vapour Transmission Rate (WVTR or WVTR‑J): Monolayer
+484	Water Vapour Permeability (WVP or WVP‑J) for Each Layer (JIS L 1099)
+485	Water Vapour Permeability (WVP or WVP‑J): Inner Layer
+486	Water Vapour Permeability (WVP or WVP‑J): Middle Layer
+487	Water Vapour Permeability (WVP or WVP‑J): Outer Layer
+488	Water Vapour Permeability (WVP or WVP‑J): Monolayer
+489	Water Vapour Permeability (WVP or WVP‑J) for Each Layer (same JIS test data expressed as permeability)
+490	Water Vapour Permeability (WVP or WVP‑J): Inner Layer
+491	Water Vapour Permeability (WVP or WVP‑J): Middle Layer
+492	Water Vapour Permeability (WVP or WVP‑J): Outer Layer
+493	Water Vapour Permeability (WVP or WVP‑J): Monolayer
+494	Water Vapour Permeability Coefficient (WVPC or WVPC‑J) for Each Layer (permeability coefficient, e.g. g·m/m²·h·Pa)
+495	Water Vapour Permeability Coefficient (WVPC or WVPC‑J): Inner Layer
+496	Water Vapour Permeability Coefficient (WVPC or WVPC‑J): Middle Layer
+497	Water Vapour Permeability Coefficient (WVPC or WVPC‑J): Outer Layer
+498	Water Vapour Permeability Coefficient (WVPC or WVPC‑J): Monolayer
+499	Water Vapour Permeability Index (WVPindex or WVPindex‑J) for Each Layer (dimensionless index if reported)
+500	Water Vapour Permeability Index (WVPindex or WVPindex‑J): Inner Layer
+501	Water Vapour Permeability Index (WVPindex or WVPindex‑J): Middle Layer
+502	Water Vapour Permeability Index (WVPindex or WVPindex‑J): Outer Layer
+503	Water Vapour Permeability Index (WVPindex or WVPindex‑J): Monolayer
+504	Remaining Moisture Content (RMC or RMC‑J) for Each Layer (in % of Initial Moisture)
+505	Remaining Moisture Content (RMC or RMC‑J): Inner Layer
+506	Remaining Moisture Content (RMC or RMC‑J): Middle Layer
+507	Remaining Moisture Content (RMC or RMC‑J): Outer Layer
+508	Remaining Moisture Content (RMC or RMC‑J): Monolayer
+509	Absorption / Absorbent Capacity (AC or AC‑J) for Each Layer (in % of Oven-Dry Mass)
+510	Absorption / Absorbent Capacity (AC or AC‑J): Inner Layer
+511	Absorption / Absorbent Capacity (AC or AC‑J): Middle Layer
+512	Absorption / Absorbent Capacity (AC or AC‑J): Outer Layer
+513	Absorption / Absorbent Capacity (AC or AC‑J): Monolayer
+514	Absorption Time / Sink Time (AT or AT‑J) for Each Layer (in seconds)
+515	Absorption Time / Sink Time (AT or AT‑J): Inner Layer
+516	Absorption Time / Sink Time (AT or AT‑J): Middle Layer
+517	Absorption Time / Sink Time (AT or AT‑J): Outer Layer
+518	Absorption Time / Sink Time (AT or AT‑J): Monolayer
+519	Liquid Absorption (LA or LA‑J, g or % of Oven-Dry Mass) for Each Layer (specify which units are being used)
+520	Liquid Absorption (LA or LA‑J, g or % of Oven-Dry Mass): Inner Layer
+521	Liquid Absorption (LA or LA‑J, g or % of Oven-Dry Mass): Middle Layer
+522	Liquid Absorption (LA or LA‑J, g or % of Oven-Dry Mass): Outer Layer
+523	Liquid Absorption (LA or LA‑J, g or % of Oven-Dry Mass): Monolayer
+524	Moisture Content vs Time (MMT‑MC(t) or MC(t)‑J) for Each Layer
+525	Moisture Content vs Time (MMT‑MC(t) or MC(t)‑J): Inner Layer
+526	Moisture Content vs Time (MMT‑MC(t) or MC(t)‑J): Middle Layer
+527	Moisture Content vs Time (MMT‑MC(t) or MC(t)‑J): Outer Layer
+528	Moisture Content vs Time (MMT‑MC(t) or MC(t)‑J): Monolayer
+529	Surface Temperature Recovery Time (STR or STR‑J) for Each Layer (in seconds or minutes)
+530	Surface Temperature Recovery Time (STR or STR‑J): Inner Layer
+531	Surface Temperature Recovery Time (STR or STR‑J): Middle Layer
+532	Surface Temperature Recovery Time (STR or STR‑J): Outer Layer
+533	Surface Temperature Recovery Time (STR or STR‑J): Monolayer
+534	EN AND/OR ISO TESTING/STANDARDS (LEAVE THIS COLUMN BLANK)
+535	Heat Flux (q″ or HF or HF‑ISO) for Each Layer (instantaneous or steady heat flux from guarded hotplate/manikin; in W/m²)
+536	Heat Flux (q″ or HF or HF‑ISO): Inner Layer
+537	Heat Flux (q″ or HF or HF‑ISO): Middle Layer
+538	Heat Flux (q″ or HF or HF‑ISO): Outer Layer
+539	Heat Flux (q″ or HF or HF‑ISO): Monolayer
+540	Thermal Diffusivity (α or α‑ISO) for Each Layer (from transient methods; in m²/s; again a general property, tagged ISO for convenience)
+541	Thermal Diffusivity (α or α‑ISO): Inner Layer
+542	Thermal Diffusivity (α or α‑ISO): Middle Layer
+543	Thermal Diffusivity (α or α‑ISO): Outer Layer
+544	Thermal Diffusivity (α or α‑ISO): Monolayer
+545	Thermal Conductivity (k or k‑ISO) for Each Layer (from guarded hot plate / similar; in W/m·K; treated as ISO/EN‑type general property, not body‑specific to moisture tests)
+546	Thermal Conductivity (k or k‑ISO): Inner Layer
+547	Thermal Conductivity (k or k‑ISO): Middle Layer
+548	Thermal Conductivity (k or k‑ISO): Outer Layer
+549	Thermal Conductivity (k or k‑ISO): Monolayer
+550	Hydrostatic Pressure / Hydrostatic Head (HP or HH or HP‑ISO or HP‑EN) for Each Layer (ISO 811 / EN 20811‑type; cm water or kPa)
+551	Hydrostatic Pressure / Hydrostatic Head (HP or HH or HP‑ISO or HP‑EN): Inner Layer
+552	Hydrostatic Pressure / Hydrostatic Head (HP or HH or HP‑ISO or HP‑EN): Middle Layer
+553	Hydrostatic Pressure / Hydrostatic Head (HP or HH or HP‑ISO or HP‑EN): Outer Layer
+554	Hydrostatic Pressure / Hydrostatic Head (HP or HH or HP‑ISO or HP‑EN): Monolayer
+555	Water Resistance (WR or WR‑ISO or WR‑EN) for Each Layer (ISO / EN water resistance methods; specify test used and units)
+556	Water Resistance (WR or WR‑ISO or WR‑EN): Inner Layer
+557	Water Resistance (WR or WR‑ISO or WR‑EN): Middle Layer
+558	Water Resistance (WR or WR‑ISO or WR‑EN): Outer Layer
+559	Water Resistance (WR or WR‑ISO or WR‑EN): Monolayer
+560	Air Permeability (AP or AP‑ISO or AP‑EN) for Each Layer (ISO 9237 / EN ISO 9237‑type; in cm³/cm²·s or L/m²·s, specify units)
+561	Air Permeability (AP or AP‑ISO or AP‑EN): Inner Layer
+562	Air Permeability (AP or AP‑ISO or AP‑EN): Middle Layer
+563	Air Permeability (AP or AP‑ISO or AP‑EN): Outer Layer
+564	Air Permeability (AP or AP‑ISO or AP‑EN): Monolayer
+565	Drying Time to Reach Specified Moisture Content or Drying Time to Target Moisture for Each Layer (DT or DT‑ISO or DT‑EN) (write both the time and the moisture content level that was specified as the target)
+566	Drying Time (DT or DT‑ISO or DT‑EN): Inner Layer (List the Time along with the Specified/Target Moisture Content)
+567	Drying Time (DT or DT‑ISO or DT‑EN): Middle Layer
+568	Drying Time (DT or DT‑ISO or DT‑EN): Outer Layer
+569	Drying Time (DT or DT‑ISO or DT‑EN): Monolayer
+570	Drying Rate for Each Layer (DR or DR‑ISO or DR‑EN) (in %/min or equivalent drying % per unit time)
+571	Drying Rate (DR or DR‑ISO or DR‑EN): Inner Layer
+572	Drying Rate (DR or DR‑ISO or DR‑EN): Middle Layer
+573	Drying Rate (DR or DR‑ISO or DR‑EN): Outer Layer
+574	Drying Rate (DR or DR‑ISO or DR‑EN): Monolayer
+575	Remaining Moisture Content for Each Layer (RMC or RMC‑ISO or RMC‑EN) (in % of Initial Moisture)
+576	Remaining Moisture Content (RMC or RMC‑ISO or RMC‑EN): Inner Layer
+577	Remaining Moisture Content (RMC or RMC‑ISO or RMC‑EN): Middle Layer
+578	Remaining Moisture Content (RMC or RMC‑ISO or RMC‑EN): Outer Layer
+579	Remaining Moisture Content (RMC or RMC‑ISO or RMC‑EN): Monolayer
+580	Thermal Resistance for Each Layer (Rct or Rct‑ISO or Rct‑EN) (in m²·K/W)
+581	Thermal Resistance (Rct or Rct‑ISO or Rct‑EN): Inner Layer
+582	Thermal Resistance (Rct or Rct‑ISO or Rct‑EN): Middle Layer
+583	Thermal Resistance (Rct or Rct‑ISO or Rct‑EN): Outer Layer
+584	Thermal Resistance (Rct or Rct‑ISO or Rct‑EN): Monolayer
+585	Water Vapour Permeability (WVP or WVP‑ISO) for Each Layer (ISO/EN ISO MVTR‑type methods)
+586	Water Vapour Permeability (WVP or WVP‑ISO): Inner Layer
+587	Water Vapour Permeability (WVP or WVP‑ISO): Middle Layer
+588	Water Vapour Permeability (WVP or WVP‑ISO): Outer Layer
+589	Water Vapour Permeability (WVP or WVP‑ISO): Monolayer
+590	Water Vapor Resistance for Each Layer (Ret or Ret‑ISO or Ret‑EN) (in Pa·m²/W)
+591	Water Vapor Resistance (Ret or Ret‑ISO or Ret‑EN): Inner Layer
+592	Water Vapor Resistance (Ret or Ret‑ISO or Ret‑EN): Middle Layer
+593	Water Vapor Resistance (Ret or Ret‑ISO or Ret‑EN): Outer Layer
+594	Water Vapor Resistance (Ret or Ret‑ISO or Ret‑EN): Monolayer
+595	Evaporative Heat Flux / Evaporative Heat Loss for Each Layer (EHF or EHF‑ISO or EHF‑EN) (in W/m²)
+596	Evaporative Heat Flux (EHF or EHF‑ISO or EHF‑EN): Inner Layer
+597	Evaporative Heat Flux (EHF or EHF‑ISO or EHF‑EN): Middle Layer
+598	Evaporative Heat Flux (EHF or EHF‑ISO or EHF‑EN): Outer Layer
+599	Evaporative Heat Flux (EHF or EHF‑ISO or EHF‑EN): Monolayer
+600	ASTM TESTING/STANDARDS
+601	Qualitative Absorbency Rating (QAR or QAR‑AATCC or QAR‑ASTM) for Each Layer (grade or descriptive rating from drop/sink absorbency tests; specify scale)
+602	Qualitative Absorbency Rating (QAR or QAR‑AATCC or QAR‑ASTM): Inner Layer
+603	Qualitative Absorbency Rating (QAR or QAR‑AATCC or QAR‑ASTM): Middle Layer
+604	Qualitative Absorbency Rating (QAR or QAR‑AATCC or QAR‑ASTM): Outer Layer
+605	Qualitative Absorbency Rating (QAR or QAR‑AATCC or QAR‑ASTM): Monolayer
+606	Thermal Absorptivity / Contact Cool Feeling (qmax or Qmax or Qmax‑J or Qmax‑GB or Qmax‑ASTM) for Each Layer (JIS L 1927, GB/T 35263, ASTM D7984‑type; in W/m²·s½)
+607	Thermal Absorptivity / Contact Cool Feeling (qmax or Qmax or Qmax‑J or Qmax‑GB or Qmax‑ASTM): Inner Layer
+608	Thermal Absorptivity / Contact Cool Feeling (qmax or Qmax or Qmax‑J or Qmax‑GB or Qmax‑ASTM): Middle Layer
+609	Thermal Absorptivity / Contact Cool Feeling (qmax or Qmax or Qmax‑J or Qmax‑GB or Qmax‑ASTM): Outer Layer
+610	Thermal Absorptivity / Contact Cool Feeling (qmax or Qmax or Qmax‑J or Qmax‑GB or Qmax‑ASTM): Monolayer
+611	Hydrostatic Pressure / Hydrostatic Head (HP or HH or HP‑ASTM) for Each Layer (AATCC 127‑style; in cm water or kPa, specify units)
+612	Hydrostatic Pressure / Hydrostatic Head (HP or HH or HP‑ASTM): Inner Layer
+613	Hydrostatic Pressure / Hydrostatic Head (HP or HH or HP‑ASTM): Middle Layer
+614	Hydrostatic Pressure / Hydrostatic Head (HP or HH or HP‑ASTM): Outer Layer
+615	Hydrostatic Pressure / Hydrostatic Head (HP or HH or HP‑ASTM): Monolayer
+616	Water Resistance (WR or WR‑ASTM) for Each Layer (AATCC 35/22‑style spray or rain tests; specify rating or % wet‑through)
+617	Water Resistance (WR or WR‑ASTM): Inner Layer
+618	Water Resistance (WR or WR‑ASTM): Middle Layer
+619	Water Resistance (WR or WR‑ASTM): Outer Layer
+620	Water Resistance (WR or WR‑ASTM): Monolayer
+621	Air Permeability (AP or AP‑ASTM) for Each Layer (ASTM D737‑type; in cm³/cm²·s or L/m²·s, specify units)
+622	Air Permeability (AP or AP‑ASTM): Inner Layer
+623	Air Permeability (AP or AP‑ASTM): Middle Layer
+624	Air Permeability (AP or AP‑ASTM): Outer Layer
+625	Air Permeability (AP or AP‑ASTM): Monolayer
+626	Moisture Vapor Transmission Rate or Water Vapor Transmission Rate (MVTR or WVTR or MVTR‑ASTM or WVTR‑ASTM) for Each Layer (ASTM E96/E96‑type; in g/m²·24 h, specify method: desiccant or water)
+627	Moisture Vapor Transmission Rate or Water Vapor Transmission Rate (MVTR or WVTR or MVTR‑ASTM or WVTR‑ASTM): Inner Layer
+628	Moisture Vapor Transmission Rate or Water Vapor Transmission Rate (MVTR or WVTR or MVTR‑ASTM or WVTR‑ASTM): Middle Layer
+629	Moisture Vapor Transmission Rate or Water Vapor Transmission Rate (MVTR or WVTR or MVTR‑ASTM or WVTR‑ASTM): Outer Layer
+630	Moisture Vapor Transmission Rate or Water Vapor Transmission Rate (MVTR or WVTR or MVTR‑ASTM or WVTR‑ASTM): Monolayer
+631	Water Vapour Permeability (WVP or WVP‑ASTM) for Each Layer (ASTM E96‑style)
+632	Water Vapour Permeability (WVP or WVP‑ASTM): Inner Layer
+633	Water Vapour Permeability (WVP or WVP‑ASTM): Middle Layer
+634	Water Vapour Permeability (WVP or WVP‑ASTM): Outer Layer
+635	Water Vapour Permeability (WVP or WVP‑ASTM): Monolayer
+636	Water Vapor Permeability Coefficient (WVPC or WVPC‑ASTM) for Each Layer
+637	Water Vapor Permeability Coefficient (WVPC or WVPC‑ASTM): Inner Layer
+638	Water Vapor Permeability Coefficient (WVPC or WVPC‑ASTM): Middle Layer
+639	Water Vapor Permeability Coefficient (WVPC or WVPC‑ASTM): Outer Layer
+640	Water Vapor Permeability Coefficient (WVPC or WVPC‑ASTM): Monolayer
+641	Water Absorbency / Water Absorption (% pick‑up) (WA or WA‑ASTM) for Each Layer (specify % on oven‑dry mass or % on total mass)
+642	Water Absorbency / Water Absorption (WA or WA‑ASTM): Inner Layer
+643	Water Absorbency / Water Absorption (WA or WA‑ASTM): Middle Layer
+644	Water Absorbency / Water Absorption (WA or WA‑ASTM): Outer Layer
+645	Water Absorbency / Water Absorption (WA or WA‑ASTM): Monolayer
+646	Water Absorption Time / Sink Time (AT or AT‑ASTM) for Each Layer (in seconds)
+647	Water Absorption Time / Sink Time (AT or AT‑ASTM): Inner Layer
+648	Water Absorption Time / Sink Time (AT or AT‑ASTM): Middle Layer
+649	Water Absorption Time / Sink Time (AT or AT‑ASTM): Outer Layer
+650	Water Absorption Time / Sink Time (AT or AT‑ASTM): Monolayer
+651	Liquid Absorption Capacity (AC or AC‑ASTM) for Each Layer (in % of Oven‑Dry Mass or g/m²; specify units)
+652	Liquid Absorption Capacity (AC or AC‑ASTM): Inner Layer
+653	Liquid Absorption Capacity (AC or AC‑ASTM): Middle Layer
+654	Liquid Absorption Capacity (AC or AC‑ASTM): Outer Layer
+655	Liquid Absorption Capacity (AC or AC‑ASTM): Monolayer
+656	Thermal Resistance (Rct) for Each Layer
+657	Thermal Resistance (Rct): Inner Layer
+658	Thermal Resistance (Rct): Middle Layer
+659	Thermal Resistance (Rct): Outer Layer
+660	Thermal Resistance (Rct): Monolayer
+661	Evaporative Resistance (Ret) for Each Layer
+662	Evaporative Resistance (Ret): Inner Layer
+663	Evaporative Resistance (Ret): Middle Layer
+664	Evaporative Resistance (Ret): Outer Layer
+665	Evaporative Resistance (Ret): Monolayer
+666	WRITE IN THE FOLLOWING COLUMNS IF THESE METRICS OR NOT FROM AATCC OR GB/T OR JIS OR ISO OR EN
+667	Qualitative Absorbency Rating
+668	Air Permeability (AP)
+669	Thermal Conductivity
+670	Thermal Diffusivity
+671	Water Resistance
+672	Hydrostatic Pressure
+673	Heat Flux
+674	Thermal Absorptivity (Qmax)
+675	Remaining Moisture Content (RMC)
+676	Capillary Pressure (CP or Pcap) in N/m2
+677	SMF
+678	PMI

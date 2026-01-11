@@ -337,21 +337,6 @@ Fabric Density: Inner Layer
 Fabric Density: Middle Layer
 Fabric Density: Outer Layer
 Fabric Density: Monolayer
-Tensile Strength or Breaking Strength for Each Layer (specify units, typically N or lbf, and specify direction, e.g. warp or weft)
-Tensile Strength: Inner Layer
-Tensile Strength: Middle Layer
-Tensile Strength: Outer Layer
-Tensile Strength: Monolayer
-Elongation at Break for Each Layer (specify units, typically % or mm)
-Elongation at Break: Inner Layer
-Elongation at Break: Middle Layer
-Elongation at Break: Outer Layer
-Elongation at Break: Monolayer
-Tear Strength for Each Layer (specify units, typically N or lbf, and specify direction)
-Tear Strength: Inner Layer
-Tear Strength: Middle Layer
-Tear Strength: Outer Layer
-Tear Strength: Monolayer
 Bottom Spreading Speed OR Spreading Speed Bottom (SSb or Sᵦ) for Each Layer
 Bottom Spreading Speed OR Spreading Speed Bottom (SSb or Sᵦ): Inner Layer
 Bottom Spreading Speed OR Spreading Speed Bottom (SSb or Sᵦ): Middle Layer
