@@ -1,0 +1,43 @@
+MasterBench
+      │
+      ├── ModelManager
+      │
+      ├── Adapters → raw results
+      │
+      ├── Validator ← NEW
+      │       ├── Relevance: "Is this moisture-related?"
+      │       ├── Quality: "Is this readable text?"
+      │       │
+      │       └── Returns:
+      │             - PASS → send to Converter
+      │             - IRRELEVANT → discard or tag
+      │             - GARBAGE → retry or flag for review
+      │
+      └── Converter → final output
+
+
+Validation:
+
+TextileVision
+      │
+      ├── Layout parsers → bboxes
+      │
+      ├── DetectionValidator ← "Do 2 tools agree this is a table?"
+      │       ├── Both found it → keep crop
+      │       └── Only 1 found it → discard (false positive)
+      │
+      ├── Extractors → raw data
+      │
+      └── returns to FabricETL
+
+
+  FabricETL
+      │
+      ├── gets extracted data from TextileVision
+      │
+      ├── ContentValidator ← "Is this data meaningful?"
+      │       ├── "yarn density of yellow" → garbage, discard
+      │       ├── "bursting strength" → irrelevant, discard
+      │       └── "moisture regain %" → valid, keep
+      │
+      └── Final Excel
