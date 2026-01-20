@@ -1,0 +1,221 @@
+Yarn Denier
+Linear Density
+Filament Count
+Porosity
+Pore Size
+Pore Size Distribution
+Open Area Fraction
+Hydraulic Diameter
+Loop Length
+Surface Roughness
+Wetting Time Top
+WTT
+WTB
+WTAvg
+WT
+Wetting Time Bottom
+Wetting Time
+Absorption Rate Bottom
+ARB
+BAR
+Absorption Rate Top
+ART
+TAR
+Bottom Absorption Rate
+Top Absorption Rate
+Wicking Distance
+Wicking Rate
+Wicking Speed
+Drying Time
+Drying Rate
+Capillary Rise Height
+Capillary Rise Rate
+Capillary Rise Speed
+Contact Angle
+Wettability Gradient
+Air Permeability
+Liquid Permeability
+water permeability
+Water Vapor Transmission Rate
+WVTR
+MVTR
+Thermal Conductivity
+Thermal Resistance
+Evaporative Resistance
+Moisture Management Capacity Index
+MMC
+Bottom Spreading Speed
+Spreading Speed Bottom
+SSb
+Sᵦ
+Maximum Wetted Radius Bottom
+MWRB
+MRb
+Rᵦ
+Maximum Wetted Radius Top
+MWRT
+MRt
+Rₜ
+Max Bottom Wetted Radius
+Maximum Wetted Radius Top Layer
+Max Top Wetted Radius
+Accumulative One-Way Transport Index
+AOTI
+One Way Transport Capability
+OWTC
+Overall Moisture Management Capacity/Capability
+OMMC
+WT‑J
+WTAvg‑J
+AR‑J
+Absorption Rate Top Layer
+Spreading Speed Top
+SSt
+SS‑J
+Top Spreading Speed
+Vertical Wicking Height
+Vertical Wicking Rate
+Vertical Wicking Area
+VWH
+VWR
+VWA
+VWH‑J
+Vertical Wicking Radius
+Horizontal Wicking Height
+Horizontal Wicking Rate
+Horizontal Wicking Area
+HWH
+HWR
+HWA
+HWH‑J
+Horizontal Wicking Radius
+Drying Index
+DI
+QDI
+DI‑J
+Moisture Regain
+MR
+MR‑J
+MC
+MC‑J
+Time to Complete Wetting
+TCW
+TCW‑J
+Evaporative Heat Flux
+EHF
+EHF‑J
+in W
+Rct
+Rct‑J
+Water Vapor Resistance
+Ret
+Ret‑J
+Water Vapour Transmission Rate
+WVTR‑J
+Water Vapour Permeability
+WVP
+WVP‑J
+Water Vapour Permeability Coefficient
+WVPC
+WVPC‑J
+Water Vapour Permeability Index
+WVPindex
+WVPindex‑J
+Remaining Moisture Content
+RMC
+RMC‑J
+Absorption Capacity
+Absorbent Capacity
+AC‑J
+Absorption Time / Sink Time
+AT‑J
+Liquid Absorption
+LA
+LA‑J
+% of Oven-Dry Mass
+Moisture Content vs Time
+MMT‑MC(t)
+Surface Temperature Recovery Time
+STR
+STR‑J
+EN AND/OR ISO TESTING/STANDARDS
+Heat Flux
+q″
+HF
+HF‑ISO
+Thermal Diffusivity
+α
+α‑ISO
+k‑ISO
+Hydrostatic Pressure
+Hydrostatic Head
+HP
+HH
+HP‑ISO
+HP‑EN
+kPa
+Water Resistance
+WR
+WR‑ISO
+WR‑EN
+AP‑ISO
+AP‑EN
+Drying Time to Reach Specified Moisture Content
+Drying Time to Target MoistureDT‑ISO
+DT‑EN
+Target Moisture Content
+DR‑ISO
+DR‑EN
+Remaining Moisture Content for Each Layer
+RMC‑ISO
+RMC‑EN
+Rct‑ISO
+Rct‑EN
+WVP‑ISO
+Water Vapor Resistance for Each Layer
+Ret‑ISO
+Ret‑EN
+Evaporative Heat Loss
+EHF‑ISO
+EHF‑EN
+Qualitative Absorbency Rating
+QAR
+QAR‑AATCC
+QAR‑ASTM
+Thermal Absorptivity
+Contact Cool Feeling
+qmax
+Qmax‑J
+Qmax‑GB
+Qmax‑ASTM
+HP‑ASTM
+WR‑ASTM
+% wet‑through
+AP‑ASTM
+MVTR‑ASTM
+WVTR‑ASTM
+WVP‑ASTM
+WVPC‑ASTM
+WA
+WA‑ASTM
+Water Absorption Time
+Sink Time
+AT‑ASTM
+Liquid Absorption Capacity
+AC‑ASTM
+Capillary Pressure
+CP
+Pcap
+SMF
+PMI
+Maximum Absorption Rate
+MAR
+Blend ratio
+Maximum Wetted radius Top Surface
+Maximum Wetted radius Bottom Surface
+Course per inch
+CPI
+Wales per inch
+WPI
+MART
+MARB
