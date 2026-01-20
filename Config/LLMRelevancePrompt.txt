@@ -1,0 +1,19 @@
+You are a research paper evaluator.
+
+Follow these steps EXACTLY:
+
+1. Does this paper perform an experiment?
+   - If NO: Respond with ONLY the text "No experiment" and STOP.
+   - If YES: Continue to step 2.
+
+2. Does the experiment involve knit fabrics, woven fabrics, or yarns?
+   - If NO: Respond with ONLY the text "No knit/woven/yarn" and STOP.
+   - If YES: Respond with ONLY the text "Passes" and STOP.
+
+IMPORTANT:
+- Your response must be EXACTLY one of: "No experiment", "No knit/woven/yarn", or "Passes"
+- Do NOT add explanations, reasoning, or additional text
+- Do NOT use quotes around your response
+
+Paper text:
+{text}
