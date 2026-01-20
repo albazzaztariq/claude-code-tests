@@ -1,0 +1,139 @@
+Metric Match: ART, which means Absorption Rate Top
+Owing to a tribo-ferroelectric synergistic effect introduced by ferroelectric polymer nanofibers, the maximum peak power density of the e-textile reaches 5.2 W m−2 under low frequency motion, which is 7 times that of the state-of-the-art breathable triboelectric textiles.
+
+Metric Match: ART, which means Absorption Rate Top
+The maximum peak power density of the e-textile reaches 5.2 W m−2 under low frequency (~2.5 Hz) motion, which is 7 times that of the state-of-the-art breathable triboelectric textiles.
+
+Metric Match: Contact Angle
+Field emission scanning electron microscopy (SEM MERLIN, Carl Zeiss), X-ray diffractometry (D/max-2550VB + , Japan) and Contact Angle Analyzer (OCA40Micro, Germany) were used to characterize the microscopic morphology, crystal phase and the contact angles of nanofibers, respectively.
+
+Metric Match: Air Permeability
+Air permeability refers to the performance of gas molecules through the fabric and is the most basic property in fabric permeability36. With the sequential superposition of layers, from moisture-wicking layer (104.67 mm s−1), fabric electrode-P (VDF-TrFE) nanofibers layer (84.90 mm s−1), fabric electrode-P (VDF-TrFE)-PA6 nanofibers layer (61.30 mm s−1) to e-textile (34.10 and 15.90 mm s−1), the air permeability shows a gradual ARTICLE NATURE COMMUNICATIONS | https://doi.org/10.1038/s41467-019-13569-5
+
+4 NATURE COMMUNICATIONS |  (2019) 10:5541 | https://doi.org/10.1038/s41467-019-13569-5 | www.nature.com/naturecommunications
+
+a b 18 c 0 NATURE COMMUNICATIONS | https://doi.org/10.1038/s41467-019-13569-5 ARTICLE
+
+NATURE COMMUNICATIONS |  (2019) 10:5541 | https://doi.org/10.1038/s41467-019-13569-5 | www.nature.com/naturecommunications 5
+
+fi
+
+−1, Skin Water droplet/sweat
+
+Air convection Environment Water vapor Skin
+
+Skin PAN PA6 Cotton
+
+Dmicro Dnano a b
+
+c
+
+d 25
+
+0 0.3 0.6 0.9 2.5 5.0 7.5 Relative frequency (%)
+
+0 5 10 15 20 PAN PA6 DPA6 = 0.456 ± 0.13 μm DPAN = 4.454 ± 1.38 μm Evaporation of water (g)
+
+0.00 0.06 0.12 0.18 0.24
+
+0 30 60 90 120 Added water
+
+Cotton fabric Cotton-PAN fabric Cotton-PA6-PAN fabric f e PAN
+
+θ = 56° θ = 55° PA6
+
+4 μm 2 μm
+
+c ARTICLE NATURE COMMUNICATIONS | https://doi.org/10.1038/s41467-019-13569-5
+
+6 NATURE COMMUNICATIONS |  (2019) 10:5541 | https://doi.org/10.1038/s41467-019-13569-5 | www.nature.com/naturecommunications
+
+Figure fica- 0 20 40 60 80 100 0 40 80 120
+
+–1Air permeability (mm s) Moisture wicking fabric ( ) Fabric electrode + P(VDF-TrFE) ( ) Fabric electrode + P(VDF-TrFE) + PA6 ( ) ( ) + ( ) ( ) + ( ) Moisture wicking fabric ( ) Fabric electrode + P(VDF-TrFE) ( ) Fabric electrode + P(VDF-TrFE) + PA6 ( ) ( ) + ( ) ( ) + ( )
+
+Pressure difference (Pa) 0 12 24 36 48 60 Time (h) –2Water vaper transmission (g cm)
+
+0 0.5 1.0 1.5 2.0
+
+Temperature = 38 °C, Relative humidity = 86%
+
+0.12 Fabrics Guard ring –1 W ) 1600 With moisture wicking fabric Without moisture wicking fabric a b
+
+c d 2–1 W ) 6 NATURE COMMUNICATIONS | https://doi.org/10.1038/s41467-019-13569-5 ARTICLE
+
+NATURE COMMUNICATIONS |  (2019) 10:5541 | https://doi.org/10.1038/s41467-019-13569-5 | www.nature.com/naturecommunications 7
+
+fi 5d, and
+
+gesture Atmega 328P VIN A0 1 Energy harvesting 2 Energy store and output 3 Signal processing and transmission 4 Correction circuit 5 Pressure sensing a b c d
+
+e
+
+movement.
+
+Metric Match: Air Permeability
+With the sequential superposition of layers, from moisture-wicking layer (104.67 mm s−1), fabric electrode-P (VDF-TrFE) nanofibers layer (84.90 mm s−1), fabric electrode-P (VDF-TrFE)-PA6 nanofibers layer (61.30 mm s−1) to e-textile (34.10 and 15.90 mm s−1), the air permeability shows a gradual ARTICLE NATURE COMMUNICATIONS | https://doi.org/10.1038/s41467-019-13569-5
+
+4 NATURE COMMUNICATIONS |  (2019) 10:5541 | https://doi.org/10.1038/s41467-019-13569-5 | www.nature.com/naturecommunications
+
+a b 18 c 0 NATURE COMMUNICATIONS | https://doi.org/10.1038/s41467-019-13569-5 ARTICLE
+
+NATURE COMMUNICATIONS |  (2019) 10:5541 | https://doi.org/10.1038/s41467-019-13569-5 | www.nature.com/naturecommunications 5
+
+fi
+
+−1, Skin Water droplet/sweat
+
+Air convection Environment Water vapor Skin
+
+Skin PAN PA6 Cotton
+
+Dmicro Dnano a b
+
+c
+
+d 25
+
+0 0.3 0.6 0.9 2.5 5.0 7.5 Relative frequency (%)
+
+0 5 10 15 20 PAN PA6 DPA6 = 0.456 ± 0.13 μm DPAN = 4.454 ± 1.38 μm Evaporation of water (g)
+
+0.00 0.06 0.12 0.18 0.24
+
+0 30 60 90 120 Added water
+
+Cotton fabric Cotton-PAN fabric Cotton-PA6-PAN fabric f e PAN
+
+θ = 56° θ = 55° PA6
+
+4 μm 2 μm
+
+c ARTICLE NATURE COMMUNICATIONS | https://doi.org/10.1038/s41467-019-13569-5
+
+6 NATURE COMMUNICATIONS |  (2019) 10:5541 | https://doi.org/10.1038/s41467-019-13569-5 | www.nature.com/naturecommunications
+
+Figure fica- 0 20 40 60 80 100 0 40 80 120
+
+–1Air permeability (mm s) Moisture wicking fabric ( ) Fabric electrode + P(VDF-TrFE) ( ) Fabric electrode + P(VDF-TrFE) + PA6 ( ) ( ) + ( ) ( ) + ( ) Moisture wicking fabric ( ) Fabric electrode + P(VDF-TrFE) ( ) Fabric electrode + P(VDF-TrFE) + PA6 ( ) ( ) + ( ) ( ) + ( )
+
+Pressure difference (Pa) 0 12 24 36 48 60 Time (h) –2Water vaper transmission (g cm)
+
+0 0.5 1.0 1.5 2.0
+
+Temperature = 38 °C, Relative humidity = 86%
+
+0.12 Fabrics Guard ring –1 W ) 1600 With moisture wicking fabric Without moisture wicking fabric a b
+
+c d 2–1 W ) 6 NATURE COMMUNICATIONS | https://doi.org/10.1038/s41467-019-13569-5 ARTICLE
+
+NATURE COMMUNICATIONS |  (2019) 10:5541 | https://doi.org/10.1038/s41467-019-13569-5 | www.nature.com/naturecommunications 7
+
+fi 5d, and
+
+gesture Atmega 328P VIN A0 1 Energy harvesting 2 Energy store and output 3 Signal processing and transmission 4 Correction circuit 5 Pressure sensing a b c d
+
+e
+
+movement.
+

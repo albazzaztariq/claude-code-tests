@@ -1,0 +1,15 @@
+# ScholarSweep Config File - Test 10 PDFs
+# Moisture management in textiles (woven/knit)
+
+[APIs]
+2
+
+[Max Results]
+10
+
+[Journals]
+
+
+[OpenAlex]
+field: fulltext
+terms: woven///knit /AND/ moisture-wicking///moisture wicking

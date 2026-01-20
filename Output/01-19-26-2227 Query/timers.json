@@ -1,0 +1,13 @@
+{
+  "1_query_generation": 0.0,
+  "2_openalex_first_call": 1.8597779273986816,
+  "3_openalex_pagination_avg": null,
+  "4_unpaywall_first_call": 0.47048401832580566,
+  "5_corpus_download_total": 14.887572288513184,
+  "6_text_extraction_first": 0.8720822334289551,
+  "7_metrics_match_first": 0.016508817672729492,
+  "8_llm_filter_first": null,
+  "9_llm_extraction_first": null,
+  "10_table_extraction_first": null,
+  "11_final_output": null
+}

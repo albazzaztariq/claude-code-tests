@@ -1,0 +1,131 @@
+This website uses cookies to ensure you get the best experience.
+
+Learn more about DOAJ’s privacy policy.
+
+Hide this message
+
+Open Global Trusted
+
+The Directory of Open Access Journals
+
+Main actions
+
+•  Support
+
+○  Institutions and libraries
+
+○
+
+•  Search
+
+Menu
+
+Secondary actions
+
+•  Search
+
+○  Journals ○  Articles
+
+•  Documentation
+
+○  API ○  OAI-PMH ○  Widgets ○  Public data dump ○  OpenURL ○  XML ○  Metadata help ○  Preservation
+
+•  About
+
+○  About DOAJ ○  DOAJ at 20 ○  DOAJ team ○  Ambassadors ○  Foundation and Advisory Boards ○  Editorial Policy Advisory Group ○  Volunteers ○  News
+
+•  Support
+
+○  Institutions and libraries ○  Publishers ○  Institutional and library supporters ○  Funders
+
+•  Apply
+
+○  Application form ○  Guide to applying ○  Transparency & best practice
+
+○  Publisher information ○  Licensing & copyright
+
+•  Login
+
+•  Login
+
+Close×
+
+Quick search
+
+Journals Articles Search by keywords: In the field: In all fields Title ISSN Subject Publisher Country of publisher Search
+
+Nature Communications (Dec 2019)
+
+All-fiber tribo-ferroelectric
+
+synergistic electronics with
+
+high thermal-moisture stability
+
+and comfortability
+
+•  Weifeng Yang, •  Wei Gong, •  Chengyi Hou, •  Yun Su, •  Yinben Guo, •  Wei Zhang, •  Yaogang Li, •  Qinghong Zhang, •  Hongzhi Wang
+
+Affiliations
+
+Weifeng Yang State Key Laboratory for Modification of Chemical Fibers and Polymer Materials, College of Materials Science and Engineering, Donghua University Wei Gong State Key Laboratory for Modification of Chemical Fibers and Polymer Materials, College of Materials Science and Engineering, Donghua University Chengyi Hou State Key Laboratory for Modification of Chemical Fibers and Polymer Materials, College of Materials Science and Engineering, Donghua University Yun Su College of Fashion and Design, Donghua University Yinben Guo State Key Laboratory for Modification of Chemical Fibers and Polymer Materials, College of Materials Science and Engineering, Donghua University Wei Zhang State Key Laboratory for Modification of Chemical Fibers and Polymer Materials, College of Materials Science and Engineering, Donghua University Yaogang Li Engineering Research Center of Advanced Glasses Manufacturing Technology, Ministry of Education, Donghua University Qinghong Zhang Engineering Research Center of Advanced Glasses Manufacturing Technology, Ministry of Education, Donghua University Hongzhi Wang State Key Laboratory for Modification of Chemical Fibers and Polymer Materials, College of Materials Science and Engineering, Donghua University
+
+DOI https://doi.org/10.1038/s41467-019-13569-5 Journal volume & issue Vol. 10, no. 1 pp. 1 – 10
+
+Abstract
+
+Read online
+
+Though triboelectric technology is attractive for designing next- generation electronic textiles, current devices do not meet performance requirements. Here, the authors report all-fiber e- textiles featuring a triboelectric/ferroelectric synergistic effect for optimizing performance and wearability.
+
+Published in Nature Communications
+
+ISSN 2041-1723 (Online) Publisher Nature Portfolio Country of publisher United Kingdom LCC subjects Science Website https://www.nature.com/ncomms/
+
+About the journal
+
+WeChat QR code
+
+[image] Close Back to top
+
+Search
+
+•  Journals •  Articles
+
+Documentation
+
+•  API •  OAI-PMH •  Widgets •  Public data dump •  OpenURL •  XML •  Metadata help •  Preservation
+
+About
+
+•  About DOAJ •  DOAJ at 20 •  DOAJ team •  Ambassadors •  Foundation and Advisory Boards •  Editorial Policy Advisory Group •  Volunteers •  News
+
+Support
+
+•  Institutions and libraries •  Publishers •  Institutional and library supporters •  Funders
+
+Apply
+
+•  Application form •  Guide to applying •  Transparency & best practice •  Publisher information
+
+•  Licensing & copyright
+
+Stay up to date
+
+•  Bluesky •  Facebook •  Github •  Instagram •  Linkedin •  Mastodon • WeChat •  Atom feed
+
+Open Global Trusted
+
+The Directory of Open Access Journals
+
+© DOAJ 2026 default by all rights reserved unless otherwise specified.
+
+•  Accessibility •  Privacy •  Contact •  T&Cs •  Code of Conduct •  Media
+
+•  IS4OA •  Cottage Labs
+
+Content on this site is licensed under a Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0) license.
+
+Copyrights and related rights for article metadata waived via CC0 1.0 Universal (CC0) Public Domain Dedication.
+
+Photos used throughout the site by David Jorre, Jean-Philippe Delberghe, JJ Ying, Luca Bravo, Brandi Redd, & Christian Perner from Unsplash.

@@ -1,0 +1,39 @@
+Metric Match: WT, which means Wetting Time
+2.4  Preparation of Directional Moisture‑Wicking Electronic Skin (DMWES)
+
+Firstly, 3 g PVDF and 0.1 g carboxylic CNTs were dissolved and stirred in 16.9 g DMF/Acetone mixed solution (3/2, wt/wt) with 0.2 wt% LiCl addition.
+
+Metric Match: WT, which means Wetting Time
+Thirdly, 2 g PAN was dissolved and stirred in 18 g DMF solution with 0.2 wt% SDS addition.
+
+Metric Match: Contact Angle
+Fig- ure 3a, b shows the water contact angle (WCA) change of each single layer with time increasing. On the PAN nanofi- brous layer, the WCA dynamically decreases from ~ 31° initially to 0° within 2.1 s, showing the superhydrophilic- ity of the nanofibrous PAN.
+
+Metric Match: WVTR, which means Water Vapor Transmission Rate
+The value is comparable to the WVTR of commercial e-PTFE (15.1 kg ­m−2 ­d−1), indicat- ing good wear comfort.
+
+3.2  Directional Moisture‑Wicking Ability of DMWES Membrane
+
+In order to evaluate the directional water transport perfor- mance in the DMWES membrane, we studied the wettability of the hydrophilic and hydrophobic nanofiber membranes firstly.
+
+Metric Match: DI, which means Drying Index
+After cooling down, the obtained product was subjected to sequential washing of 3 M HCl, then DI water until the pH = 7.
+
+Metric Match: DI, which means Drying Index
+Ultimately, the obtained black jelly was ultrasonicated in DI water for 2 h under argon protection and centrifuged at 4,000 rpm. The concentration of the colloidal ­Ti3C2Tx nanosheets solution was ~ 8 mg ­mL−1.
+
+Metric Match: kPa, which means kilopascals, which is a unit measuring a material's resistance to water
+The DMWES membrane showed excellent comprehen- sive pressure sensing performance, high sensitivity (maximum sensitivity of 548.09 ­kPa−1), wide linear range, rapid response and recovery time.
+
+Metric Match: kPa, which means kilopascals, which is a unit measuring a material's resistance to water
+The direc- tional moisture-wicking electronic skin (DMWES) showed superior static sensing properties, high sensitivity in wide pressure range (maximum sensitivity of 548.09 ­kPa−1), and rapid response/recover time (28.4/39.1 ms).
+
+Metric Match: kPa, which means kilopascals, which is a unit measuring a material's resistance to water
+The sensitivity curve can be split into three parts: S1 exists in the low-pressure area (0–3.20 kPa), S2 lies in the middle-pressure area (3.20–6.30 kPa), and S3 lies in the high-pressure area (6.30–20.0 kPa).
+
+Metric Match: kPa, which means kilopascals, which is a unit measuring a material's resistance to water
+The corresponding sen- sitivity of S1, S2, and S3 is 237.1, 548.09, and 75.7 ­kPa−1, respectively.
+
+Metric Match: kPa, which means kilopascals, which is a unit measuring a material's resistance to water
+The long-term piezoresistive stability of the DMWES was further evaluated by continuous compression and separation test at 10 kPa; the current response under pressure was stable even after 3,000 cycles (Fig.
+

@@ -1,0 +1,1182 @@
+Environmental Chemistry Letters (2021) 19:583–611 
+https://doi.org/10.1007/s10311-020-01089-4
+REVIEW
+Functionalization of polymers and nanomaterials for water treatment, 
+food packaging, textile and biomedical applications: a review
+1,15 2 3 4 5 Pooyan Makvandi    · Sidra Iftekhar  · Fabio Pizzetti  · Atefeh Zarepour  · Ehsan Nazarzadeh Zare  · 
+6 7 8 9 10,11 Milad Ashrafizadeh  · Tarun Agarwal  · Vinod V. T. Padil  · Reza Mohammadinejad  · Mika Sillanpaa  · 
+7 12,13 14 3 Tapas Kumar Maiti  · Giuseppe Perale  · Ali Zarrabi    · Filippo Rossi  
+Received: 11 August 2020 / Accepted: 27 August 2020 / Published online: 16 September 2020 
+© The Author(s) 2020
+Abstract
+The inert nature of most commercial polymers and nanomaterials results in limitations of applications in various industrial 
+fields. This can be solved by surface modifications to improve physicochemical and biological properties, such as adhesion, 
+printability, wetting and biocompatibility. Polymer functionalization allows to graft specific moieties and conjugate mol-
+ecules that improve material performances. In the last decades, several approaches have been designed in the industry and 
+academia to graft functional groups on surfaces. Here, we review surface decoration of polymers and nanomaterials, with 
+focus on major industrial applications in the medical field, textile industry, water treatment and food packaging. We discuss 
+the advantages and challenges of polymer functionalization. More knowledge is needed on the biology behind cell–polymer 
+interactions, nanosafety and manufacturing at the industrial scale.
+  Antibacterial · Drug delivery · Functional polymers · Functionalization · Surface modification Keywords
+Pooyan Makvandi, Sidra Iftekhar, Fabio Pizzetti and Atefeh 
+Zarepour have contributed equally to this work.
+8 	 Department of Nanomaterials in Natural Sciences, Institute 
+  	 Pooyan Makvandi  * for Nanomaterials, Advanced Technologies and Innovation 
+	 pooyanmakvandi@gmail.com (CXI), Technical University of Liberec (TUL), Studentská 
+1402/2, Liberec, Czech Republic   	 Ali Zarrabi  *
+	 alizarrabi@sabanciuniv.edu 9 	 Pharmaceutics Research Center, Institute 
+of Neuropharmacology, Kerman University of Medical    	 Filippo Rossi  *
+Sciences, Kerman, Iran 	 filippo.rossi@polimi.it
+10 	 Faculty of Environment and Chemical Engineering, Duy Tan  1 	 Istituto Italiano di Tecnologia, Centre for Micro- University, Da Nang 550000, Vietnam
+BioRobotics, Viale Rinaldo Piaggio 34, 
+11 	 School of Civil Engineering and Surveying, Faculty  56025 Pontedera, Pisa, Italy
+of Health, Engineering and Sciences, University of Southern  2 	 Department of Environmental Engineering, University  Queensland, West Street, Toowoomba, QLD 4350, Australia
+of Engineering and Technology Taxila, Taxila 47050, 
+12 	 Faculty of Biomedical Sciences, University of Southern  Pakistan
+Switzerland (USI), Via G. Buffi 13, 6900 Lugano,  3 	 Department of Chemistry, Materials and Chemical  Switzerland
+Engineering, Politecnico di Milano Technical University, 
+13 	 Ludwig Boltzmann Institute for Experimental and Clinical  20133 Milan, Italy
+Traumatology, Donaueschingenstrasse 13, 1200 Vienna,  4 	 Department of Biotechnology, Faculty of Biological Science  Austria
+and Technology, University of Isfahan, Isfahan, Iran
+14 	 Sabanci University, Nanotechnology Research  5 	 School of Chemistry, Damghan University,  and Application Center (SUNUM), Tuzla, Istanbul 34956, 
+36716‑41167 Damghan, Iran Turkey
+6 	 Department of Basic Science, Faculty of Veterinary  15 	 Department of Medical Nanotechnology, Faculty 
+Medicine, University of Tabriz, Tabriz, Iran of Advanced Technologies in Medicine, Iran University 
+7 of Medical Sciences, 14496‑14535 Tehran, Iran 	 Department of Biotechnology, Indian Institute of Technology, 
+Kharagpur, Kharagpur 721302, India
+1 3 Vol.:(0123456789)
+
+584 	 Environmental Chemistry Letters (2021) 19:583–611
+Introduction
+The inert nature of most commercial polymers and nano-
+materials limits their development for specific applications 
+in various industries and, therefore, surface modification 
+must be carried out to improve their adhesion, printing and 
+wetting by bringing a variety of polar and other functional 
+groups on surfaces of polymer and nanostructures. Several 
+surface functionalization methods have been established dur-
+ing the past decades that generally follow a common path: 
+first the binding of primary reactive functional groups to the 
+polymer chain ends at the surface, followed by modifying 
+the reactive surface with active/bioactive agents, hydropho-
+bic and hydrophilic monomers, oligomers or polymers to 
+achieve specific surface characteristics matching the needs 
+of the end use (Karnati et al.  2019 ; Pour et al.  2015 ; Zare 
+et al.  2019 ; Zhou et al.  2020 ).
+(Abd Elkodous et al.  2019 ; Vuppaladadium et al.  2020 ; Mak- The immobilization of active/bioactive agents on a poly-
+vandi et al.  2020 ; Deb et al.  2019 ). The application of nano- meric surface is generally performed by covalent bonds, elec-
+materials in the field of biomedicine is varied from utilizing as  trostatic interactions and ligand–receptor pairing. Non-cova-
+drug delivery vehicles or therapeutic agents for different types  lent physical adsorption is desirable for some applications 
+of diseases and infections, to diagnostic agents in biologi- such as certain drug delivery systems (Richey et al.  2000 ) and 
+cal imaging, cell labeling and biosensors and functionalizing  regenerable antimicrobial textiles (Kim and Sun  2001 ; Sun 
+moieties for medical devices like stents or lenses (Jamaledin  et al.  2001 ). The covalent immobilizations offer some other 
+et al.  2020 ; Rout et al.  2018 ). Based on the literature, nano- advantages by providing the durability of active/bioactive 
+materials are classified into three main categories: (1) organic  agents, the extended half-life for biomolecules and preventing 
+nanoparticles like dendrimers, lipid-based nanosystems, poly- their quick metabolism (Alferiev et al.  2006 ; Harris  1992 ), as 
+mers and biopolymers, (2) inorganic nanoparticles including  well as preventing the migration of bioactive agents to food 
+metal and metal oxide nanoparticles (like magnetic, Au, Ag,  from the active food packaging films. Grafting of polyfunc-
+Cu), carbon-based nanoparticles (graphene, graphene oxide,  tional and anchoring compounds via a spacer molecule onto 
+carbon nanotubes, carbon dot and graphene quantum dot),  the surface of the solid substrate leads to an increase in the 
+silica nanoparticles, quantum dots and upconversion nanopar- number of available active/bioactive agents  per  unit area and 
+ticles and (3) hybrid nanomaterials which are a complex of  improves the efficiency of active/bioactive agents by reduc-
+inorganic and organic nanomaterials in different forms (like  ing steric restrictions. Hence, the current review focuses on 
+core–shell nanoplatforms, nanocomposites, hydrogels, nano- recent advances in the modification of polymer and nano-
+capsules, nanospheres, etc.) (Fig.  2 ; Yang et al.  2019 ). materials surfaces, via active/bioactive agents targeted for 
+various medicinal and industrial applications (Fig.  1 ).
+Biomedical applications
+Nanomaterials are introduced as different types of materials 
+with at least one-dimension size in the range of nano- and 
+have high surface energy, which are suitable candidates for 
+being utilized in different biomedical applications. This is 
+resulted from their extraordinary properties enabling them 
+to donate new properties to the available tools and improve 
+their performance in physiological conditions, increasing the 
+satisfaction level of the users. Improving the biocompatibility, 
+water solubility, biodegradability, bioavailability, antimicro-
+bial activity, antioxidant and anticancer properties, and imag-
+ing capability are among several types of features which could 
+be provided via utilization of nanomaterials in biomedicine 
+1 3
+
+Environmental Chemistry Letters (2021) 19:583–611	 585
+Effect of surface func- Fig. 3   
+tionalization on cell internaliza-
+tion. Surface‑modified nanoma-
+terials could allow or avoid cell 
+internalization
+). More-
+on the other organs (Singh et al.  2019
+1 3
+
+586 	 Environmental Chemistry Letters (2021) 19:583–611
+Different approaches for  Fig. 4   
+the transmission of antimicro-
+bial properties on a specific 
+platform. Reprinted with per-
+mission from Delfi et al. ( 2020 )
+ring-opening reactions, and multicomponent reactions  different polymers can be used, such as polyethylene glycol, 
+(Blasco et al.  2017 ). The first one is a very promising tech- polycaprolactone and polylactic acid; for example, function-
+nique since amide bonds show high stability in different  alized carbon nano-onions (d’Amora et al.  2020 ) with hya-
+). 
+1 3
+
+Environmental Chemistry Letters (2021) 19:583–611	 587
+delivery in colorectal cancer. Carcinoembryonic antigen is a  microglia internalization, while a smaller amount (obtained 
+cell surface glycoprotein in colorectal cancer patients, whose  in imidazole systems) guaranteed higher microglia uptake 
+serum level evaluation is recommended in clinical settings.  compare to nanogels without coatings. In a more recent 
+In the field of surface functionalization, ethylene diamine  work (Mauri et al.  2020 ), they developed a coating strategy 
+was successfully used with cellulose nanoparticles forming  through primary amines, in order to reduce microglia inter-
+aminodeoxy cellulose nanoparticles, which were subse- nalization. Nanogels were designed following two differ-
+quently incorporated into poly(ethylene- co -acrylic acid) to  ent routes: direct grafting of aliphatic primary amines and 
+develop composites. These composites were found to main- linkage of the -NH  modified polyethylene glycol on the 
+2
+tain their biocompatibility even after the introduction of the  nanogel surface.
+functionalized nanoparticles, thus enabling their use in bio- A minimal uptake was obtained by combining amine with 
+medical applications (Chenampulli et al.  2019 ). Besides pol- nanogel PEGylation. Furthermore, nanogel–polyethylene 
+ymers, other materials can also be used for surface function- glycol–NH  satisfied all biocompatibility criteria and, even 
+2
+alization, such as cellular components. Indeed, the surface of  if their dimensions were suitable for the microglia phagocytic 
+polymeric nanoparticles was functionalized with umbilical  activity, they remain available in the extracellular environ-
+cord-derived mesenchymal stem cell membrane for tumor- ment. Photo-crosslinkable nanogel from a polymer template 
+targeted therapy (Yang et al.  2018a ). Umbilical cord derived  with intrinsic photoluminescence and large photostability 
+mesenchymal stem cells showed tropism against malignant  for theranostic applications is other interesting possibility 
+lesions, low immunogenicity, and high proliferative ability.  (Gyawali et al.  2018 ). Nanogels were prepared from citric 
+-cysteine, and polyethylene glycol using  The nanoparticles used were poly(lactic- co -glycolic acid)- acid, maleic acid,  l
+a solvent- and surfactant-free one-step reaction. To reach  based, with a layer of plasma membrane from umbilical 
+the optimal potential in theranostic applications, a surface  cord mesenchymal stem cells coating on the surface. Such 
+functionalization with arginylglycylaspartic acid peptides  functionalization increased the cellular uptake efficiency of 
+and a doxorubicin encapsulation were applied, resulting in  poly(lactic- co -glycolic acid) nanoparticles, the tumor cell 
+a pH-responsive drug release in acidic medium resembling  killing efficacy of poly(lactic- co -glycolic acid)-encapsulated 
+tumor microenvironment. Shifting to other materials, also  doxorubicin and the tumor targeting of nanoparticles. Nano-
+hydrogels are gaining relevant importance in biomedical  gels are also recently gaining relevant importance in bio-
+applications, such as drug delivery and tissue engineering  medical applications as drug delivery systems for targeted 
+(Satapathy et al.  2015 ). Hydrogels are 3D structure made  applications. They are defined as nanoparticles comprised of 
+up of hydrophilic polymers with high water affinity, whose  a 3D structure, either physically or chemically crosslinked, 
+dissolution is prevented, thanks to the formation of physical  usually of polymeric nature. Sometimes, other definitions 
+or chemical bonds. The polymers constituting such a matrix  can be also found, such as particles of gels having a diam-
+can be chemically modified in order to introduce new features  eter in the range of 1 to 100 nm (McNaught and Wilkin-
+in the final material, thus allowing the synthesis of hydrogels  son  1997 ). Some of their principal properties are related 
+for different applications, from controlled drug delivery to  to their large surface area and stability. Their formulation 
+selective targeting tools or diagnostics such as functional- is similar to biological tissues, thanks to the water content 
+ized polyvinyl alcohol hydrogels with fucoidan for improved  and carbon-based composition, ensuring high biocompat-
+ibility and biodegradability (Cho et al.  2018 ). Nanogels, as  endothelialization and hemocompatibility (Yao et al.  2020 ). 
+for nanoparticles, can be produced with different methods.  Fucoidan is a sulfated polysaccharide with anticoagulant and 
+First of all, they can be prepared through chemical reaction  antithrombotic properties, the problem with such a modifica-
+involving a heterogenous polymerization of low molecular  tion was that some mechanical properties were sacrificed. 
+weight monomers or the crosslinking of polymeric precur- The use of sodium trimetaphosphate, as a co-crosslinker, 
+sors (Chacko et al.  2012 ; Soni et al.  2016 ). A lot of different  avoided the mechanical losses. These materials were tested 
+therapeutic possibilities were exploited with different coat- in vivo, exhibiting promising results coupled with higher 
+ings on polyethylene glycol–polyethyleneimine-based nano- patency rate and lower intimal hyperplasia formation. Func-
+gels developed for spinal cord injury treatment (Mauri et al.  tionalization with biomolecules is also a good possibility: 
+2017 ). Coatings were prepared using polyethylene glycol  in this direction polyamidoamine/thiolated hyaluronic acid 
+monomethyl ether modifying its terminal hydroxyl groups  hydrogels were functionalized with human vascular endothe-
+with a series of linkers, in order to evaluate the quantity  lial cadherin fusion protein using a Fc-binding polypeptide 
+of polymer chemically bonded and its effect over microglia  attached to the alkene modified polyamidoamine dendrimer 
+internalization. The polyethylene glycol modification with  (Gao et al.  2020 ). This functionalized hydrogel was improved 
+imidazole or carboxyl moieties proved to be successful. Fur- to enhance adhesion and proliferation of human umbilical 
+thermore, it was shown that a high amount of polyethylene  cord mesenchymal stem cells and facilitated the reconstruc-
+glycol coating (obtained in carboxyl systems) reduced the  tion of vascular-promoting extracellular microenvironment. 
+1 3
+
+588 	 Environmental Chemistry Letters (2021) 19:583–611
+during years and also introduces a large variety of prod- Such facilitation is provided through upregulating the expres-
+ucts which all pursued the same goal, providing the most  sion of endogenous vascular endothelial cadherin and the 
+comfortable situation for a wide range of consumers (Jocić  secretion of human umbilical cord mesenchymal stem cells, 
+2016 ). Different types of materials are used for producing  including growth factors, extracellular matrix components 
+yarn of textiles, which are categorized into two main groups:  and immune-modulating factors. Furthermore, human umbil-
+natural materials such as silk, hemp wool and cotton fibers  ical cord mesenchymal stem cells loaded within hydrogel 
+and synthetic materials including nylon, polyester and rayon.  effectively also promote host cell recruitment and the sub-
+Natural materials have widely been applied as solid-phase  sequent vascularization. Hyaluronan-based hydrogels were 
+extraction absorbents for sample preparation due to their  able to mimic healthy or malignant extracellular matrix, 
+high adsorption capacity of hydrophobic materials. These  but, as physical gels, they lacked in mechanical proper-
+are eco-friendly materials that exhibit specific features like  ties (Bonnesœur et al.  2020 ). Their functionalization with 
+high mechanical strength, good biocompatibility and desired  poly- -lysine or extracellular matrix proteins (such as type  l
+stability in non-aqueous or aqueous solutions. However, the  III or type IV collagen) can guarantee stiffness tunability 
+versatile applications of these materials are restricted due  through crosslinking at gradual genipin concentration. The 
+to their monotonous functional groups. Synthetic products  materials showed an increasing in stiffness with gradual 
+also have disadvantages like more rapidly burning, low bio- genipin concentration and an efficient enzyme resistance 
+degradability, and skin damages (Katsnelson  2015 ). These  with poly- -lysine treatment. Such structures were able to  l
+features along with the market demands for introducing  support glioblastoma and breast cancer cells cultures and 
+novel types of textiles for a specific application has lead to  were able to enhance or reduce proliferation and viability. 
+the emergence of novel technologies for engineering of the  Functionalization is also a good strategy to improve drug 
+available materials; among them is the surface functionaliza- delivery performances (Arellano-Sandoval et al.  2020 ). In 
+tion via different agents, especially polymeric nanomateri- this field, an agave xylan-type hemicellulose was conjugated 
+als to develop the existing properties and also create novel  with trimethoxysilylpropylmethacrylate crosslinked with 
+characters. N -vinylcaprolactam obtaining a thermo-responsive material. 
+In other words, surface modifications could lead to the  This hybrid hydrogel showed a high capability of controlling 
+production of vintages with features like low weight, less  the release of antibiotic in time. Other key applications in 
+damage, more comfortable and fewer health risks for con- biomedical field are represented by sensing applications: a 
+ventional or particular usage (Abidin et al.  2018 ). Utilizing  polyvinylpyrrolidone hydrogel stabilized with ZnO quantum 
+nanotechnology has great effects in the textile industry due  dots was developed as a sensing platform for hexavalent chro-
+to its cost-effectiveness and feasibility via integrating dif- mium (Truskewycz et al.  2020 ). The functionalization of this 
+ferent types of nanomaterials with specific features with the  system with photoluminescent 2-amino-2-methyl-1-propanol 
+ability to be used in diverse fields including sports, health- quantum carbon dots showed a limit of detection of 1.2 μM 
+6+ care, military and fashion (Pakdel et al.  2020 ). Furthermore,  , below the maximum allowable limit for drinking water.  ­Cr
+nanotechnology has introduced the smart textiles via apply- Recently, it was shown that functional amino-modification of 
+ing stimuli-responsive polymers with the ability to sense and  cellulose-based paper scaffolds with either PAMAM (Agar-
+respect to the environmental changes, which could provide  wal et al.  2018 ) or APTES (Agarwal et al.  2019 ,  2020a ), 
+a huge global market with about 26% annual growth rate  significantly improved the adhesion and spreading of the 
+(Pereira et al.  2020 ). human hepatocellular carcinoma cells, HepG2. Interest-
+Based on the induced properties, the surface-functional- ingly, the degree of functionalization critically modulated the 
+ized texture via different agents leads to introduce different  cytotoxicity and adhesion properties of the scaffolds. Other 
+types of smart textile that could be classified into different  functionalization strategies employed to improve functional 
+categories, some of the most important of which are: characteristics of the paper substrates have been summarized 
+elsewhere (Agarwal et al.  2020b ).
+1.	 Antimicrobial textiles,
+2.	 Self-cleaning textiles,
+Textile applications 3.	 Cooling management and moisture-wicking textiles,
+4.	 Flame-retardant textiles,
+5.	 Self-healing textiles, One of the most important functional areas of polymeric 
+engineering is the textile industry, which at first was intro-
+The surface functionalization process could be carried out  duced for the aim of human clothing and then was extended 
+either during the fabrication of textile fibers through spin- with great progress so that it presents some exciting prod-
+ning or at the final step on the fabrics via printing, coating  ucts in recent years. Choosing the best material for clothing 
+and laminating (Sarif Ullah Patwary  2015 ). Here, in this  in different environmental situations brings a lot of work 
+1 3
+
+Environmental Chemistry Letters (2021) 19:583–611	 589
+section, we will discuss some of these textiles in detail,  weather. Moreover, the antimicrobial fibers could be used for 
+Antimicrobial textiles
+a  Synthesis of the  Fig. 5   
+antibacterial and antiadhesive 
+b cotton fabric,   the bacteri-
+ally adhesive and antiadhesive 
+mechanism of the pristine and 
+c treated fabrics,   antibacte-
+d rial action of treated fabrics,   
+transmission electron micros-
+copy image of antibacterial 
+effect against  S. aureus  after 0, 
+12 and 24 h. Adapted with per-
+mission from (Lin et al.  2018 ). 
+Copyright 2018 American 
+Chemical Society
+1 3
+
+590 	 Environmental Chemistry Letters (2021) 19:583–611
+are commonly used, which could affect the microbial spe- efficiency of about 99% even after 30 washing cycles (Luo 
+contact mode (Elbourne et al. 
+et al.  2019 ).
+A  S-cotton preparation.  Fig. 6   
+B  Drops of soy sauce, milk 
+and coffee on S-cotton and 
+comparing the self-cleaning 
+property of S-cotton with other 
+C two types.   Scanning electron 
+microscope (SEM) images 
+a b of P-cotton ( ), D-cotton ( ), 
+c D S-cotton ( ).   Wettability of 
+P-cotton and S-cotton with 
+oily solvents (stained with 
+oil red O) and water (stained 
+with methylene blue). ­CCl ,  4
+tetrachloromethane; D-cotton, 
+surface-modified cotton fabric 
+with 10-dihydro-9-oxa-10-phos-
+phaphenanthrene 10-oxide; 
+OAPS, octa(aminophenyl)
+silsesquioxane; P-cotton, cot-
+ton fabric; P(GM- co -DM), 
+poly(methyl methacrylate 
+glycidyl ester- co -dodecyl 
+heptafluoroethyl methacrylate); 
+S-cotton, superhydrophobic cot-
+ton; TEA, triethylamine; THF, 
+tetrahydrofuran. Reprinted with 
+permission from Elsevier (Chen 
+et al.  2019 ), Copyright 2019
+1 3
+
+Environmental Chemistry Letters (2021) 19:583–611	 591
+cytoplasmic membrane of bacteria led to a damage to cyto-
+plasmic membrane which is accompanied by the leakage of 
+cytoplasm that finally consequences to cell death after 24 h 
+(Lin et al.  2018 ).
+Self‑cleaning textiles
+The self-cleaning property for a textile is defined as the 
+capability of the textile to remove different types of contami-
+nants spontaneously without using any external wash. This 
+property could be developed via utilizing superhydrophobic 
+or photoactive agents on the surface of a material which is 
+an attractive feature, especially for the textiles. The most 
+important point which should be considered when using 
+Sweat released from the moisture-wicking textiles. PU, pol- this type of coating is that the coating shouldn’t affect other  Fig. 7   
+yurethane; PAN-SiO , polyacrylonitrile-SiO ; PU-HPAN, polyure- properties of the textile, like its breathability, wearability,  2 2
+thane–polyacrylonitrile. Reprinted with permission from John Wiley 
+and mechanical properties. Thus, it is very important to  and Sons (Miao et al.  2018 ), Copyright 2018
+control the amount of coating ingredients. The mechanism 
+of superhydrophobic agents is architecting the surface via 
+functionalized materials so that the spherical form of water  Cooling management and moisture‑wicking textiles
+droplets is preserved on the surface of the material and 
+thus they could flow on the surface and remove any types  Providing the thermal comfort is one of the most impor-
+of impurities. Different strategies could be used to induce  tant features for clothing, especially in hot summer days, 
+this feature in textiles, like interaction by polymers with low  which could be provided by cooperation between personal 
+surface energy, increasing the surface roughness and func- cooling and textiles. In other words, designing a cooling 
+tionalization by nanomaterials (Ghasemlou et al.  2019 ; Lu  garment is an affordable method for cooling management 
+et al.  2015 ). In this regard, Chen et al.  2019  fabricated a  instead of using air conditioners with high energy consump-
+superhydrophobic cotton textile with self-cleaning and heat  tion (Fu et al.  2019 ). These are breathable materials with air 
+resistance abilities. They used two modification steps on the  permeability property, which are designed based on three 
+surface of cotton fabric (P-cotton in Fig.  6 ). The first step  principles: (1) applying thermo-responsive polymers with 
+was applying 9, 10-dihydro-9-oxa-10-phosphaphenanthrene  the ability of sensing and reacting to the environmental tem-
+-cotton), which counted as a flame-retardant  10-oxide ( perature changes, (2) using materials and structures which  d
+component, while the second step was using two different  can transfer the body thermal radiation and (3) incorporating 
+polymeric structures: poly(methyl methacrylate glycidyl  materials with light reflection property (Baji et al.  2020 ).
+ester- co -dodecyl heptafluoroethyl methacrylate) or /and sili- Moisture is the other problem of a hot and humid environ-
+con-containing compound octa(aminophenyl)silsesquioxane  ment and also during higher levels of activity, which could 
+(S-cotton) (Fig.  6 a) to reach the low surface energy. The final  affect the comfortable feeling. Moisture evaporation into the 
+product showed superhydrophobic–lipophilic property so 
+that different types of droplets on its surface showed spheri-
+cal shape with contact angle more than 150 (characteristics 
+of superhydrophobic materials) (Fig.  6 b).
+To confirm the self-cleaning property of the final cot-
+ton fabrics, they treated all types of cotton fabrics (P, D 
+and S) with certain amounts of clay and then washed the 
+clay with water (Fig.  6 c). The result of this test revealed 
+that only the S-cotton showed self-cleaning property 
+which was originated from its superhydrophobic property 
+(Fig.  6 d). They also revealed that the simultaneous pres-
+ence of phosphorus, fluorine and silicon in the structure 
+of the final product had improved the thermal stability of 
+cotton and donated the thermal retardant property to the 
+fabric (Chen et al.  2019 ).
+1 3
+
+592 	 Environmental Chemistry Letters (2021) 19:583–611
+a N , N - Fig. 8   
+c ), Cop-
+).
+1 3
+
+Environmental Chemistry Letters (2021) 19:583–611	 593
+the ability to decrease the temperature of skin about 6.5 °C 
+in comparison to the bare skin. This novel texture worked 
+based on the selection between absorbing/emitting thermal 
+radiations and reflected the solar energy (more than 90%) 
+due to its micro-nanostructure (Song et al.  2020 ).
+Flame‑retardant textiles
+Flame-retardant textiles could be used in particular for fire-
+fighters’ clothing and for protecting against uncontrollable 
+fires. Using flame retardants (for textiles and buildings) has 
+increased annually during the last years, while most of them 
+show adverse effects on the environment and humans (Yasin 
+et al.  2018 ). Thus, it is necessary to discover new types of 
+eco-friendly flame retardants or new methods for preparing 
+flame-retardant textiles. In this regard, some natural extracts 
+such as banana pseudostem sap, coconut shell, and spinach 
+leaves juice, and also some proteins such as casein and whey 
+protein are among natural flame retardants that have recently 
+been used (Yang et al.  2018b ).
+Another approach for producing these types of textiles 
+is using polymeric and nanocomposite agents with natural 
+flame-retardant properties in the textiles structure. For exam-
+ple, Zhang et al. fabricated an eco-friendly flame-retardant 
+cotton fabric via surface coating of cotton by ammonium salt 
+of melamine hexa(methylphosphonic acid). The final prod-
+uct showed a high limiting oxygen index (about 43%) which 
+was maintain to about 33.4% after 50 laundering cycles that 
+confirmed its high flame-retardant stability. Moreover, the 
+toxicity results of this fabric revealed no toxicity against 
+humans and the environment (Zhang et al.  2018 ).
+Mourgas et al. ( 2019 ) produced a type of improved flame-
+retarded polyamide 6 via co-condensation of two types of 
+organophosphorus compounds on the surface of polyamide 
+via ε-caprolactam. The knitted fabric of this new type of 
+polyamide showed high thermal stability, excellent flame 
+retardancy and high limiting oxygen index values of about 
+35%. The presence of phosphorus groups in the structure of 
+this textile was the main reason of its flame-retardant ability. 
+Moreover, it was shown that the presence of the organo-
+phosphorus compounds in the structure of polyamide had 
+no negative effect on its other features (Mourgas et al.  2019 ).
+Self‑healing textiles
+Self-healing textiles are a class of smart textiles with autono-
+mous repairing ability and are known as one of the most 
+attractive subcategories of the textile industry. This property 
+could prolong the lifetime of the products and could be cre-
+ated by different coating agents like micro/nanocapsules and 
+polymeric coatings. Shelf-healing textiles are also classified 
+as a type of responsive materials, which are activated due to 
+1 3
+
+594 	 Environmental Chemistry Letters (2021) 19:583–611
+a risk to them (Ambat et al.  2020 ; Ben Hamida et al.  2018 ;  mechanism and the selectivity of polymeric materials could 
+Bessaies et al. 
+2019 2018 ). 
+et al. 
+acteristics which the bulky phase could not hold making 
+their way to be used in many areas of science especially in  As mentioned above, the overall performance of the pol-
+water treatment (Chenab et al.  2020 ; Iftekhar et al.  2017b ,  ymer-functionalized materials depends on two important 
+c ,  2018c ,  d ,  2020a ). Over time researchers divined that  things that must be taken under consideration- (a) the physi-
+compared to bare nanomaterials, functionalization with  cal state of the material in water and the chemical nature 
+the polymers allowed the adaptation for specific pollutants  of the functional moieties bore by the polymer. Due to the 
+both with efficiency and selectivity owing to the presence  versatility of polymerization methods, a wide range of 
+of specific functional groups. The selection of polymers for  materials have been synthesized. Based on their chemical 
+the functionalization required the knowledge of removal  structure, such materials are either soluble or insoluble in 
+pathways involved between the functional groups and  water (Fig.  10 ). The removal of pollutant by water-soluble 
+pollutants. Moreover, besides the chemical nature of the  polymers is widely used through liquid-phase polymer-based 
+functional groups, other parameters also play a vital role  retention, which when merged with ultrafiltration, leading 
+toward the selectivity of polymer-functionalized materials,  to the establishment of the polymer-enhanced ultrafiltration 
+viz. the physical state, and physical features (beads, gels,  process employing functionalized membranes. The other 
+fibers, membranes, etc.) need to be considered for targeted  process is a solid-phase extraction which includes fixed-
+water treatment method (Rivas et al.  2018 ). The fabrication  bed or ion exchange column processes, for the removal was 
+and testing of polymer-functionalized materials have been  employed via insoluble polymeric materials (Gao et al.  2017 , 
+expanded over the decades, and the common moieties used  2018 ; Graillot et al.  2015 ; Srivastava et al.  2018 ). The hydro-
+for functionalization include N-donors (amides, amines) and  philicity of polymeric materials facilitated a direct interac-
+O-donors (ethers, alcohols) both of which proved to be of  tion of the functional groups with the pollutant in the poly-
+great interest. The removal/reaction pathway mainly depends  mer, enhancing the efficiency of ultrafiltration process, but 
+on the functional groups carried by the polymeric materials  the removal of the polymer–pollutant complex is a difficult 
+as well as the effluent acidity. For instance, the removal of  and expensive process. The difficulty in separation of mate-
+metal cations occurred by the anionic functional moieties  rial limits its implementation at an industrial level due to the 
+via ion exchange, whereby complexation interactions were  involvement of ultrafiltration steps that required relatively 
+likely due to uncharged functional moieties. The removal  high pressure and thus could lead to high operating costs 
+Different polymer-based materials for the removal of pollutants from water. Reprinted with permission from Rivas et al. ( 2018 ) Fig. 10   
+1 3
+
+Environmental Chemistry Letters (2021) 19:583–611	 595
+Representation of dominant mechanisms on various functional groups Fig. 11   
+and significant membrane fouling (Fenyvesi et al.  2020 ). On  (polyelectrolytes), while such interactions are generally 
+the contrary, the removal of materials is easy in solid-phase  reversible and weak. On the other hand, for the polymeric 
+extraction process, where the slow kinetics and low removal  material carrying uncharged functional groups, the preva-
+rate of such materials were led by the insoluble material.  lent mechanism is more likely complexation leading to the 
+The problem can be overcome by using hydrosoluble poly- formation of coordination bonds between the pollutant and 
+meric materials. Additionally, the adaptability of material’s  functional groups, which are stronger than electrostatic ones 
+physical state enabled their application in elution processes  but are still reversible. Another aspect that needs to be con-
+1 3
+
+596 	 Environmental Chemistry Letters (2021) 19:583–611
+Polymers materials bearing O- and N-donor functional moieties for the removal of various pollutants Table 1   
+Functional moiety pK Physical state Targeted pollutant References a
+Polyvinyl alcohol > 14 Beads, nanofiber, mem- Cd, Cr, Cu, Pb, Zn,Mo Al-Hwaiti et al. ( 2019 ), 
+brane, nanocomposite Isawi ( 2020 ), Lee ( 2019 ) 
+and Vatanpour et al. 
+( 2020 )
+Poly (itaconic acid) 4.5 Water-soluble polymer Pb, Cu, Cd, Sn, Zn Rezania et al. ( 2019 )
+polyethylene glycol (PEG) – Hydrosoluble membrane Zn, Pb, Cr Baharuddin et al. ( 2019 )
+Cu, Co, Sr, Tetracycline, Fakhri et al. ( 2019 ), Sum  10–11 Membrane, fiber,  Amines
+et al. ( 2019 ), Wamba  hydrosoluble polymer,  1. 3-(Aminopropyl)trieth-
+et al. ( 2018 ) and Wang  nanocomposite bead, 
+1 3
+
+Environmental Chemistry Letters (2021) 19:583–611	 597
+Reactional pathway leading to PVA-based hybrid nanomaterials. Reprinted with permission from Elsevier (Muller et al.  2019 ), Copy- Fig. 12   
+right 2019
+core–shell superparamagnetic nanoparticles immobilized  removal of some pollutants, particularly metal ions. Fur-
+with ethylenediaminetetraacetic acid derivatives which  ther, they offer excellent removability under neutral and 
+), 
+1 3
+
+598 	 Environmental Chemistry Letters (2021) 19:583–611
+Possible cation and anion exchange groups. Reprinted with permission from Elsevier (Vogel and Meier-Haack  2014 ), Copyright 2014 Fig. 13   
+aminopropyltriethoxysilane (Ramasamy et al.  2018 ,  2019 ),  mechanism (Vogel and Meier-Haack  2014 ). To understand 
+poly(glycidyl methacrylate- co -ethylene glycol dimeth- this, Bui et al. ( 2011 ) employed aminopropyl-functional-
+acrylate), 2-amino pyrimidine(Sadjadi et al.  2019 ), etc.  ized silica for the removal or 14 different pharmaceuticals 
+Along with many others, the functionalization of nanoma- (Atenolol, Acetaminophen, Clofibric, Carbamazepine acid, 
+terials with amino/silanes is very common. The modifica- Estrone, Diclofenac, Gemfibrozil, Gemfibrozil, Ibuprofen, 
+tion is mostly conducted by grafting process between nano- Opromide, Iopromide, Sulfamethoxazole, Ketoprofen, Tri-
+materials or membranes and alkoxyaminosilanes where the  methoprim). The material showed reduced adsorption for 
+OH group of nanomaterials react with the alkoxy group of  the two compounds containing amine groups and estrone 
+2017 ).
+,  2020a ).
+1 3
+
+Environmental Chemistry Letters (2021) 19:583–611	 599
+Possible mechanisms of  Fig. 14   
+polychelatogen and polyelec-
+trolyte for polymeric materials 
+bearing phosphonic acid moie-
+ties. Reprinted with permission 
+from Elsevier (Beaugeard et al. 
+2020 ), Copyright 2020
+diacids. Compared to other functional groups, the removal  were combined. Page et al. (Reaves  2004 ; Page et al.  2017 ) 
+capacity of phosphonic acid moieties is fascinating at low  studied the combined effect of different ligand groups with 
+pH. At pH ≥ 2, phosphonic groups dissociate facilitating  phosphonic groups, viz. sulfonic/phosphonic, aminophos-
+the electrostatic interaction as the competition between the  phonic or iminodiacetic for selective recovery of La, Sm 
++ ­H  and pollutant is comparatively low due to the negative  and HO from common impurities of Fe, Th and Al. Like-
+charge carried by the materials bearing phosphonic func- wise, compared to common resin, the bifunctional chelating 
+tional units (Alexandratos and Hussain  1998 ; Ferrah et al.  resin bearing phosphonic and sulfonic groups showed better 
+2011 ). The hydrophilic character of polymeric material  removal of fluoride (Li et al.  2020 ). Among all examples, 
+increased due to a negative charge facilitating faster kinet- bifunctional polymer-supported aminophosphonic acid 
+ics. Meanwhile, the scenario is completely different for pH  (Zidan et al.  2020 ), carboxylic–amine–phosphonic acid 
+between 2–7 and above 7. When the pH lies between ­pk   (Wang et al.  2020a ), diphosphonic (Fila et al.  2019 ), poly-
+a1
+and ­pK , phosphonic moieties behaved both as polychela- amine in the presence of HDPE (Zhao et al.  2019a ) proved 
+a2
+togen and polyelectrolyte (Fig.  14 ) due to the dissociation  to be of interest for the removal of metal cations.
+of only one hydroxyl group. Above pH 7, two acid moieties 
+dissociate due to electrostatic forces. Being hard acids, phos- Polymeric materials bearing sulfonic moieties
+phonic groups showed a better affinity toward hard cations 
+compared to soft cations (Beaugeard et al.  2020 ; Tokuy- Sulfonic acids (R-SO3H) own the electro-attractor character 
+ama et al.  2011 ). Artiushenko et al. ( 2020 ) tested amino- of the sulfur atom which caused the negative pKa value (− 2) 
+di(methylenephosphonic) acid covalently immobilized on  often termed as hard monoacids. Regardless of solution pH, 
+silica for the preconcentration of rare earth’s elements from  this acid group always dissociate in aqueous medium fol-
+polluted water. However, the extraction of rare earth’s ele- lowing the ion exchange mechanism. The polymeric materi-
+1 3
+
+600 	 Environmental Chemistry Letters (2021) 19:583–611
+Reprinted with permission from John Wiley and Sons (Bayramoglu  Adsorption mechanism on the sulfonic-functionalized terpol- Fig. 15   
+et al.  2020 ), Copyright 2020
+1 3
+
+Environmental Chemistry Letters (2021) 19:583–611	 601
+Schematic illustration  Fig. 16   
+packaging materials. Among these, the first reported mate- enthalpic factors, which in case of polar solvents is pos-
+rials found in the literature, which emerged in the market  sible by utilizing alkyl-ammonium surfactants (Bumbud-
+as better materials, were the clay nanoparticles incorpo- sanpharoke and Ko  2019 ). Generally, the materials can be 
+rated in the polymer matrix. The homogenous dispersion  prepared by melt processing or (in situ) polymerization. 
+of clay nanoparticles is a need in a polymer matrix to  To prepare polymeric clay materials, various polymers 
+enhance its properties depending on enthalpic and entropic  and clay fillers were used. Among these, the most widely 
+factors to determine the morphological arrangement (Rhim  used polymers are polyethylene terephthalate, nylon, poly-
+et al.  2013 ; Silvestre et al.  2011 ). This uniform disper- styrene, polyolefins, polylactide, polyamide, polyimides, 
+sion is only achievable when polymer–clay interactions  epoxy resins polyurethane and ethylene–vinyl alcohol 
+1 3
+
+602 	 Environmental Chemistry Letters (2021) 19:583–611
+(Sirelkhatim et al.  2015 ). ­SiO (Bumbudsanpharoke and Ko  2019 ), while the commonly  , ZnO, MgO and ­TiO  are the 
+2 2
+used nanoclays includes montmorillonite and alumina- widely studied metal oxide nanoparticles because of their 
+silicate layered clay (Silvestre et al.  2011 ). Vidotti et al.  ability to act as disinfecting photocatalytic agents and UV 
+( 2017 ) studied that the addition of polyester ionomer com- blockers. The generation of reactive oxygen species and 
+patibilizer in polymer clay composite resulted in exfolia- hydroxyl radicals (Fig.  16 ) on the surface of ­TiO  stemmed 
+2
+tion and intercalation of nanoclays that reduces up to 30%  from the fatty acid and polyunsaturated phospholipids oxida-
+and 50% of moisture and carbon dioxide permeability,  tion of microbial cell membrane (Dobrucka  2019 ; Yildirim 
+respectively. Xie et al. ( 2012 ) investigated that combining  and Röcker  2018 ). The ­TiO  polymer nanoparticles were 
+2
+low density polyethylene (nonpolar, hydrophobic polymer)  reported to be active against fecal contamination in water 
+with organo-montmorillonite improved the moisture bar- and  E. coli  in food (Silvestre et al.  2011 ). Chi et al. ( 2019 ) 
+rier, which could be reduced if the contents of organo- tested ­TiO  incorporated in polylactic acid increased of 
+2
+montmorillonite exceed a certain limit. The reduction in  mango shelf life up to 15 days. Additionally, the antibacte-
+lipid oxidation of meat products and extension in shelf life  rial characteristics of MgO and ZnO were also investigated 
+was reported by Vilarinho et al. ( 2018 ) by the incorpora- by many researchers and in comparison to Ag nanoparticles, 
+tion of montmorillonite in polylactic acid film. Further, to  both ZnO and MgO nanoparticles provide safe and afford-
+prepare improved polymer nanoparticle-based materials,  able food packaging option (Janani et al.  2020 ; Silvestre 
+other nanomatrices used are silicon oxide, silver oxide and  et al.  2011 ). It was stated that reduction in particle size of 
+carbon nanotubes due to their antibacterial activity. For  ZnO significantly improves its mechanical, barrier and anti-
+instance, the addition of carbon nanotubes with different  microbial properties (Yamamoto  2001 ). The ZnO nanopar-
+polymers like polyamide, polypropylene, polylactic, etc.,  ticles have been combined with different polymer matrices 
+triggers toward improvement in water transmission rate of  some of which are polypropylene, poly (vinyl chloride), 
+up to 200%. Studies also reported the improvement in bar- polyamide, etc., which improves the stability of materials 
+ particle  rier and mechanical properties by addition of ­SiO (Dobrucka  2019 ).
+2
+in polymer matrices. Carbon nanotubes on combining with polymers could not 
+only enhance the features of the polymer matrix but also 
+improve the antimicrobial property. Liu et al. ( 2019 ) fabri- Active polymer nanoparticles packaging
+cated the polylactic acid/carbon nanotubes/chitosan fibers 
+The main purpose of designing the “Active packaging” using  through electrospinning, which demonstrated antimicro-
+polymer nanoparticles is to adsorb or release substance  bial activity against  Staphylococcus aureus  than against  E . 
+from, into and around the packaged food. Currently, the  coli . The experiments further exhibited that 7% contents of 
+promising utilization of most of the active polymer nano- core–shell improved the shelf life of strawberries for several 
+particles is antimicrobial packaging, ethylene removers,  days. To the best of the authors knowledge, we are unable 
+carbon dioxide absorbers/emitters and oxygen scavengers  to find the studies related to a combination of single-wall 
+(Fig.  17 ). To develop the active polymer nanoparticles, the  carbon nanotubes with polymer matrix as a food packag-
+frequently used nanoparticles include metal nanoparticles,  ing material. Additionally, the applications at the industrial 
+metal oxide nanoparticles and carbon nanotubes. Au, Ag and  scale stopped due to many studies suggesting that carbon 
+Zn nanoparticles are extensively used metal nanoparticles  nanotubes are cytotoxic for humans (Silvestre et al.  2011 ; 
+with antimicrobial features (Silvestre et al.  2011 ). Regard- Zubair and Ullah  2020 ).
+ing the antimicrobial properties of Ag nanoparticles, vari-
+ous mechanisms have been proposed including degrading  Intelligent polymer nanoparticles packaging
+lipopolysaccharides, adhesion to the cell surface, damaging 
+bacteria DNA, penetration inside the bacterial cell, releasing  The purpose of “Intelligent polymer nanoparticles packag-
++ antimicrobial ­Ag  ions and forming “pits” in the membranes  ing” is to examine the packaged food condition or environ-
+(Carbone et al.  2016 ). Several authors reported the applica- ment the food is surrounded by. The latest advancements for 
+tion of Ag NPs alone with different polymers or in conjunc- intelligent polymer nanoparticles include pathogen sensors, 
+tion with other metal oxides like ZnO, Ag/zeolite and Ag/Au  freshness indicators and oxygen indicators. During food stor-
+which generates more antibacterial effect than silver alone.  age, microorganism growth is facilitated by oxygen, which 
+Matak et al. studied the use of Ag and ­TiO  nanoparticles  boosted the interest to develop irreversible and non-toxic 
+2
+in polyethylene matrix for liquid, solid, acidic and fat-con- oxygen sensors to ensure absence of oxygen in the packaging 
+taining food samples. The microbial growth was inhibited  system while packing under nitrogen and vacuum (Dobrucka 
+by Ag nanoparticles containers up to 10 days (Metak and  2019 ; Silvestre et al.  2011 ). To photosensitize the methylene 
+Ajaal  2013 ). Besides, nanoparticles based on Zn provide  blue via triethanolamine, ­TiO  nanoparticles were encap-
+2
+better antibiotic, antimicrobial and antifungal properties  sulated in a polymer matrix using UVA light by Lee et al. 
+1 3
+
+Environmental Chemistry Letters (2021) 19:583–611	 603
+device by embedding the Au nanoparticles in the polyelec- and noticed that rate of color recovery was proportionate 
+to the oxygen level exposure (Lee et al.  2002 ). Likewise, 
+­SnO  was used as a photosensitizer for oxygen indication 
+2
+where the film color fluctuates subject to the oxygen expo-
+sure (Mills and Hazafy  2009 ). Based on the gas emissions 
+of microorganisms, different types of gas sensors developed 
+which could be used for identification and quantification 
+(Dobrucka  2019 ; Silvestre et al.  2011 ). Polymer nanoparti-
+cles sensors, owing to high stability and sensitivity, are the 
+most prevalent forms of sensors. Sensors developed using 
+)  conducting nanoparticles entrenched in a polymer matrix 
+to identify and detect microorganism specific responses are 
+under investigation (Liu et al.  2007 ). From the pattern of 
+response produced by such sensors, three forms of bacteria 
+were identified, namely  Vibrio parahemolyticus ,  Salmonella  
+spp. and  Bacillus cereus . Other innovations in this area of 
+research are at an early stage consisting of devices that will 
+detect the release of preservatives as soon as the food starts 
+electrochemical signals, creating sensors that are both selec- to spoil and thus offer a base for intelligent preservative-
+tive and sensitive. The frequently used polymer used for the  packaging technology.
+surface modification of carbon nanotubes as a monomer is 
+pyrrole due to its conductive properties and is ideal for bio-
+Other industrial applications logical and pharmaceutical analyses from acidic to neutral 
+region. Other polymer of interest is orthophenylenediamine 
+which is fairly akin to pyrrole (Beluomini et al.  2019 ). The  Polymer-functionalized nanomaterials belong to the polymer 
+polymer was used for the functionalization of single-wall  nanotechnology spectrum that is wide implemented in an 
+carbon nanotubes and used for the detection of brucine with  interdisciplinary field. This section provides an overview of 
+limits of detection of 0.21 μmol/L (Liu et al.  2012 ). the application of polymer-functionalized materials in sen-
+sor, energy storage sector and catalysis.
+Energy storage
+Sensors
+The creation of renewable and sustainable sources for 
+The sensing characteristics of polymer nanoparticles depend  storage like wind and solar energy divisions is needed 
+on the chemical and structural alterations because of the  on urgent basis because of the escalating energy crisis 
+polymer and nanoparticles interaction with the environ- instigated by the diminution of traditional fossil fuels. 
+ment affording a subsequent output usually as an optical  As renewable energy resources are sporadic, effective 
+or electrical signal (Zare et al.  2014 ; Ahmad et al.  2019 ; 
+Belbruno  2019 ; Boyaciyan and von Klitzing  2019 ). Sub-
+ramanian et al. ( 2018 ) detected the vapors of toluene and 
+benzene at room temperature with polyaniline metal oxide 
+composite ­(TiO /SnO ). The interaction of sensor material 
+2 2
+and vapors of analyte occurs by surface adsorption. Metals 
+exhibiting surface plasmon resonance are typically used for 
+optical sensors (Boyaciyan and von Klitzing  2019 ). By uti-
+lizing the chitosan and polymer film of Ag metal, Verma and 
+Gupta ( 2015 ) spotted the presence of heave metals optically 
+in polluted water. The Ag films coated with polymer and 
+chitosan are capable of binding metal ions of their surface 
+and this binding changes the dielectric features of the sens-
+ing surface. The shift in surface plasmon response can be 
+detected by using a UV/Vis spectrometer and the possibility 
+Synthesis of corn-like ­SnO  coated PDA nanoparticles used  Fig. 18    2 of detecting the very low concentration of metal ions, i.e., 
+as anodes for Li-ion batteries. HPC-g-PAA: hydroxypropylcellulose-
+1 ppb increases. Boyaciyan et al. ( 2018 ) prepared a sensor  g -polyacrylic acid; PDA: polydopamine
+1 3
+
+604 	 Environmental Chemistry Letters (2021) 19:583–611
+energy storage techniques are needed to generate and  Catalysis
+store renewable energy quickly and steadily. This led to 
+the growing research interest in Electrochemical Energy  The broad array of diverse polymer nanoparticle-type 
+Storage Systems with cells, batteries and capacitors being  nanoreactors are made with catalytic activity. For example, 
+among various storage systems that have been crucial  chemically attracted metal nanoparticles to polymer chains, 
+(Fard et al.  2017a ,  b ; Boyaciyan and von Klitzing  2019 ).  homogenous distribution of functionalized nanoparticles 
+In this area, the appropriate application of polymer nano- in microgel assembly, polymeric membrane surfaces, or 
+particles is lithium-ion batteries which is based on four  polymer-functionalized metallic thin films (Boyaciyan and 
+main components consisting of anode, cathode, separator  von Klitzing  2019 ). Functionalized polymer brushes for 
+and electrolyte. Presently, porous polyolefin-based poly- hydrogen evolution were prepared by Stern et al. ( 2018 ). 
+mers, viz. polypropylene and polyethylene, were used in  The highly oriented planar pyrolytic graphite was used for 
+separators that restrict the electrolyte diffusion because of  the growth of cationic polyelectrolyte brushes, which cata-
+hydrophobic surface (Wang et al.  2020d ; Song et al.  2012 ).  lyze hydrogen production from water by binding molybde-
+Polydopamine-based separator coated with polyethylene  num sulfide of cationic polyelectrolyte. To become mobile 
+which improved the electrolyte diffusion and the discharge  the growth of polyelectrolyte brushes on spherical surfaces 
+capacity of the battery stayed 84.1%. In lithium ions bat- (Lu and Ballauff  2016 ), Gill et al. ( 2009 ) fabricated poly-
+teries, the positive and negative electrode, i.e., cathode and  mer brush catalysts based on MNPs functionalized by pip-
+anode, play an important role in determining the electro- erazine and employed for the Knoevenagel condensation. 
+chemical performance. A template method for the growth  After the reaction, the brushes can be pulled out selectively 
+ nanoparticles coated polydopamine by tapping  of the ­SnO anywhere due to the presence of MNPs (Yan et al.  2019 ).  2
+a bottlebrush like cellulose- g -acrylic acid (Fig.  18 ). It was  4-Nitrophenol was successfully reduced by thermosensitive 
+stated that coated polymer nanoparticles performed better  functionalized nanoreactors which are capable of adjusting 
+than uncoated and exhibited long cycling stability up to  the catalytic activity, switching on and off concerning tem-
+300 cycles (Liu et al.  2017 ). perature (Jia et al.  2016 ).
+Dye-sensitized solar cell is another type used for 
+energy storage based on photosensitizing dye having 
+Conclusion light adsorption behavior coated on semiconductor like 
+­TiO . The harvesting of solar cell energy enhancement is 
+2
+possible through polydopamine which owns wide band  Despite the great progresses in the last years and the high 
+adsorption feature (Wang et al.  2020d ). Nam et al. ( 2012 )  success of polymer functionalization in different fields, 
+prepared polymer nanoparticles dye-sensitized solar cell  several challenges still remain. First of all, a better under-
+via polymerization of dopamine under ­N  atmosphere in  standing of the biological mechanisms behind cell–polymer  2
+tris(hydroxymethyl)aminomethane solution; the result- interactions could guarantee a better design. Indeed, many 
+ing mixture was used for coating of ­TiO  electrode as a  of the pathways involved in cell uptake, toxicity, etc., are  2
+dye. It was also reported that the coating method signifi- still under investigation and a common theory is far to be 
+cantly affects the photovoltaic parameters. The polydopa- established. In parallel, also safety concerns should be taken 
+mine–TiO –DC acquired by dip coating technique offered  into particular consideration: nanotoxicity indeed aims to  2
+greater efficiency than the polydopamine–TiO –CV sam- study the potential negative chronic impact of nano-objects  2
+ples obtained through capacitance–voltage method (Nam  in humans. In the last decades, clinical studies underlined 
+et al.  2012 ). The ultrafast high energy density, long-term  that potentially they can contribute to damage, inflammation 
+stability and charge–discharge behavior are unique fea- and undesired entrance through biological barriers. The fac-
+tures of supercapacitors, which has fascinated considerable  tors behind possible toxic effects should be investigated to 
+attention recently. Normally, carbon and metal materials  ameliorate their use considering that nano-objects can come 
+are materials used in supercapacitors; however, polymer  in contact with genetic material through inhalation, skin 
+nanoparticles are also used widely (Wang et al.  2020d ).  absorption or ingestion. Toxicity is a big issue that should be 
+Madhu et al. ( 2015 ) prepared electrode made of mixed  considered not only in the final application but also during 
+oxide (Ni–Co) coated with polydopamine and observed  the entire manufacturing and then disposal. The large-scale 
+that the coated material resulted in an increase of surface  production represents an other big challenge due to the fact 
+2 area from 36 to 59 m /g compared to bare ­NiCo O  sam- that it is well known that small volumes (laboratory scale)  2 4
+ples, yielding a quick ion diffusion in electrolyte (Veer- favor the surface respect to the bulk, while increasing the 
+amani et al.  2016 ). scale the opposite. A big technological progress should be 
+1 3
+
+Environmental Chemistry Letters (2021) 19:583–611	 605
+done to allow reliable synthesis, functionalization and stor- bead based hexagonal close packed 3D implant for bone tissue 
+engineering. ACS Appl Mat Interfaces 8:32132–32145 age of these devices. Moreover, financial and economic bar-
+Agarwal T, Rustagi A, Das J, Kumar Maiti T (2018) PAMAM den- riers represent a high impediment in their final use due to the 
+drimer grafted cellulose paper scaffolds as a novel in vitro 3D 
+high cost behind all the points addressed above. In summary,  liver model for drug screening applications. Coll Surf B Bioint-
+we can state that polymers and nano-objects represent a  erfaces 172:346–354
+Agarwal T, Kumar Maiti T, Behera B, Kumar Ghosh S, Apoorva A,  milestone for many applications, from medicine to catalysis. 
+Padmavati M (2019) Biofunctionalized cellulose paper matrix  However, the easy combination of polymers cannot satisfy 
+for cell delivery applications. Int J Biol Macromol 139:114–127
+all the properties needed and so surface functionalization  Agarwal T, Biswas P, Pal S, Kumar Maiti T, Chakraborty S, Kumar 
+represents a winning strategy that consent to introduce ideal  Ghosh S, Dhars (2020a) Inexpensive and versatile paper-based 
+platform for 3D culture of liver cells and related bioassays. ACS  properties different from the ones of the native polymers: the 
+Appld Bio Mater 3:2522–2533 functionalization approaches appear as the basic line for the 
+Agarwal T, Borrelli MR, Makvandi P, Ashrafizadeh M, Kumar Maiti 
+amelioration of the performances of these devices. T (2020b) Paper-based cell culture: paving the pathway for liver 
+tissue model development on a cellulose paper chip. ACS Appl 
+Bio Mater 3:3956–3974   Vinod V.T. Padil would like to gratefully acknowl- Acknowledgements
+Ahmad OS, Bedwell TS, Esen C, Garcia-Cruz A, Piletsky SA (2019)  edge financial support under the “Project Hybrid Materials for Hierar-
+Molecularly imprinted polymers in electrochemical and opti- chical Structures” (HyHi, Reg. No. CZ.02.1.01/0.0/0.0/16_019/000084
+cal sensors. Trends Biotechnol.  https​://doi.org/10.1016/j.tibte​ 3) and Research Infrastructure NanoEnviCz (Project No. LM2018124) 
+ch.2018.08.009 supported by the Ministry of Education, Youth and Sports of the Czech 
+Ajji Z, Ali AM (2010) Separation of copper ions from iron ions using  Republic and European Union–European Structural and Investment 
+PVA- g -(acrylic acid/ N -vinyl imidazole) membranes prepared  Funds in the frames of Operational Program Research, Development 
+by radiation-induced grafting. J Hazard Mater.  https​://doi. and Education.
+org/10.1016/j.jhazm​at.2009.08.049
+Alexandratos SD, Hussain LA (1998) Synthesis of α-, β-, and    Open access funding provided by Politecnico di Milano  Funding
+γ-ketophosphonate polymer-supported reagents: the role of intra- within the CRUI-CARE Agreement.
+ligand cooperation in the complexation of metal ions. Macromol-
+ecules.  https​://doi.org/10.1021/ma971​587d
+Compliance with ethical standards  Alferiev IS, Connolly JM, Stachelek SJ, Ottey A, Rauova L, Levy RJ 
+(2006) Surface heparinization of polyurethane via bromoalkyla-
+tion of hard segment nitrogens. Biomacromolecules 7:317–322.    The authors declare that they have no conflict of  Conflict of interest
+https​://doi.org/10.1021/bm050​6694 interest.
+Al-Hwaiti M, Ibrahim KA, Harrara M (2019) Removal of heavy metals 
+from waste phosphogypsum materials using polyethylene glycol    This article is licensed under a Creative Commons Attri- Open Access
+and polyvinyl alcohol polymers. Arab J Chem 12:3141–3150 bution 4.0 International License, which permits use, sharing, adapta-
+Ambat I, Srivastava V, Iftekhar S, Haapaniemi E, Sillanpää M  tion, distribution and reproduction in any medium or format, as long 
+(2020) Effect of different co-solvents on biodiesel production  as you give appropriate credit to the original author(s) and the source, 
+from various low-cost feedstocks using Sr–Al double oxides.  provide a link to the Creative Commons licence, and indicate if changes 
+Renew Energy 146:2158–2169.  https​://doi.org/10.1016/j.renen​ were made. The images or other third party material in this article are 
+e.2019.08.061 included in the article’s Creative Commons licence, unless indicated 
+Ansari TM, Ajmal M, Saeed S, Naeem H, Ahmad HB, Mahmood K,  otherwise in a credit line to the material. If material is not included in 
+Farooqi ZH (2019) Synthesis and characterization of magnetic  the article’s Creative Commons licence and your intended use is not 
+poly(acrylic acid) hydrogel fabricated with cobalt nanoparticles  permitted by statutory regulation or exceeds the permitted use, you will 
+for adsorption and catalytic applications. J Iran Chem Soc.  https​ need to obtain permission directly from the copyright holder. To view a 
+://doi.org/10.1007/s1373​8-019-01738​-8 copy of this licence, visit  http://creat​iveco​mmons​.org/licen​ses/by/4.0/ .
+Arellano-Sandoval L, Delgado E, Camacho-Villegas TA, Bravo-
+Madrigal J, Manríquez-González R, Lugo-Fabres PH, Toriz G, 
+García-Uriostegui L (2020) Development of thermosensitive 
+hybrid hydrogels based on xylan-type hemicellulose from agave 
+bagasse: characterization and antibacterial activity. MRS Com- References
+mun 10:147–154.  https​://doi.org/10.1557/mrc.2019.165
+Arshad F, Selvaraj M, Zain J, Banat F, Haija MA (2019) Polyethylen-
+Abd Elkodous M, El-Sayyad GS, Abdelrahman IY, El-Bastawisy HS,  imine modified graphene oxide hydrogel composite as an effi-
+Mosallam FM, Nasser HA, Gobara M, Baraka A, Elsayed MA,  cient adsorbent for heavy metal ions. Sep Purif Technol.  https​://
+El-Batal AI (2019) Therapeutic and diagnostic potential of nano- doi.org/10.1016/j.seppu​r.2018.06.035
+materials for enhanced biomedical applications. Colloids Surf B  Artiushenko O, Ávila EP, Nazarkovsky M, Zaitsev V (2020) Reusable 
+Biointerfaces 180:411–428 hydroxamate immobilized silica adsorbent for dispersive solid 
+Abidin NIZ, Sabri MFM, Kalantari K, Afifi AM, Ahmad R (2018)  phase extraction and separation of rare earth metal ions. Sep 
+Corrosion detection for natural/synthetic/textiles fiber polymer  Purif Technol 231:115934
+composites. In: Structural health monitoring of biocomposites,  Asif MB, Majeed N, Iftekhar S, Habib R, Fida S, Tabraiz S (2016) 
+fibre-reinforced composites and hybrid composites.  https​://doi. Chemically enhanced primary treatment of textile effluent using 
+org/10.1016/B978-0-08-10229​1-7.00006​-X alum sludge and chitosan. Desalin Water Treat 57:7280–7286. 
+Agarwal T, Kabiraj P, Hari Narayana G, Kulanthaivel S, Kasiviswa- https​://doi.org/10.1080/19443​994.2015.10154​48
+nathan  U, Pal K, Giri S, Maiti TK, Banerjee I (2016) Alginate  Baharuddin NH, Sulaiman NMN, Aroua MK, Nawawi MGM, Kassim 
+MA, Othman MR, Dahlan I (2019) Starch as novel water soluble 
+1 3
+
+606 	 Environmental Chemistry Letters (2021) 19:583–611
+Carbone M, Donia DT, Sabbatella G, Antiochia R (2016) Silver  biopolymer in removal mixtures heavy metal ions via polymer 
+nanoparticles in polymeric matrices for fresh food packag- enhanced ultrafiltration. In: AIP conference proceedings.  https​
+ing. J King Saud Univ Sci.  https​://doi.org/10.1016/j.jksus​ ://doi.org/10.1063/1.51171​34
+.2016.05.004 Baji A, Agarwal K, Oopath SV (2020) Emerging developments in the 
+Chacko RT, Ventura J, Zhuang J, Thayumanavan S (2012) Poly- use of electrospun fibers and membranes for protective clothing 
+mer nanogels: a versatile nanoscopic drug delivery platform.  applications. Polymers (Basel).  https​://doi.org/10.3390/polym​
+Adv Drug Deliv Rev 64:836–851.  https​://doi.org/10.1016/j. 12020​492
+addr.2012.02.002 Bayramoglu G, Kunduzcu G, Arica MY (2020) Preparation and charac-
+Chen T, Hong J, Peng C, Chen G, Yuan C, Xu Y, Zeng B, Dai L  terization of strong cation exchange terpolymer resin as effective 
+(2019) Superhydrophobic and flame retardant cotton modified  adsorbent for removal of disperse dyes. Polym Eng Sci.  https​://
+with DOPO and fluorine-silicon-containing crosslinked polymer.  doi.org/10.1002/pen.25272​
+Carbohydr Polym 208:14–21.  https​://doi.org/10.1016/j.carbp​ Bearman G, Munoz-Price S, Morgan DJ, Murthy RK (2017) Infection 
+ol.2018.12.023 prevention: new perspectives and controversies. Infect Prev New 
+Chenab KK, Sohrabi B, Jafari A, Ramakrishna S (2020) Water treat- Perspect Controv.  https​://doi.org/10.1007/978-3-319-60980​-5
+ment: functional nanomaterials and applications from adsorp- Beaugeard V, Muller J, Graillot A, Ding X, Robin JJ, Monge S (2020) 
+tion to photodegradation. Mater Today Chem.  https​://doi. Acidic polymeric sorbents for the removal of metallic pollution 
+org/10.1016/j.mtche​m.2020.10026​2 in water: a review. React Funct Polym.  https​://doi.org/10.1016/j.
+Chenampulli S, Unnikrishnan G, Thomas S, Narine SS (2019) Novel  react​funct​polym​.2020.10459​9
+ethylene diamine functionalised nanocellulose/poly(ethylene- co - Bekas DG, Tsirka K, Baltzis D, Paipetis AS (2016) Self-healing materi-
+acrylic acid) composites for biomedical applications. Cellulose  als: a review of advances in materials, evaluation, characteriza-
+26:1795–1809.  https​://doi.org/10.1007/s1057​0-018-02227​-6 tion and monitoring techniques. Compos Part B Eng 87:92–119
+Chi H, Song S, Luo M, Zhang C, Li W, Li L, Qin Y (2019) Effect  Belbruno JJ (2019) Molecularly imprinted polymers. Chem Rev.  https​
+of PLA nanocomposite films containing bergamot essential oil,  ://doi.org/10.1021/acs.chemr​ev.8b001​71
+­TiO Beluomini MA, da Silva JL, de Sá AC, Buffon E, Pereira TC, Stra-  nanoparticles, and Ag nanoparticles on shelf life of man- 2
+diotto NR (2019) Electrochemical sensors based on molecu- goes. Sci Hortic (Amsterdam).  https​://doi.org/10.1016/j.scien​
+larly imprinted polymer on nanostructured carbon materials:  ta.2019.01.059
+a review. J Electroanal Chem.  https​://doi.org/10.1016/j.jelec​ Cho H, Jammalamadaka U, Tappa K (2018) Nanogels for pharmaceuti-
+hem.2019.04.005 cal and biomedical applications and their fabrication using 3D 
+Ben Hamida S, Iftekhar S, Ambat I, Srivastava V, Sillanpää M,  printing technologies. Materials (Basel).  https​://doi.org/10.3390/
+Amri Z, Ladhari N (2018) Dry and wet ozonation of denim:  ma110​20302​
+degradation products, reaction mechanism, toxicity and cyto- d’Amora M, Camisasca A, Boarino A, Giordani S, Arpicco S (2020) 
+toxicity assessment. Chemosphere 203:514–520.  https​://doi. Supramolecular functionalization of carbon nano-onions with 
+org/10.1016/j.chemo​spher​e.2018.03.199 hyaluronic acid-phospholipid conjugates for selective targeting 
+Bertelsen ER, Deodhar G, Kluherz KT, Davidson M, Adams ML,  of cancer cells. Colloids Surf B Biointerfaces 188:110779.  https​
+Trewyn BG, Shafer JC (2019) Microcolumn lanthanide separa- ://doi.org/10.1016/j.colsu​rfb.2020.11077​9
+tion using bis-(2-ethylhexyl) phosphoric acid functionalized  Dakova IG, Karadjova IB, Georgieva VT, Georgiev GS (2009) Poly-
+ordered mesoporous carbon materials. J Chromatogr A.  https​ carboxylic microsphere polymer gel for solid phase extraction of 
+://doi.org/10.1016/j.chrom​a.2019.02.057 trace elements. Microchim Acta.  https​://doi.org/10.1007/s0060​
+Bessaies H, Iftekhar S, Doshi B, Kheriji J, Ncibi MC, Srivastava V,  4-008-0031-4
+Sillanpää M, Hamrouni B (2020) Synthesis of novel adsorbent  Darabi RR, Peyravi M, Jahanshahi M (2019) Modified forward osmosis 
+by intercalation of biopolymer in LDH for the removal of arse- membranes by two amino-functionalized ZnO nanoparticles: a 
+nic from synthetic and natural water. J Environ Sci.  https​://doi. comparative study. Chem Eng Res Des.  https​://doi.org/10.1016/j.
+org/10.1016/j.jes.2020.01.028 cherd​.2019.02.019
+Blasco E, Sims MB, Goldmann AS, Sumerlin BS, Barner-Kowollik  Daraei P, Zereshki S, Shokri A (2019) Application of nontoxic 
+C (2017) 50th Anniversary perspective: polymer functionaliza- green emulsion liquid membrane prepared by sunflower oil for 
+tion. Macromolecules 50:5215–5252.  https​://doi.org/10.1021/ water decolorization: process optimization by response sur-
+acs.macro​mol.7b004​65 face methodology. J Ind Eng Chem.  https​://doi.org/10.1016/j.
+Bonnesœur S, Morin-Grognet S, Thoumire O, Le Cerf D, Boyer O,  jiec.2019.04.039
+Vannier JP, Labat B (2020) Hyaluronan-based hydrogels as  Deb PK, Kokaz SF, Abed SN, Paradkar A, Tekade RK (2019) Phar-
+versatile tumor-like models: tunable ECM and stiffness with  maceutical and biomedical applications of polymers. In: Basic 
+genipin-crosslinking. J Biomed Mater Res Part A 108:1256– fundamentals of drug delivery. Academic Press, pp 203–267. 
+1268.  https​://doi.org/10.1002/jbm.a.36899​ https​://doi.org/10.1016/B978-0-12-81790​9-3.00006​-6
+Boyaciyan D, von Klitzing R (2019) Stimuli-responsive polymer/ Delfi M, Ghomi M, Zarrabi A, Mohammadinejad R, Baghban Taragh-
+metal composites: from fundamental research to self-regu- dari Z, Ashrafizadeh M, Zare EN, Agarwal T, Padil VVT, 
+lating devices. Curr Opin Colloid Interface Sci.  https​://doi. Mokhtari B, Rossi F, Perale G, Sillanpaa M, Borzacchiello A, 
+org/10.1016/j.cocis​.2019.10.005 Kumar Maiti T, Makvandi P (2020) Functionalization of poly-
+Boyaciyan D, Krause P, Von Klitzing R (2018) Making strong poly- mers and nanomaterials for biomedical applications: antimicro-
+electrolyte brushes pH-sensitive by incorporation of gold nano- bial platforms and drug carriers. Prosthesis 2:117–139
+particles. Soft Matter.  https​://doi.org/10.1039/c8sm0​0411k​ Dobrucka R (2019) Application of nanotechnology in food packaging. 
+Bui TX, Kang SY, Lee SH, Choi H (2011) Organically functional- J Microbiol Biotechnol Food Sci 2019:353–359
+ized mesoporous SBA-15 as sorbents for removal of selected  Elbourne A, Crawford RJ, Ivanova EP (2017) Nano-structured anti-
+pharmaceuticals from water. J Hazard Mater.  https​://doi. microbial surfaces: from nature to synthetic analogues. J Col-
+org/10.1016/j.jhazm​at.2011.07.043 loid Interface Sci 508:603–616.  https​://doi.org/10.1016/j.
+Bumbudsanpharoke N, Ko S (2019) Nanoclays in food and beverage  jcis.2017.07.021
+packaging. J Nanomater.  https​://doi.org/10.1155/2019/89271​67 Fakhri H, Mahjoub AR, Aghayan H (2019) Effective adsorption of 
+2+ 2+ ­Co  and ­Sr   ions by 10-tungsten-2-molybdophosphoric acid 
+1 3
+
+Environmental Chemistry Letters (2021) 19:583–611	 607
+and recovery from industrial wastewaters. Sep Purif Technol.  supported amine modified magnetic SBA-15. J Radioanal Nucl 
+https​://doi.org/10.1016/j.seppu​r.2014.11.023 Chem 321:449–461
+Guo L, Yang Y, Wang Y (2019) Single-step coating of polyethyl- Fard LA, Ojani R, Bakhsh Raoof J, Zare EN, Mansour Lakouraj M 
+enimine on gradient nanoporous phenolics for tight mem- (2017a) PdCo porous nanostructures decorated on polypyrrole 
+branes with ultrahigh permeance. J Membr Sci.  https​://doi. @ MWCNTs conductive nanocomposite—Modified glassy car-
+org/10.1016/j.memsc​i.2019.11717​2 bon electrode as a powerful catalyst for ethanol electrooxidation. 
+Gyawali D, Kim JP, Yang J (2018) Highly photostable nanogels for  Appl Surf Sci 401:40–48
+fluorescence-based theranostics. Bioact Mater 3:39–47.  https​:// Fard LA, Ojani R, Bakhsh Raoof J, Zare EN, Mansour Lakouraj M 
+doi.org/10.1016/j.bioac​tmat.2017.03.001 (2017b) Poly (pyrrole- co -aniline) hollow nanosphere supported 
+Habib R, Asif MB, Iftekhar S, Khan Z, Gurung K, Srivastava V, Sillan- Pd nanoflowers as high-performance catalyst for methanol elec-
+pää M (2017) Influence of relaxation modes on membrane foul- trooxidation in alkaline media. Energy 127:419–427
+ing in submerged membrane bioreactor for domestic wastewater  Fellenz N, Perez-Alonso FJ, Martin PP, García-Fierro JL, Bengoa JF, 
+treatment. Chemosphere 181:19–25.  https​://doi.org/10.1016/j. Marchetti SG, Rojas S (2017) Chromium(VI) removal from water 
+chemo​spher​e.2017.04.048 by means of adsorption-reduction at the surface of amino-func-
+Haleem A, Syaal SB, Ajmal M, Ambreen J, Rauf S, Ali N, Muham- tionalized MCM-41 sorbents. Microporous Mesoporous Mater. 
+mad S, Shah A, Zia MA, Siddiq M (2020) Silver and palladium  https​://doi.org/10.1016/j.micro​meso.2016.10.012
+nanoparticle embedded poly(n-isopropylacrylamide- co -2-acryla- Fenyvesi É, Barkács K, Gruiz K, Varga E, Kenyeres I, Záray G, Szente 
+mido-2-methylpropane sulfonic acid) hybrid microgel catalyst  L (2020) Removal of hazardous micropollutants from treated 
+with pH and temperature dependent catalytic activity. Korean J  wastewater using cyclodextrin bead polymer—a pilot demon-
+Chem Eng.  https​://doi.org/10.1007/s1181​4-020-0484-7 stration case. J Hazard Mater.  https​://doi.org/10.1016/j.jhazm​
+Harris JM (1992) Introduction to biotechnical and biomedical  at.2019.12118​1
+applications of poly (ethylene glycol). In: Poly (ethylene  Ferrah N, Abderrahim O, Didi MA, Villemin D (2011) Removal of 
+glycol) Chemistry. Springer, Boston, pp 1–14.  https​://doi. copper ions from aqueous solutions by a new sorbent: polyeth-
+org/10.1007/978-1-4899-0703-5_1 yleneiminemethylene phosphonic acid. Desalination.  https​://doi.
+Hoseinnejad M, Jafari SM, Katouzian I (2018) Inorganic and metal  org/10.1016/j.desal​.2010.11.035
+nanoparticles and their antimicrobial activity in food packaging  Fila D, Hubicki Z, Kołodyńska D (2019) Recovery of metals from 
+applications. Crit Rev Microbiol 44:161–181 waste nickel–metal hydride batteries using multifunctional 
+Hosseini J, Zare EN, Ajloo D (2019) Experimental and theoretical  Diphonix resin. Adsorption.  https​://doi.org/10.1007/s1045​0-019-
+calculation investigation on effective adsorption of lead(II) onto  00013​-9
+poly(aniline-co-pyrrole) nanospheres. J Mol Liq 296:111789 Fu K, Yang Z, Pei Y, Wang Yongxin, Xu B, Wang YuHuang, Yang 
+Iftekhar S, Farooq MU, Sillanpää M, Asif MB, Habib R (2017a)  B, Hu L (2019) Designing textile architectures for high energy-
+Removal of Ni(II) using multi-walled carbon nanotubes elec- efficiency human body sweat- and cooling-management. Adv 
+trodes: relation between operating parameters and capacitive  Fiber Mater 1:61–70.  https​://doi.org/10.1007/s4276​5-019-0003-y
+deionization performance. Arab J Sci Eng 42:235–240.  https​:// Gaddes D, Jung H, Pena-Francesch A, Dion G, Tadigadapa S, Dressick 
+doi.org/10.1007/s1336​9-016-2301-5 WJ, Demirel MC (2016) Self-healing textile: enzyme encapsu-
+Iftekhar S, Srivastava V, Sillanpää M (2017b) Synthesis and appli- lated layer-by-layer structural proteins. ACS Appl Mater Inter-
+cation of LDH intercalated cellulose nanocomposite for sepa- faces 8:20371–20378
+ration of rare earth elements (REEs). Chem Eng J.  https​://doi. Gao B, Safaei Z, Babu I, Iftekhar S, Iakovleva E, Srivastava V, Doshi B, 
+org/10.1016/j.cej.2016.10.028 Hammouda S Ben, Kalliola S, Sillanpää M (2017) Modification 
+Iftekhar S, Srivastava V, Sillanpää M (2017c) Enrichment of lantha- of ZnIn2S4 by anthraquinone-2-sulfonate doped polypyrrole as 
+nides in aqueous system by cellulose based silica nanocom- acceptor-donor system for enhanced photocatalytic degradation 
+posite. Chem Eng J 320:151–159.  https​://doi.org/10.1016/j. of tetracycline. J Photochem Photobiol A Chem 348:150–160. 
+cej.2017.03.051 https​://doi.org/10.1016/j.jphot​ochem​.2017.08.037
+Iftekhar S, Ramasamy DL, Srivastava V, Asif MB, Sillanpää M (2018a)  Gao B, Iftekhar S, Srivastava V, Doshi B, Sillanpää M (2018) Insights 
+Understanding the factors affecting the adsorption of Lanthanum  into the generation of reactive oxygen species (ROS) over poly-
+using different adsorbents: a critical review. Chemosphere.  https​ thiophene/ZnIn2S4 based on different modification processing. 
+://doi.org/10.1016/j.chemo​spher​e.2018.04.053 Catal Sci Technol 8:2186–2194.  https​://doi.org/10.1039/c8cy0​
+Iftekhar S, Srivastava V, Casas A, Sillanpää M, Sillanp M (2018b) Syn- 0303c​
+thesis of novel GA-g-PAM/SiO Gao C, Zhang Y, Xie J, Wang X, Cao L, Chen G, Mao H, Bi X, Gu Z,   nanocomposite for the recovery  2
+Yang J (2020) VE-cadherin functionalized injectable PAMAM/ of rare earth elements (REE) ions from aqueous solution. J Clean 
+HA hydrogel promotes endothelial differentiation of hMSCs  Prod 170:251–259.  https​://doi.org/10.1016/j.jclep​ro.2017.09.166
+and vascularization. Appl Mater Today 20:100690.  https​://doi. Iftekhar S, Srivastava V, Hammouda SBSB, Sillanpää M (2018c) Fabri-
+org/10.1016/j.apmt.2020.10069​0 cation of novel metal ion imprinted xanthan gum-layered double 
+Ghasemlou M, Daver F, Ivanova EP, Adhikari B (2019) Bio-inspired  hydroxide nanocomposite for adsorption of rare earth elements. 
+sustainable and durable superhydrophobic materials: from  Carbohydr Polym.  https​://doi.org/10.1016/j.carbp​ol.2018.04.054
+nature to market. J Mater Chem A 7:16643–16670.  https​://doi. Iftekhar S, Srivastava V, Ramasamy DL, Naseer WA, Sillanpää M 
+org/10.1039/c9ta0​5185f​ (2018d) A novel approach for synthesis of exfoliated biopoly-
+Gill CS, Long W, Jones CW (2009) Magnetic nanoparticle polymer  meric-LDH hybrid nanocomposites via in-stiu coprecipitation 
+brush catalysts: alternative hybrid organic/inorganic structures  with gum Arabic: application towards REEs recovery. Chem Eng 
+to obtain high, local catalyst loadings for use in organic transfor- J 347:398–406.  https​://doi.org/10.1016/j.cej.2018.04.126
+mations. Catal Lett.  https​://doi.org/10.1007/s1056​2-009-0099-4 Iftekhar S, Srivastava V, Abdul Wasayh M, Hezarjaribi M, Sillanpää 
+Graillot A, Cojocariu C, Bouyer D, Monge S, Mauchauffe S, Robin  M (2020a) Incorporation of inorganic matrices through differ-
+JJ, Faur C (2015) Thermosensitive polymer enhanced filtration  ent routes to enhance the adsorptive properties of xanthan via 
+(TEF) process: an innovative process for heavy metals removal  adsorption and membrane separation for selective REEs recov-
+ery. Chem Eng J.  https​://doi.org/10.1016/j.cej.2020.12428​1
+1 3
+
+608 	 Environmental Chemistry Letters (2021) 19:583–611
+biosensors. In: Nanotechnology.  https​://doi.org/10.1088/0957- Iftekhar S, Srivastava V, Sillanpää M (2020b) Synthesis of hybrid bio-
+4484/18/42/42401​7 nanocomposites and their application for the removal of rare-
+Liu P, Zhang X, Xu W, Guo C, Wang S (2012) Electrochemical sen- earth elements from synthetic wastewater. In: Sillanpää M (ed) 
+sor for the determination of brucine in human serum based on  Advanced water treatment: adsorption. Elsevier, New York.  https​
+molecularly imprinted poly-o-phenylenediamine/SWNTs com- ://doi.org/10.1016/B978-0-12-81921​6-0.00007​-2
+posite film. Sens Actuators B Chem.  https​://doi.org/10.1016/j. Isawi H (2020) Using zeolite/polyvinyl alcohol/sodium alginate nano-
+snb.2012.01.011 composite beads for removal of some heavy metals from waste-
+Liu X, Iocozzia J, Wang Y, Cui X, Chen Y, Zhao S, Li Z, Lin Z (2017)  water. Arab J Chem 13:5691–5716
+Noble metal–metal oxide nanohybrids with tailored nanostruc- Jamaledin R, Yiu CKY, Zare EN, Niu L-N, Vecchione R, Chen G, 
+tures for efficient solar energy conversion, photocatalysis and  Gu Z, Tay FR, Makvandi P (2020) Advances in antimicro-
+environmental remediation. Energy Environ Sci.  https​://doi. bial microneedle patches for combating infections. Adv Mat 
+org/10.1039/c6ee0​2265k​ 32:2002129
+Liu Y, Wang S, Lan W, Qin W (2019) Fabrication of polylactic acid/ Janani N, Zare EN, Salimi F, Makvandi P (2020) Antibacterial traga-
+carbon nanotubes/chitosan composite fibers by electrospinning  canth gum-based nanocomposite films carrying ascorbic acid 
+for strawberry preservation. Int J Biol Macromol.  https​://doi. antioxidant for bioactive food packaging. Carbohydr Polym 
+org/10.1016/j.ijbio​mac.2018.09.042 247:116678
+Lou Z, Zhang W, Hu X, Zhang H (2017) Synthesis of a novel func- Jia H, Roa R, Angioletti-Uberti S, Henzler K, Ott A, Lin X, Möser J, 
+tional group-bridged magnetized bentonite adsorbent: charac- Kochovski Z, Schnegg A, Dzubiella J, Ballauff M, Lu Y (2016) 
+terization, kinetics, isotherm, thermodynamics and regeneration.  Thermosensitive ­Cu O-PNIPAM core-shell nanoreactors with  2 Chin J Chem Eng.  https​://doi.org/10.1016/j.cjche​.2016.10.010 tunable photocatalytic activity. J Mater Chem A.  https​://doi.
+Lu Y, Ballauff M (2016) Spherical polyelectrolyte brushes as nanore- org/10.1039/c6ta0​3528k​
+actors for the generation of metallic and oxidic nanoparticles:  Jocić D (2016) Polymer-based smart coatings for comfort in clothing. 
+synthesis and application in catalysis. Prog Polym Sci.  https​:// Tekstilec 59:107–114
+doi.org/10.1016/j.progp​olyms​ci.2016.03.002 Karnati SR, Oldham D, Fini EH, Zhang L (2019) Surface function-
+Lu Y, Sathasivam S, Song J, Crick CR, Carmalt CJ, Parkin IP (2015)  alization of silica nanoparticles to enhance aging resistance of 
+Robust self-cleaning surfaces that function when exposed to  asphalt binder. Constr Build Mater 211:1065–1072
+either air or oil. Science 347:1132–1135.  https​://doi.org/10.1126/ Katsnelson A (2015) News feature: microplastics present pollution 
+scien​ce.aaa09​46 puzzle. Proc Natl Acad Sci USA 112:5547–5549.  https​://doi.
+Luo G, Xi G, Wang X, Qin D, Zhang Y, Fu F, Liu X (2017) Anti- org/10.1073/pnas.15041​35112​
+bacterial N-halamine coating on cotton fabric fabricated using  Kim YH, Sun G (2001) Durable antimicrobial finishing of nylon fab-
+mist polymerization. J Appl Polym Sci 134:1–7.  https​://doi. rics with acid dyes and a quaternary ammonium salt. Text Res J 
+org/10.1002/app.44897​ 71:318–323.  https​://doi.org/10.1177/00405​17501​07100​407
+Luo M, Li M, Jiang S, Shao H, Razal J, Wang D, Fang J (2020) Sup- Kobylinska N, Kostenko L, Khainakov S, Garcia-Granda S (2020) 
+ported growth of inorganic–organic nanoflowers on 3D hierar- Advanced core-shell EDTA-functionalized magnetite nano-
+chically porous nanofibrous membrane for enhanced enzymatic  particles for rapid and efficient magnetic solid phase extraction 
+water treatment. J Hazard Mater.  https​://doi.org/10.1016/j.jhazm​ of heavy metals from water samples prior to the multi-element 
+at.2019.12094​7 determination by ICP-OES. Microchim Acta.  https​://doi.
+Madhu R, Veeramani V, Chen SM, Veerakumar P, Liu S Bin (2015)  org/10.1007/s0060​4-020-04231​-9
+Functional porous carbon/nickel oxide nanocomposites as  Kochameshki MG, Mahmoudian M, Marjani A, Farhadi K, Enayati 
+binder-free electrodes for supercapacitors. Chem A Eur J.  https​ M, Mollayousefi HS (2019) Graphene oxide grafted poly(acrylic 
+://doi.org/10.1002/chem.20150​0247 acid) synthesized via surface initiated RAFT as a pH-responsive 
+Maji S, Agarwal T, Kumar Maiti T (2017) PAMAM (generation 4)  additive for mixed matrix membrane. J Appl Polym Sci.  https​://
+incorporated gelatin 3D matrix as an improved dermal substi- doi.org/10.1002/app.47213​
+tute for skin tissue engineering. Colloids Surf B Biointerfaces  Lee B (2019) Synthesis of polyvinyl alcohol (PVA) polymer beads for 
+155:128–134 heavy metal removal in aqueous solutions
+Makvandi P, Ghomi M, Ashrafizadeh M, Tafazoli A, Agarwal T, Delfi  Lee JH, Yeo Y (2015) Controlled drug release from pharmaceu-
+M, Akhtari J, Nazarzade Zare E, Padil VVT, Zarrabi A, Pour- tical nanocarriers. Chem Eng Sci 125:75–84.  https​://doi.
+reza N, Miltyk W, Kumar Maiti T (2020) A review on advances  org/10.1016/j.ces.2014.08.046
+in graphene-derivative/polysaccharide bionanocomposites:  Lee SW, Mao C, Flynn CE, Belcher AM (2002) Ordering of quantum 
+therapeutics, pharmacogenomics and toxicity. Carbohydr Polym  dots, using genetically engineered viruses. Science.  https​://doi.
+116952 org/10.1126/scien​ce.10680​54
+Matusiak M (2019) Moisture management properties of seersucker  Li Y, Yang F, Yu J, Ding B (2016) Hydrophobic fibrous membranes 
+woven fabrics of different structure. Fibres Text East Eur 27:43– with tunable porous structure for equilibrium of breathable and 
+50.  https​://doi.org/10.5604/01.3001.0013.0741 waterproof performance. Adv Mater Interfaces.  https​://doi.
+Mauri E, Veglianese P, Papa S, Mariani A, De Paola M, Rigamonti  org/10.1002/admi.20160​0516
+R, Chincarini GMF, Rimondo S, Sacchetti A, Rossi F (2017)  Li R, Tian X, Ashraf I, Chen B (2020) Fluoride removal using a 
+Chemoselective functionalization of nanogels for microglia treat- chelating resin containing phosphonic–sulfonic acid bifunc-
+ment. Eur Polym J 94:143–151.  https​://doi.org/10.1016/j.eurpo​ tional group. J Chromatogr A.  https​://doi.org/10.1016/j.chrom​
+lymj.2017.07.003 a.2019.46069​7
+Mauri E, Veglianese P, Papa S, Rossetti A, De Paola M, Mariani A,  Lin J, Chen X, Chen C, Hu J, Zhou C, Cai X, Wang W, Zheng C, Zhang 
+Posel Z, Posocco P, Sacchetti A, Rossi F (2020) Effects of pri- P, Cheng J, Guo Z, Liu H (2018) Durably antibacterial and bac-
+mary amine-based coatings on microglia internalization of nano- terially antiadhesive cotton fabrics coated by cationic fluorinated 
+gels. Colloids Surf B Biointerfaces.  https​://doi.org/10.1016/j. polymers. ACS Appl Mater Interfaces 10:6124–6136.  https​://doi.
+colsu​rfb.2019.11057​4 org/10.1021/acsam​i.7b162​35
+McNaught AD, Wilkinson A (1997) Compendium of chemical termi- Liu Y, Chakrabartty S, Alocilja EC (2007) Fundamental building 
+nology. Blackwell Science, Oxford blocks for molecular biowire based forward error-correcting 
+1 3
+
+Environmental Chemistry Letters (2021) 19:583–611	 609
+Chem Eng J 365:291–304.  https​://doi.org/10.1016/j. Metak AM, Ajaal TT (2013) Investigation on polymer based nano-
+cej.2019.02.057 silver as food packaging materials. Int J Agr Biol Eng 7:772–778
+Ran J, Chu C, Pan T, Ding L, Cui P, Fu CF, Zhang CL, Xu T (2019)  Miao D, Huang Z, Wang X, Yu J, Ding B (2018) Continuous, spon-
+Non-covalent cross-linking to boost the stability and perme- taneous, and directional water transport in the trilayered fibrous 
+ability of graphene-oxide-based membranes. J Mater Chem A.  membranes for functional moisture wicking textiles. Small 14:1–
+https​://doi.org/10.1039/c9ta0​0952c​ 10.  https​://doi.org/10.1002/smll.20180​1527
+Ranjeh M, Masjedi-Arani M, Salavati-Niasari M, Moayedi H (2020)  Mills A, Hazafy D (2009) Nanocrystalline ­SnO -based, UVB-activated,  2
+EDTA-modified sol–gel synthesis of monoclinic ­Li colourimetric oxygen indicator. Sens Actuators B Chem.  https​:// MnO   2 3
+doi.org/10.1016/j.snb.2008.12.048 nanoparticles as an effective photocatalyst for degradation 
+Mishra S, Singh AK, Singh JK (2020) Ferrous sulfide and carboxyl- of organic dyes. J Mol Liq.  https​://doi.org/10.1016/j.molli​
+functionalized ferroferric oxide incorporated PVDF-based nano- q.2019.11229​2
+composite membranes for simultaneous removal of highly toxic  Reaves E (2004) Ethylenediaminetetraacetic acid (EDTA) and the salts 
+heavy-metal ions from industrial ground water. J Membr Sci.  of EDTA: science assessment document for tolerance reassess-
+https​://doi.org/10.1016/j.memsc​i.2019.11742​2 ment [WWW Document]
+Morais DS, Guedes RM, Lopes MA (2016) Antimicrobial approaches  Rezania H, Vatanpour V, Faghani S (2019) Poly(itaconic acid)-assisted 
+for textiles: from research to market. Materials (Basel) 9:1–21.  ultrafiltration of heavy metal ions’ removal from wastewater. Iran 
+https​://doi.org/10.3390/ma906​0498 Polym J 28:1069–1077
+Mourgas G, Giebel E, Schneck T, Unold J, Buchmeiser MR (2019)  Rhim JW, Park HM, Ha CS (2013) Bio-nanocomposites for food pack-
+Syntheses of intrinsically flame-retardant polyamide 6 fibers  aging applications. Prog Polym Sci.  https​://doi.org/10.1016/j.
+and fabrics. J Appl Polym Sci 136:1–10.  https​://doi.org/10.1002/ progp​olyms​ci.2013.05.008
+app.47829​ Richey T, Iwata H, Oowaki H, Uchida E, Matsuda S, Ikada Y (2000) 
+Muller J, Prelot B, Zajac J, Monge S (2019) Synthesis and study of  Surface modification of polyethylene balloon catheters for local 
+sorption properties of polyvinyl alcohol (PVA)-based hybrid  drug delivery. Biomaterials 21:1057–1065
+materials. React Funct Polym 144:104364 Rivas BL, Urbano BF, Sánchez J (2018) Water-soluble and insolu-
+Nam HJ, Kim B, Ko MJ, Jin M, Kim JM, Jung DY (2012) A new  ble polymers, nanoparticles, nanocomposites and hybrids with 
+mussel-inspired polydopamine sensitizer for dye-sensitized solar  ability to remove Hazardous inorganic pollutants in water. Front 
+cells: controlled synthesis and charge transfer. Chem A Eur J.  Chem.  https​://doi.org/10.3389/fchem​.2018.00320​
+https​://doi.org/10.1002/chem.20120​2283 Rodrigues DG, Monge S, Pellet-Rostaing S, Dacheux N, Bouyer D, 
+Nayak MC, Isloor AM, Inamuddin, Lakshmi B, Marwani HM, Khan  Faur C (2019) A new carbamoylmethylphosphonic acid-based 
+I (2019) Polyphenylsulfone/multiwalled carbon nanotubes  polymer for the selective sorption of rare earth elements. Chem 
+mixed ultrafiltration membranes: fabrication, characteriza- Eng J.  https​://doi.org/10.1016/j.cej.2019.04.026
+2+ 2+ 2+ tion and removal of heavy metals ­Pb Rončević S, Nemet I, Ferri TZ, Matković-Čalogović D (2019) Char- , ­Hg , and ­Cd  from 
+acterization of nZVI nanoparticles functionalized by EDTA and  aqueous solutions. Arab J Chem.  https​://doi.org/10.1016/j.arabj​
+dipicolinic acid: a comparative study of metal ion removal from  c.2019.10.007
+aqueous solutions. RSC Adv.  https​://doi.org/10.1039/c9ra0​4831f​ Nunes da Silva F, Bassaco MM, Bertuol DA, Tanabe EH (2019) 
+Rout GK, Shin HS, Gouda S, Sahoo S, Das G, Fraceto LF, Patra JK  An eco-friendly approach for metals extraction using poly-
+(2018) Current advances in nanocarriers for biomedical research  meric nanofibers modified with di-(2-ethylhexyl) phosphoric 
+and their applications. Artif Cells Nanomed Biotechnol 46:1053– acid (DEHPA). J Clean Prod.  https​://doi.org/10.1016/j.jclep​
+1062.  https​://doi.org/10.1080/21691​401.2018.14788​43 ro.2018.11.098
+Sadjadi S, Koohestani F, Bahri-Laleh N, Didehban K (2019) Halloysite  Page MJ, Soldenhoff K, Ogden MD (2017) Comparative study of the 
+nanoclay decorated with 2-amino pyrimidine functionalized  application of chelating resins for rare earth recovery. Hydromet-
+poly glycidyl methacrylate: an efficient support for the immo- allurgy.  https​://doi.org/10.1016/j.hydro​met.2017.02.006
+bilization of Pd nanoparticles. J Solid State Chem.  https​://doi. Pakdel E, Wang J, Kashi S, Sun L, Wang X (2020) Advances in pho-
+org/10.1016/j.jssc.2018.12.051 tocatalytic self-cleaning, superhydrophobic and electromagnetic 
+Sadyrbaeva T (2019) Membrane extraction and electrodeposition of  interference shielding textile treatments. Adv Colloid Interface 
+zinc(II) and lead(II) during electrodialysis. In: Key engineer- Sci 277:102116.  https​://doi.org/10.1016/j.cis.2020.10211​6
+ing materials.  https​://doi.org/10.4028/www.scien​tific​.net/ Pereira C, Pereira AM, Freire C, Pinto TV, Costa RS, Teixeira JS 
+KEM.800.175 (2020) Nanoengineered textiles: from advanced functional nano-
+Sarif Ullah Patwary MS (2015) Smart textiles and nano-technology: a  materials to groundbreaking high-performance clothing. Handb 
+general overview. J Text Sci Eng.  https​://doi.org/10.4172/2165- Funct Nanomater Ind Appl.  https​://doi.org/10.1016/b978-0-12-
+8064.10001​81 81678​7-8.00021​-1
+Sarma GK, Sen Gupta S, Bhattacharyya KG (2019) Nanomaterials as  Pour ZS, Makvandi P, Ghaemy M (2015) Performance properties and 
+versatile adsorbents for heavy metal ions in water: a review. Envi- antibacterial activity of crosslinked films of quaternary ammo-
+ron Sci Pollut Res.  https​://doi.org/10.1007/s1135​6-018-04093​-y nium modified starch and poly (vinyl alcohol). Int J Biol Mac-
+Satapathy S, Singh VK, Sateesh Sagiri S, Agarwal T, Banerjee I, Bhat- romol 80:596–604
+tacharya MK, Kumar N, Pal K (2015) Development and charac- Ramasamy DL, Puhakka V, Iftekhar S, Wojtuś A, Repo E, Hammouda 
+terization of gelatin-based hydrogels, emulsion hydrogels, and  S Ben, Iakovleva E, Sillanpää M (2018) N- and O-ligand doped 
+bigels: a comparative study. J Appl Polym Sci 132:n/a-n/a mesoporous silica-chitosan hybrid beads for the efficient, sustain-
+Shu Q, Khayambashi A, Wang X, Wei Y (2018) Studies on adsorption  able and selective recovery of rare earth elements (REE) from 
+of rare earth elements from nitric acid solution with macropo- acid mine drainage (AMD): understanding the significance of 
+rous silica-based bis(2-ethylhexyl)phosphoric acid impreg- physical modification and conditioning of the. J Hazard Mater 
+nated polymeric adsorbent. Adsorpt Sci Technol.  https​://doi. 348:84–91
+org/10.1177/02636​17417​74811​2 Ramasamy DL, Puhakka V, Doshi B, Iftekhar S, Sillanpää M (2019) 
+Silva S, Almeida AJ, Vale N (2019) Combination of cell-penetrating  Fabrication of carbon nanotubes reinforced silica composites 
+peptides with nanoparticles for therapeutic application: a review.  with improved rare earth elements adsorption performance. 
+Biomolecules 9:22
+1 3
+
+610 	 Environmental Chemistry Letters (2021) 19:583–611
+Tokuyama H, Yoshida T, He L (2011) Preparation of novel emulsion  Silvestre C, Duraccio D, Cimmino S (2011) Food packaging based 
+gel adsorbents and their adsorption properties for heavy-metal  on polymer nanomaterials. Prog Polym Sci.  https​://doi.
+ions. Ind Eng Chem Res.  https​://doi.org/10.1021/ie201​179n org/10.1016/j.progp​olyms​ci.2011.02.003
+Truskewycz A, Beker SA, Ball AS, Murdoch B, Cole I (2020) Incor- Singh AP, Biswas A, Shukla A, Maiti P (2019) Targeted therapy in 
+poration of quantum carbon dots into a PVP/ZnO hydrogel  chronic diseases using nanomaterial-based drug delivery vehi-
+for use as an effective hexavalent chromium sensing platform.  cles. Signal Transduct Target Ther 4:1–21
+Anal Chim Acta 1099:126–135.  https​://doi.org/10.1016/j. Sirelkhatim A, Mahmud S, Seeni A, Kaus NHM, Ann LC, Bakhori 
+aca.2019.11.053 SKM, Hasan H, Mohamad D (2015) Review on zinc oxide nano-
+Vatanpour V, Salehi E, Sahebjamee N, Ashrafi M (2020) Novel chi- particles: antibacterial activity and toxicity mechanism. Nano 
+tosan/polyvinyl alcohol thin membrane adsorbents modified with  Micro Lett 7:219–242
+detonation nanodiamonds: preparation, characterization, and  Song J, Ryou MH, Son B, Lee JN, Lee DJ, Lee YM, Choi JW, Park 
+adsorption performance. Arab J Chem 13:1731–1740 JK (2012) Co-polyimide-coated polyethylene separators for 
+Veeramani V, Madhu R, Chen SM, Sivakumar M (2016) Flower-like  enhanced thermal stability of lithium ion batteries. Electrochim 
+nickel–cobalt oxide decorated dopamine-derived carbon nano- Acta.  https​://doi.org/10.1016/j.elect​acta.2012.06.078
+composite for high performance supercapacitor applications.  Song YN, Li Y, Yan DX, Lei J, Li ZM (2020) Novel passive cooling 
+ACS Sustain Chem Eng.  https​://doi.org/10.1021/acssu​schem​ composite textile for both outdoor and indoor personal thermal 
+eng.6b013​91 management. Compos Part A Appl Sci Manuf 130:105738.  https​
+Verma R, Gupta BD (2015) Detection of heavy metal ions in con- ://doi.org/10.1016/j.compo​sites​a.2019.10573​8
+taminated water by surface plasmon resonance based optical fibre  Soni KS, Desale SS, Bronich TK (2016) Nanogels: an overview of 
+sensor using conducting polymer and chitosan. Food Chem.  https​ properties, biomedical applications and obstacles to clini-
+://doi.org/10.1016/j.foodc​hem.2014.06.045 cal translation. J Control Release 240:109–126.  https​://doi.
+Vidotti SE, Chinellato AC, Hu GH, Pessan LA (2017) Effect of  org/10.1016/j.jconr​el.2015.11.009
+an organo-modified montmorillonite on the barrier prop- Sousa AR, Oliveira MJ, Sarmento B (2019) Impact of CEA-targeting 
+erties of PET nanocomposites using a polyester iono- nanoparticles for drug delivery in colorectal cancer. J Pharmacol 
+mer as a compatibilizing agent. Mater Res.  https​://doi. Exp Ther 370:657–670.  https​://doi.org/10.1124/jpet.118.25444​1
+org/10.1590/1980-5373-MR-2016-0751 Srivastava V, Iftekhar S, Wang Z, Babu I, Sillanpää M (2018) Synthe-
+Vilarinho F, Andrade M, Buonocore GG, Stanzione M, Vaz MF,  sis and application of biocompatible nontoxic nanoparticles for 
+3+ Sanches Silva A (2018) Monitoring lipid oxidation in a pro- reclamation of ­Ce  from synthetic wastewater: toxicity assess-
+cessed meat product packaged with nanocomposite poly(lactic  ment, kinetic, isotherm and thermodynamic study. J Rare Earths 
+acid) film. Eur Polym J.  https​://doi.org/10.1016/j.eurpo​ 36:994–1006.  https​://doi.org/10.1016/j.jre.2018.03.005
+lymj.2017.11.034 Srivastava V, Zare N, Makvandi P, Zheng X, Iftekhar S, Wu A, Padil 
+Vogel C, Meier-Haack J (2014) Preparation of ion-exchange materi- VVT, Mokhtari B, Varma RS, Tay FR, Sillanpaa M (2020) Cyto-
+als and membranes. Desalination.  https​://doi.org/10.1016/j.desal​ toxic aquatic pollutants and their removal by nanocomposite-
+.2013.12.039 based sorbents. Chemosphere 258:127324
+Vuppaladadium SSR, Agarwal T, Kulanthaivel S, Mohanty B, Barik  Stern LA, Mocny P, Vrubel H, Bilgic T, Klok HA, Hu X (2018) Pol-
+CS, Maiti TK, Pal S, Pal K, Banerjee I (2020) Silanization  ymer-brush-templated three-dimensional molybdenum sulfide 
+improves biocompatibility of graphene oxide. Mater Sci Eng C  catalyst for hydrogen evolution. ACS Appl Mater Interfaces. 
+110:110647 https​://doi.org/10.1021/acsam​i.7b166​79
+Wamba AGN, Kofa GP, Koungou SN, Thue PS, Lima EC, Dos Reis  Subramanian E, Santhanamari P, Murugan C (2018) Sensor function-
+GS, Kayem JG (2018) Grafting of Amine functional group on  ality of conducting polyaniline-metal oxide ­(TiO /SnO ) hybrid  2 2 silicate based material as adsorbent for water purification: a  materials films toward benzene and toluene vapors at room 
+short review. J Environ Chem Eng.  https​://doi.org/10.1016/j. temperature. J Electron Mater.  https​://doi.org/10.1007/s1166​
+jece.2018.04.062 4-018-6338-y
+Wang X, Zheng Y, Xu L (2018) An electrochemical adenine sen- Sum JY, Ahmad AL, Ooi BS (2019) Selective separation of heavy 
+sor employing enhanced three-dimensional conductivity and  metal ions using amine-rich polyamide TFC membrane. J Ind 
+molecularly imprinted sites of Au NPs bridged poly(3-thiophene  Eng Chem.  https​://doi.org/10.1016/j.jiec.2019.03.052
+acetic acid). Sens Actuators B Chem.  https​://doi.org/10.1016/j. Sun G, Xu X, Bickett JR, Williams JF (2001) Durable and regenerable 
+snb.2017.09.116 antibacterial finishing of fabrics with a new hydantoin deriva-
+Wang Z, Deb A, Srivastava V, Iftekhar S, Ambat I, Sillanpää M (2019)  tive. Ind Eng Chem Res 40:1016–1021.  https​://doi.org/10.1021/
+Investigation of textural properties and photocatalytic activity of  ie000​657t
+PbO/TiO Sun J, Chen H, Qi D, Wu H, Zhou C, Yang H (2020) Enhanced immo-  and ­Sb O /TiO  towards the photocatalytic degrada- 2 2 3 2
+bilization of mercury(II) from desulphurization wastewater by  tion Benzophenone-3 UV filter. Sep Purif Technol 228:115763. 
+EDTA functionalized graphene oxide nanoparticles. Environ  https​://doi.org/10.1016/j.seppu​r.2019.11576​3
+Technol (UK).  https​://doi.org/10.1080/09593​330.2018.15348​93 Wang H, Li S, Yuan Y, Liu X, Sun T, Wu Z (2020a) Study of the 
+Tang SY, Qiu YR (2019) Selective separation and recovery of heavy  epoxy/amine equivalent ratio on thermal properties, cryogenic 
+metals from electroplating effluent using shear-induced disso- mechanical properties, and liquid oxygen compatibility of the 
+ciation coupling with ultrafiltration. Chemosphere.  https​://doi. bisphenol A epoxy resin containing phosphorus. High Perform 
+org/10.1016/j.chemo​spher​e.2019.07.061 Polym.  https​://doi.org/10.1177/09540​08319​87134​0
+Tirtom VN, Dinçer A (2020) Effective removal of heavy metals from  Wang W, Zhu Z, Zhang M, Wang S, Qu C (2020b) Synthesis of a 
+an aqueous solution with poly(N-vinylimidazole-acrylamide)  novel magnetic multi-amine decorated resin for the adsorption 
+hydrogels. Sep Sci Technol.  https​://doi.org/10.1080/01496​ of tetracycline and copper. J Taiwan Inst Chem Eng 106:130–137
+395.2020.17354​34 Wang Y, Liang X, Zhu H, Xin JH, Zhang Q, Zhu S (2020c) Reversible 
+Timma LM, Lewald L, Gier F, Homey L, Neyer C, Nickisch-Hartfiel A,  water transportation diode: temperature-adaptive smart janus tex-
+Gutmann JS, Oberthür M (2019) Nonfouling textiles with tunable  tile for moisture/thermal management. Adv Funct Mater 30:1–9. 
+antimicrobial activity based on a zwitterionic polyamine finish.  https​://doi.org/10.1002/adfm.20190​7851
+RSC Adv 9:9783–9791.  https​://doi.org/10.1039/C8RA0​9975H​
+1 3
+
+Environmental Chemistry Letters (2021) 19:583–611	 611
+Zare EN, Mansour Lakouraj M, Baghayeri M (2014) Electro-magnetic  Wang Z, Zou Y, Li Y, Cheng Y (2020d) Metal-containing polydopa-
+polyfuran/FeO nnanocomposite: synthesis, characterization, anti- mine nanomaterials: catalysis, energy, and theranostics. Small. 
+oxidant activity, and its application as a biosensor. Int J Polym  https​://doi.org/10.1002/smll.20190​7042
+Mat Polym Biomater 64:175–183 Wang C, Makvandi P, Zare EN, Tay FR, Niu L (2020e) Advances in 
+Zare EN, Motahari A, Sillanpää M (2018a) Nanoadsorbents based on  antimicrobial organic and inorganic nanocompounds in biomedi-
+conducting polymer nanocomposites with main focus on poly- cine. Adv Ther 3:2000024
+aniline and its derivatives for removal of heavy metal ions/dyes:  Wilfong WC, Kail BW, Wang Q, Shi F, Shipley G, Tarka TJ, Gray ML 
+a review. Environ Res 162:173–195 (2020) Stable immobilized amine sorbents for heavy metal and 
+Zare EN, Mansour Lakouraj M, Kasirian N (2018b) Development of  REE removal from industrial wastewaters. Environ Sci Water 
+effective nano-biosorbent based on poly m-phenylenediamine  Res Technol 6:1286–1299
+grafted dextrin for removal of Pb (II) and methylene blue from  Wu D, Sun Y, Wang Q (2013) Adsorption of lanthanum(III) from aque-
+water. Carbohydr Polym 201:539–548 ous solution using 2-ethylhexyl phosphonic acid mono-2-eth-
+Zare EN, Makvandi P, Tay FR (2019) Recent progress in the indus- ylhexyl ester-grafted magnetic silica nanocomposites. J Hazard 
+trial and biomedical applications of tragacanth gum. Carbo- Mater 260:409–419
+hydr Polym 212:450–467.  https​://doi.org/10.1016/J.CARBP​ Xia K, Guo Y, Shao Q, Zan Q, Bai R (2019) Removal of mercury(II) 
+OL.2019.02.076 by EDTA-functionalized magnetic ­CoFe O @SiO  nanoma- 2 4 2
+Zhang F, Gao W, Jia Y, Lu Y, Zhang G (2018) A concise water-solvent  terial with core–shell structure. Nanomaterials.  https​://doi.
+synthesis of highly effective, durable, and eco-friendly flame- org/10.3390/nano9​11153​2
+retardant coating on cotton fabrics. Carbohydr Polym 199:256– Xie L, Lv XY, Han ZJ, Ci JH, Fang CQ, Ren PG (2012) Prepara-
+265.  https​://doi.org/10.1016/j.carbp​ol.2018.05.085 tion and performance of high-barrier low density polyethylene/
+Zhang P, Gong JL, Zeng GM, Song B, Fang S, Zhang M, Liu HY,  organic montmorillonite nanocomposite. Polym Plast Technol 
+Huan SY, Peng P, Niu QY, Wang DB, Ye J (2019) Enhanced  Eng.  https​://doi.org/10.1080/03602​559.2012.69913​1
+permeability of rGO/S-GO layered membranes with tunable  Xue CH, Bai X, Jia ST (2016) Robust, self-healing superhydropho-
+inter-structure for effective rejection of salts and dyes. Sep Purif  bic fabrics prepared by one-step coating of PDMS and octa-
+Technol.  https​://doi.org/10.1016/j.seppu​r.2019.03.041 decylamine. Sci Rep 6:1–11.  https​://doi.org/10.1038/srep2​7262
+Zhao W, Liu Z, Yuan Y, Liu F, Zhu C, Ling C, Li A (2019a) Insight into  Yadav N, Seidi F, Del Gobbo S, D’Elia V, Crespy D (2019) Versa-
+Cu(II) adsorption on polyamine resin in the presence of HEDP by  tile functionalization of polymer nanoparticles with carbonate 
+tracking the evolution of amino groups and Cu(II)-HEDP com- groups: via hydroxyurethane linkages. Polym Chem 10:3571–
+plexes. ACS Sustain Chem Eng.  https​://doi.org/10.1021/acssu​ 3584.  https​://doi.org/10.1039/c9py0​0597h​
+schem​eng.8b061​69 Yamamoto O (2001) Influence of particle size on the antibacterial 
+Zhao X, Liu Y, Shuai Z, Wang C (2019b) Preparation and performance  activity of zinc oxide. Int J Inorg Mater.  https​://doi.org/10.1016/
+of three-layered structure composite membrane for heavy metal  S1466​-6049(01)00197​-0
+ions and hazardous dyes rejection. Polym Eng Sci.  https​://doi. Yan S, Jiang C, Guo J, Fan Y, Zhang Y (2019) Synthesis of silver 
+org/10.1002/pen.24965​ nanoparticles loaded onto polymer-inorganic composite materi-
+Zhou X, Zheng P, Wang L, Liu X (2019) Preparation of sulfonated  als and their regulated catalytic activity. Polymers (Basel).  https​
+poly(arylene ether nitrile)-based adsorbent as a highly selective  ://doi.org/10.3390/polym​11030​401
+and efficient adsorbent for cationic dyes. Polymers (Basel) 11:32.  Yang N, Ding Y, Zhang Y, Wang B, Zhao X, Cheng K, Huang Y, 
+https​://doi.org/10.3390/polym​11010​032 Taleb M, Zhao J, Dong WF, Zhang L, Nie G (2018a) Surface 
+Zhou W, Qiao Z, Zare EN, Huang J, Zheng X, Sun X, Shao M, Wang  functionalization of polymeric nanoparticles with umbilical cord-
+H, Wang X, Chen D, Zheng J, Fang S, Li YM, Zhang X, Yang  derived mesenchymal stem cell membrane for tumor-targeted 
+L, Makvandi P, Wu A (2020) 4D-printed dynamic materials in  therapy. ACS Appl Mater Interfaces 10:22963–22973.  https​://
+biomedical applications: chemistry, challenges, and their future  doi.org/10.1021/acsam​i.8b053​63
+perspectives in the clinical sector. J Med Chem.  https​://doi. Yang TT, Guan JP, Tang RC, Chen G (2018b) Condensed tannin from 
+org/10.1021/acs.jmedc​hem.9b021​15 Dioscorea cirrhosa tuber as an eco-friendly and durable flame 
+Zidan IH, Cheira MF, Bakry AR, Atia BM (2020) Potentiality of  retardant for silk textile. Ind Crops Prod 115:16–25.  https​://doi.
+uranium recovery from G. Gattar leach liquor using Duolite  org/10.1016/j.indcr​op.2018.02.018
+ES-467 chelating resin: kinetic, thermodynamic and isotherm  Yang G, Phua SZF, Bindra AK, Zhao Y (2019) Degradability and 
+features. Int J Environ Anal Chem.  https​://doi.org/10.1080/03067​ clearance of inorganic nanoparticles for biomedical applications. 
+319.2020.17486​13 Adv Mater 31:1805730
+Zubair M, Ullah A (2020) Recent advances in protein derived bionano- Yao Y, Zaw AM, Anderson DEJ, Hinds MT, Yim EKF (2020) Fucoidan 
+composites for food packaging applications. Crit Rev Food Sci  functionalization on poly(vinyl alcohol) hydrogels for improved 
+Nutr.  https​://doi.org/10.1080/10408​398.2018.15348​00 endothelialization and hemocompatibility. Biomaterials 
+249:120011.  https​://doi.org/10.1016/j.bioma​teria​ls.2020.12001​1
+Yasin S, Behary N, Perwuelz A, Guan J (2018) Life cycle assessment    Springer Nature remains neutral with regard to  Publisher’s Note
+of flame retardant cotton textiles with optimized end-of-life  jurisdictional claims in published maps and institutional affiliations.
+phase. J Clean Prod 172:1080–1088.  https​://doi.org/10.1016/j.
+jclep​ro.2017.10.198
+Yildirim S, Röcker B (2018) Active packaging. In: Nanomaterials for 
+food packaging: materials, processing technologies, and safety 
+issues.  https​://doi.org/10.1016/B978-0-323-51271​-8.00007​-3
+1 3

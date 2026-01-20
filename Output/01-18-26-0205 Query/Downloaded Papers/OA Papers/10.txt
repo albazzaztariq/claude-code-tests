@@ -1,0 +1,1092 @@
+  e-ISSN 2150-5551
+      CN 31-2103/TB
+REVIEW
+https://doi.org/10.1007/s40820-022-00911-8
+Breathable Electronic Skins for Daily Physiological 
+Signal Monitoring
+Cite as
+Nano-Micro Lett. 
+(2022) 14:161 1 1 1 1 1 1 Yi Yang   , Tianrui Cui , Ding Li , Shourui Ji , Zhikang Chen , Wancheng Shao ,  *
+1 1,2 Houfang Liu   , Tian‑Ling Ren   * *
+Received: 30 April 2022 
+Accepted: 30 June 2022 
+Published online: 9 August 2022 
+© The Author(s) 2022
+HIGHLIGHTS
+•	
+•	
+•	
+ment directions of breathable e-skins.
+ABSTRACT   With the aging of society and the increase in people’s 
+concern for personal health, long-term physiological signal monitoring 
+in daily life is in demand. In recent years, electronic skin (e-skin) for 
+daily health monitoring applications has achieved rapid development 
+due to its advantages in high-quality physiological signals monitoring 
+and suitability for system integrations. Among them, the breathable 
+e-skin has developed rapidly in recent years because it adapts to the 
+long-term and high-comfort wear requirements of monitoring physi‑
+ological signals in daily life. In this review, the recent achievements 
+of breathable e-skins for daily physiological monitoring are systemati‑
+cally introduced and discussed. By dividing them into breathable e-skin 
+electrodes, breathable e-skin sensors, and breathable e-skin systems, we 
+sort out their design ideas, manufacturing processes, performances, and 
+applications and show their advantages in long-term physiological signal monitoring in daily life. In addition, the development directions 
+and challenges of the breathable e-skin are discussed and prospected.
+KEYWORDS   Electronic skin; Breathable; Physiological signal monitoring; Wearable systems
+Yi Yang and Tianrui Cui contributed equally to this work.
+  	 Yi Yang, yiyang@tsinghua.edu.cn; Houfang Liu, houfangliu@tsinghua.edu.cn; Tian‑Ling Ren, RenTL@tsinghua.edu.cn *
+1 	 School of Integrated Circuit, and Beijing National Research Center for Information Science and Technology, Tsinghua University, Beijing 100084, 
+People’s Republic of China
+2 	 Center for Flexible Electronics Technology, Tsinghua University, Beijing 100084, People’s Republic of China
+Vol.:(0123456789)
+1 3
+
+161 	   Page 2 of 28 Nano-Micro Lett. (2022) 14:161
+1  Introduction becoming more multifunctional, more integrated, and more 
+intelligent to realize a doctor-like daily healthcare system.
+In this review, recent advances in breathable e-skin elec‑ In recent years, electronic skins (e-skins) for daily health 
+trodes, sensors, and systems for daily physiological signal  monitoring applications have achieved rapid development 
+monitoring are introduced, respectively. Their design meth‑ due to their advantages in daily physiological signal mon‑
+ods, functional materials, structures, fabricating processes,  itoring: (1) The flexible substrate of e-skin can attach to 
+and performances are systematically discussed. Then, the  human skin with high conformability, which helps to collect 
+typical multifunctional, highly integrated, and intelligent  higher quality physiological signals [ 1 – 3 ]. (2) The e-skins 
+e-skin systems are shown, which are competent for daily  have developed from single-mode to multifunction [ 4 ,  5 ], 
+independent work and long-term in situ sensing-processing- and their outstanding detection performances show their 
+diagnosis of physiological signals in daily life. Finally, we  great potential in medical level applications [ 6 ]. (3) Due to 
+discuss the challenges that breathable e-skins may face in  their high system integration potential, e-skins are becoming 
+daily health monitoring and conclude with comments on  systematic to achieve both physiological signal acquisition 
+their future directions. and diagnosis, which is suitable for daily health management 
+like a “portable doctor” [ 7 ,  8 ]. Thus, many high-performance 
+e-skins for wearable daily physiological signal monitoring 
+2  Breathable e‑Skin Electrodes
+have been developed [ 9 – 11 ]. Meanwhile, the demand for 
+daily and long-term physiological signal monitoring pro‑
+Since most electrophysiological signal monitoring requires 
+motes higher requirements for the development of e-skin.
+direct contact between the conductive material and human 
+With the increasing need for long-term and comfortable 
+skin to record the signals with high-quality and long-term 
+physiological signal monitoring through e-skin, breathable 
+stability, some important factors should be taken into 
+(air-permeable) e-skins have attracted particular attention 
+account. First, the conductive materials should have high 
+in recent years [ 12 – 15 ]. The breathable e-skin can avoid the 
+conductivity and stable contact with human skin to record 
+accumulation of sweat and greatly improve the comfort of 
+high-quality signals. Second, the substrate materials should 
+long-term wear [ 16 ]. Based on the types of monitoring sig‑
+have good breathability and biocompatibility to avoid skin 
+nals, the breathable e-skins for daily long-term physiological 
+irritations and conform to human skin. Third, the electrode 
+signal monitoring can be divided into two main categories. 
+should possess stable physical and chemical properties for 
+One is the breathable e-skin electrode for electrophysiologi‑
+daily long-term use. Fourth, as electrodes for daily health 
+cal signal monitoring [ 17 – 20 ], including the electrocardio‑
+monitoring, their process complexity and material costs need 
+graph (ECG) e-skin electrode, electro-oculography (EOG) 
+to be considered. In this section, according to types of moni‑
+e-skin electrode, electromyography (EMG) e-skin electrode, 
+toring physiological signals, we introduce the development 
+electroencephalograph (EEG) e-skin electrode, etc. The 
+of the typical breathable e-skins in the applications of moni‑
+other is breathable e-skin sensors [ 21 – 25 ], which are used 
+toring ECG, EOG, EMG, EEG, and so on, respectively. The 
+to detect both physical physiological signals (pules, breath 
+preparation methods and characteristics of these breathable 
+sound, blood pressure, body temperature, etc.) and chemical 
+e-skin electrodes are also described emphatically.
+physiological signals (glucose, ethanol, electrolytes, etc.). 
+Besides, there are also multifunctional breathable e-skins 
+for detecting multiple physiological signals [ 5 ]. According  2.1  Breathable ECG e‑Skin Electrodes
+to different physiological signals or multiple physiological 
+signals monitoring requirements, the functional materials,  Cardiovascular disease is a major threat to global human 
+structures, and fabricating processes of breathable e-skins  health, which can be prevented and diagnosed by a sim‑
+are various. Furthermore, considering the requirements of  ple and effective solution, which is ECG monitoring [ 26 ]. 
+detecting and analyzing physiological signals, the system  However, because of the short monitoring time of the static 
+integration requirements of detecting and analyzing physi‑ ECG acquisition in hospitals and the relatively fixed physi‑
+ological signals, the e-skins for daily health monitoring are  cal examination time, misdiagnosis or missed diagnosis 
+© The authors https://doi.org/10.1007/s40820-022-00911-8
+
+Fig. 1   a  Schematic illustration of the dual-gradient poly (ionic liquid) nanofiber-based e-skin electrode. Reproduced with permission from Ref. 
+b [ 29 ]. Copyright 2021 Wiley.   SEM images of textile e-skin made from different conductive elastomeric fibers. Reproduced with permission 
+c from Ref. [ 30 ]. Copyright 2022 Wiley.   Photograph and SEM images of the substrate-free e-skin on the human skin. The scale bars represent 
+d 1 cm and 200 μm, respectively. Reproduced with permission from Ref. [ 31 ]. Copyright 2020 American Chemical Society.   Fabrication process 
+e of the imperceptible graphene-based EOG e-skin electrode. Reproduced with permission from Ref. [ 36 ]. Copyright 2018 Springer Nature.   
+f EOG headband with graphene textile e-skin electrodes. Reproduced with permission from Ref. [ 19 ]. Copyright 2019 IOPscience.   EOG e-skin 
+integrated with an eye mask. Reproduced with permission from Ref. [ 38 ]. Copyright 2021 Springer
+1 3
+
+161 	   Page 4 of 28 Nano-Micro Lett. (2022) 14:161
+had good long-term monitoring performance and could not  the ECG e-skin can be used to detect the human ECG signal 
+cause accumulation of sweat and skin allergy, suitable for  in real-time. Moreover, the substrate-free e-skin can also be 
+the daily ECG monitoring application. used as a strain sensor to detect a variety of physical physi‑
+The mature garment industry has made clothing more  ological signals with high sensitivity.
+durable, breathable, and comfortable. If the ECG e-skin 
+electrode can adopt the woven structure like clothing, it can 
+not only meet the requirements of breathability and durabil‑ 2.2  Breathable EOG e‑Skin Electrodes
+ity but also be suitable for integration with daily clothing to 
+achieve long-term wearable health monitoring. Eskandar‑ EOG reflects the electrophysiological signals between the 
+ian et al .  used conductive elastomeric filaments to realize a  cornea and the retina of human eyes [ 32 ], which is widely 
+three-dimensional (3D) conductive e-skin with an industrial- used in the research of brain science, mental disease diagno‑
+scale knitting machine [ 30 ]. As shown in Fig.  1 b, the textile  sis, sleep, etc. [ 33 ]. Although EOG, EEG, and EMG can all 
+e-skin had a 3D textile structure that ensured a dense con‑ be used in the diagnosis of neurological abnormalities, the 
+ductive network, while its melt-spun fibers had good flex‑ EOG has dominant advantages including: (1) The analysis 
+−2 −1 ibility (strain > 200%) and breathability (about 20 g ­m  ­h   of the EOG signals is easier because the EOG has a linear 
+water vapor permeability). Besides, the e-skin could realize  relationship to eye movements in a certain range. (2) EOG 
+24 h continuous ECG monitoring in daily living conditions,  signals are more stable than EEG and EMG signals [ 34 ]. 
+demonstrating its durability and stability in complex usage  At present, however, many state-of-the-art EOG electrodes 
+environments. Moreover, the realized textile ECG e-skin  are bulky, airtight, rigid, and uncomfortable to wear [ 35 ]. 
+could be integrated into the garments seamlessly and its  As EOG electrodes are applied to the delicate skin around 
+performance remained stable after 30 times washing. The  the eyes, the EOG electrodes are expected to be flexible, 
+textile-based breathable e-skin meets the needs of long-term  air-permeable, and soft to avoid skin damage, fatigue, or 
+ECG monitoring in daily life and has the potential of form‑ irritation, which makes them good candidates for EOG elec‑
+ing smart clothing for daily health monitoring. trodes. Besides, flexible e-skin electrodes can conform to 
+At present, most wearable ECG electrodes have sub‑ the surface of human skin, so they can monitor the EOG 
+strates. Although some of their substrates are breathable,  signals with low impedance, high signal-to-noise ratios 
+their existence limits the evaporation of sweat and decreases  (SNR), and high quality. In this section, we will introduce 
+the flexibility and comfort of e-skins. To realize an e-skin  some advanced breathable EOG e-skin electrodes and dem‑
+with excellent breathability while maintaining good mechan‑ onstrate their advantages in the daily long-term monitoring 
+ical properties, Qiao et al .  developed a substrate-free e-skin  of EOG signals.
+based on laser-scribed graphene [ 31 ]. The e-skin was pre‑ Facing the lack of high-performance breathable EOG 
+pared by laser-reduced graphene oxide which was drop cast  electrodes, Ameri et al .  developed an imperceptible and 
+on a transfer paper. By using a water-soluble sacrificial layer,  breathable tattoo-like graphene e-skin [ 36 ]. The graphene 
+the laser-scribed and substrate-free graphene layer could be  was fabricated by chemical vapor deposition (CVD) and 
+separated from the unreduced graphene oxide and trans‑ transferred onto a piece of commercial tattoo paper with 
+ferred onto the human skin (Fig.  1 c). Compared with e-skins  the help of poly (methyl methacrylate) (PMMA). After 
+with substrates, the substrate-free e-skin has good breatha‑ being cut into an electrode shape, the graphene layer was 
+bility (it hardly affects skin perspiration), high flexibility  transferred to the human skin by a tattoo paper (Fig.  1 d). 
+(100% strain range), and low resistance (1 Ω in the vertical  The realized ultrathin, ultrasoft, and transparent tattoo-
+direction). Most significantly, the substrate-free e-skin can  like EOG e-skin was substrate-free and could be laminated 
+attach to the uneven human skin surface conformably, which  around the eyes without using any adhesives. Besides, they 
+greatly decreases the skin–electrode contact impedance (5.6  did not constrain eye movements or facial expressions. 
+kΩ at 1 kHz). Because of its good fit with skin, it is not easy  Due to their good contact with the skin, the SNR of the 
+to move relative to the skin, which makes the collected ECG  tattoo-like e-skin was 15.22 dB, which was much higher 
+signal has good quality. After combined with a flexible sig‑ than the commercial Ag/AgCl gel electrodes in detecting 
+nal processing module and a convolutional neural network,  EOG signals. Moreover, the EOG e-skin realized a 4° high 
+© The authors https://doi.org/10.1007/s40820-022-00911-8
+
+ 161 Page 5 of 28  Nano-Micro Lett. (2022) 14:161	
+2.3  Breathable EMG e‑Skin Electrodes angular resolution of eye movement. In their experiment, 
+the high-precision EOG signals acquired by the breath‑
+able e-skin electrode were successfully used to control a  Monitoring epidermal EMG is an effective way to reflect 
+drone in real-time, which showed its high performance in  human muscle activity [ 39 ], which has important applica‑
+detecting long-term EOG signals and great potential in  tions in guiding daily sports health, rehabilitation training, 
+human–robot interaction. neuro-medicine, etc. [ 40 ]. Epidermal e-skins are considered 
+As an ideal carrier of long-term EOG monitoring elec‑ ideal electrodes for daily EMG signal monitoring due to 
+trodes, the headband is a suitable daily wearable platform.  their skin conformability and excellent detecting capabili‑
+Besides, the head-worn fabric itself can act as a breathable  ties [ 41 ]. Although many kinds of EMG e-skins have been 
+substrate. Inspired by the headband, Golparvar et al .  pro‑ developed these years. However, most of them are designed 
+posed a textile-based EOG e-skin that was directly weaved  without considering breathability. The lack of breathabil‑
+into a headband [ 19 ,  37 ]. The conductive textiles were fab‑ ity is a particularly serious defect for the epidermal EMG 
+ricated from graphene-coated commercial fabrics, which  electrodes since many of their application scenarios of 
+were low-cost, durable, and scalable such as nylon and cot‑ them in daily life are related to sports. Such an application 
+ton. The graphene oxide suspension prepared by a modi‑ environment with a large amount of sweat and severe skin 
+fied Hummer’s method was dip-coated on the textiles. After  deformation is likely to lead to the accumulation of sweat in 
+being treated with the reducing agent, the graphene oxide  the electrode–skin interface, which may cause irritation or 
+particles were reduced and a conductive graphene network  electrode damage. Moreover, the accumulation of sweat not 
+was formed on fabrics (Fig.  1 e). The breathable EOG e-skin  only easily leads to skin allergy or uncomfortable wearing 
+revealed an excellent correlation of 91.3% against the com‑ but also greatly affects the quality of collected EMG signals 
+mercial Ag/AgCl EOG gel electrode during the long-term  [ 42 ]. To make EMG e-skin electrodes suitable for daily use, 
+EOG monitoring. With good biocompatibility, the e-skins  it is necessary to improve their breathability and durability 
+were integrated into a fabric headband and realized auto- while ensuring their electrical performance. In this section, 
+detection of multiple eye movements, which anticipated their  we will introduce typical e-skin electrodes for EMG moni‑
+potential in EOG-based human–machine interfaces. toring which have preliminary solved the above problems.
+EOG monitoring also shows healthcare and medical value  Aiming at the problem of sweat accumulation caused by 
+in sleep monitoring. For long-term sleep monitoring, the  airtight epidermal EMG electrodes, Yang et al. proposed 
+EOG electrode should be soft, lightweight, and breathable to  an all-nanofiber-based e-skin that has directional sweat 
+minimize interference with the wearer’s normal sleep activ‑ transport properties [ 43 ]. As shown in Fig.  2 a, the designed 
+ities. To realize a daily-use EOG e-skin for high-comfort  multilayer e-skin consisted of superhydrophilic hydrolyzed-
+and real-time EOG signal monitoring, Hsieh et al .  realized  polyacrylonitrile (HPAN), polyurethane (PU), and silver 
+a breathable soft-fabric-based EOG e-skin [ 38 ]. The con‑ nanowires (AgNWs). The HPAN layer, the medical adhesive 
+ductive fabrics with 20% silver and 80% polyamide formed  layer, and the PU layer were all fabricated by electrospinning 
+a dense and breathable conductive network. Besides, a  to form an all-porous breathable structure. The AgNWs were 
+sponge package was used to relieve the contact pressure  dispersed on these fibers through vacuum filtration to form 
+of the e-skin electrode on the skin around the eye while  a dense conductive network. With a hydrophilic–hydropho‑
+ensuring its breathability. The sponge package also ensured  bic gradient structure, the e-skin could evaporate the sweat 
+the durability and stability of the e-skin in long-term EOG  from the electrode–skin interface in 5 s with a water vapor 
+−2 −1 monitoring. By integrating the breathable e-skin into an eye  permeability of 1748.09 g ­m  ­d , which was higher than 
+mask, the EOG e-skin with only 9 g weight and high flexibil‑ the vapor transmission rate of the human skin. The sheet 
+−1 ity realized convenient signal monitoring during sleep, and  resistance of the electrode was ultra-low (4.3 Ω ­sq ) and 
+even continuous 24 h EOG recording. By cooperating the  could be easily changed by adjusting the quantity of the 
+e-skin with the edge-computing module, the acquired EOG  AgNW. Besides, with a high adhesion force between the 
+−1 e-skin system gave a real-time sleep quality score, indicating  e-skin and human skin (430.87 mN ­cm ) and high flexibil‑
+that the soft-fabric-based e-skin was promising in daily high  ity (strain > 500%), the all-fiber-based e-skin was suitable for 
+comfort EOG monitoring. daily long-term EMG monitoring on the sweaty human skin.
+1 3
+
+161 	   Page 6 of 28 Nano-Micro Lett. (2022) 14:161
+and a porous elastomer-fabric substrate that could attach to  term electrophysiological signal monitoring. To enhance 
+© The authors https://doi.org/10.1007/s40820-022-00911-8
+
+ 161 Page 7 of 28  Nano-Micro Lett. (2022) 14:161	
+the long-term wearing comfort of EMG e-skin electrodes  The realization of a more comfortable and reliable EEG 
+and improve user experience, Miyamoto et al. proposed an  electrode has always been an important challenge to be 
+inflammation-free and breathable e-skin based on nano‑ solved in the application of long-term EEG monitoring in 
+mesh [ 45 ]. The nanomesh was made from water-soluble  daily life. By using laser-scribed graphene and polyure‑
+PVA nanofibers. A thin layer of Au was coated on the PVA  thane (PU) nanomesh, Qiao et al. realized an EEG e-skin 
+nanofibers to form a dense conductive network (Fig.  2 c).  with high comfort, breathability, and high flexibility [ 5 ]. 
+When the Au-PVA nanomesh was transferred onto human  The PU nanomesh was fabricated by electrospinning PU-
+skin for EMG detecting, some water was sprayed on it to  dimethyl formamide (DMF) solution. Graphene oxide (GO) 
+dissolve the PVA nanofibers and make the conductive nano‑ nanoparticles were coated on PU fibers to form a core–shell 
+mesh attach to human skin. Because the nanomesh e-skin  PU-GO structure. The graphene oxide shell layer was further 
+was very thin and flexible and could be tightly fitted to the  reduced by laser to form a conductive laser-scribed graphene 
+skin surface, the electrode–skin contact impedance was  (LSG) shell layer. The realized LSG-PU nanomesh e-skin 
+small enough (140 kΩ at 100 Hz) to monitor high-precision  was ultrathin and ultrasoft, when applied to the skin, the 
+EMG signals without significant noise. Besides, the e-skin  skin texture on the back could be clearly shown through 
+had high flexibility and durability and sustained over 10,000  the e-skin (Fig.  2 d). The LSG-PU nanomesh e-skin had 
+cycles of bending test on a finger (with 40% elongation).  high flexibility (> 60% strain range), high stability (can sus‑
+Moreover, compared to other thin-film e-skins, the nano‑ tain > 1000 stretching cycles), and excellent breathability 
+mesh e-skin was inflammation-free and not easy to cause  (hardly prevents water vapor from being expelled). When 
+skin irritation when worn for a long period. The nanomesh  choosing the conductive material of the e-skin, compared 
+e-skin electrode could sustain the complex wearing environ‑ with noble metals like gold, the laser-scribed graphene was 
+ment in daily life and has huge potential in long-term daily  low cost, which made the EEG e-skin suitable for large-
+EMG monitoring. scale wear. The EEG signal acquired by the nanomesh e-skin 
+had high quality, which could further be used as the input 
+of the convolutional neural network to analyze the wearer’s 
+concentration. 2.4  Breathable EEG e‑Skin Electrodes
+Personalized daily healthcare puts forward the require‑
+ment for low-cost, reliable, and comfortable medical equip‑ EEG is an important electrophysiological signal which can 
+ment. 3D printing is a fast and customizable method for  reflect the condition of the human brain and is widely used 
+making breathable electrode templates. However, it remains  in multiple health fields including fatigue detection, sleep 
+a challenge to directly print highly flexible materials to  condition monitoring, mental health diagnosis, etc. [ 46 ]. 
+achieve high-precision breathable structures. Facing this  Nowadays, scalp electrodes are commonly used for detect‑
+challenge, Ho et al. developed a 3D-printed sugar scaffold  ing EEG signals [ 47 ]. However, EEG caps or rigid EEG 
+that was customized according to human characteristics and  electrodes are not suitable for daily long-term EEG moni‑
+was used as a high-precision template for preparing flex‑ toring because they are uncomfortable to wear and require 
+ible and porous EEG e-skins [ 49 ]. As shown in Fig.  2 e, the  complex preparation procedures. Therefore, to achieve daily 
+human body shape characters were acquired by 3D scanning  long-term EEG signal monitoring, it is necessary to develop 
+and used as the input of the 3D printer. The sugar grains  a more convenient wearing form on the one hand and a more 
+formed a water-soluble 3D porous scaffold of the breathable  comfortable electrode on the other hand [ 48 ]. At present, 
+e-skin by 3D printing. Then, the silicone elastomer was filled  EEG signals have been able to be collected from places such 
+in the scaffold and the sugar scaffold was removed by water  as the forehead with high quality, eliminating the need to 
+to form a silicone elastomer e-skin with a 3D porous struc‑ clean hair in advance before wearing electrodes on the scalp. 
+ture. Finally, to give the e-skin conductivity, the surfaces of  To improve the wearing comfort and avoid sweat accumula‑
+the porous silicone elastomer were coated with multiwalled  tion, the breathable EEG e-skin electrode is becoming an 
+3 carbon nanotubes to form a dense (4 kΩ/50 × 10 × 3 ­mm )  excellent choice for EEG monitoring on the bare skin. In 
+−3 and light (0.25 g ­cm ) conductive network. When detecting  this section, we will introduce some typical new breathable 
+EEG signals, the customized porous e-skin contacted the  e-skin electrodes for daily long-term EEG monitoring.
+1 3
+
+161 	   Page 8 of 28 Nano-Micro Lett. (2022) 14:161
+skin surface with high conformability. The acquired EEG  and could be used for a long period. This non-destructive 
+signals were used to effectively distinguish the sleep state  method of preparing breathable electrodes without affect‑
+of the wearer, which showed its capability of being used  ing normal physiological activities is likely to be trans‑
+as a reliable, breathable, and personalized e-skin electrode. ferred to the breathable e-skin electrode for monitoring 
+Long-term wearable e-skin electrodes have the potential  human physiological signals in daily life, which shows its 
+to be widely used in high-fidelity daily EEG signal moni‑ potential in the directly patterned breathable e-skin.
+toring. Ameri et al. developed a flexible and breathable  Implant or direct monitoring of physiological signals 
+graphene-tattoo-based EEG e-skin whose electrode–skin  on tissues or cells requires higher breathability and bio‑
+contact impedance is on par with the commercial Ag/AgCl  compatibility of the e-skin, and its mechanical properties 
+gel electrode [ 13 ] (Fig.  2 f). With a sub-micrometer thick‑ should meet the requirements that it will not cause damage 
+ness (~ 463 nm), the tattoo-like e-skin electrode has excel‑ to tissues or cells. Lee et al. used the Au-coated parylene-
+lent electrical and mechanical properties. With over 40%  polyurethane nanomesh to monitor the field potential of 
+strain range, the e-skin can be attached to human skin with‑ the isolated cardiomyocytes [ 51 ] (Fig.  2 h). The super-thin 
+out restraining daily activities. More significantly, the tattoo  (only one or two layers of nanofibers) and ultra-flexible 
+electrode requires only one-tenth the area of the commer‑ nanofibers did not hinder the motion of the cells. Besides, 
+cial Ag/AgCl gel EEG electrode to achieve the same contact  the nanomesh-based e-skin had ultra-low tensile force (0.4 
+impedance. Moreover, the e-skin collected EEG signals with  mN) at a strain of 10%, which was much lower than the 
+high precision and clearly distinguished the eye-opening and  tension that cardiomyocytes can handle. With excellent 
+eye-closing states without noise disturbing. biocompatibility, chemical stability, and ultra-high soft‑
+ness, the e-skin maintained a reliable operation for 96 h 
+without performance degradation or damaging the cardio‑
+myocytes, which showed its application potential in daily- 2.5  Other Breathable e‑Skin Electrodes
+use, no-body-damage breathable e-skin electrode.
+In summary, we introduced some typical breathable  Apart from typical breathable e-skin electrodes mentioned 
+e-skin electrodes for long-term electrophysiological sig‑ above, there are also breathable e-skin electrodes devel‑
+nal monitoring in recent years and summarized their char‑ oped for other applications. Although some of them are not 
+acteristics including types, breathability, materials, and  designed for monitoring human physiological signals in 
+fabrication methods. To facilitate parallel comparison,  daily life, the advanced technology and device performance 
+the characteristics of those typical breathable e-skin elec‑ adopted by them are also suitable for developing daily-use 
+trodes are listed in Table  1 . Since most electrophysiologi‑ breathable electrophysiological signal e-skin electrodes. In 
+cal signal monitoring requires direct contact between the  this section, we will introduce two typical examples of the 
+conductive material and human skin to record the signals  other breathable e-skin electrodes, the first is a breathable 
+with high quality, the design of the e-skin electrode should  e-skin for detecting the health condition of plants, and the 
+be considered to have a good fit with the skin to reduce  second is a breathable nanomesh e-skin for implantable ECG 
+the electrode–skin contact impedance while avoiding the  signal monitoring.
+noise interference signal caused by skin deformation and  To realize physiological information monitoring of liv‑
+external environment. Besides, for daily long-term electro‑ ing fragile plants, Kim et al. invented a lossless way to 
+physiological signal monitoring needs, electrode materials  directly vapor-printing conformal and durable electrodes 
+need good breathability, wear comfort, and stability. More‑ on growing plants [ 50 ]. The p-doped poly(3, 4-propylen‑
+over, considering the potential of daily large-scale use, the  edioxythiophene) was chosen as the conductive material 
+preparation process needs to be simplified and the cost can  and applied to the surface of the plants by vapor-coating 
+be reduced. To meet the above development requirements  (Fig.  2 g). The conductive polymer did not block or fill the 
+and ensure good breathability, the fiber-based or substrate- stomata of the plant, and the vapor-printed electrode did 
+free e-skin electrode is becoming the preferred choice of  not influence the natural growth of the plant specimens 
+breathable e-skin electrodes.
+© The authors https://doi.org/10.1007/s40820-022-00911-8
+
+ 161 Page 9 of 28  Nano-Micro Lett. (2022) 14:161	
+Table 1    Summary of the breathability, materials, and fabrication methods of the typical breathable e-skin electrodes listed in Sect.  2
+Categories Types Breathability Materials Fabrication Methods Refs.
+ECG electrodes Moisture-wicking and  Water vapor transmission rate  Dual-gradient poly (ionic  Electrospinning [ 29 ]
+antibacterial e-skin (WVT) ~ 70% liquid) nanofibers
+−2 −1 3D conductive textile  20 g ­m  ­h Conductive elastomeric  Industrial-scale knitting  [ 30 ]
+e-skin melt-spun filaments machine
+Substrate-free e-skin hardly affects skin perspira‑ Laser-scribed graphene Sacrificial layer process [ 31 ]
+tion
+EOG electrodes Tattoo-like e-skin Breathable CVD graphene Sacrificial layer process [ 36 ]
+[ 19 ,  37 ] Textile-based e-skin Breathable Graphene-coated commer‑ Dip coating graphene 
+cial fabrics oxide on fabrics and 
+reducing
+Soft-fabric-based e-skin Breathable 20% silver and 80% poly‑ Dip coated silver on the  [ 38 ]
+amide, sponge package sponge
+−2 −1 EMG electrodes All-nanofiber-based e-skin 1748.09 g ­m  ­d HPAN, PU, and AgNWs Electrospinning and  [ 43 ]
+vacuum filtration
+−1 −2 E-beam evaporating and  [ 44 ] Strain-limiting e-skin WVT = 3.13 ± 0.18 g ­h  ­m Gold electrode, polyimide 
+etching supporting and packag‑
+ing layer, porous elasto‑
+mer-fabric substrate
+−1 Inflammation-free e-skin 0.11 g ­day Au-coated PVA nanofibers Magnetron sputtering and  [ 45 ]
+sacrificial layer process
+−1 [ 5 ] LSG-PU nanomesh e-skin 0.067 g ­day Laser-scribed graphene,  Electrospinning process  EEG electrodes
+attached it to the fingertip to monitor the force felt by the  and glucose. Their design ideas, manufacturing methods, 
+fingertip [ 58 ]. As shown in Fig.  3 a, the e-skin consisted of  and performances will be discussed.
+1 3
+
+161 	   Page 10 of 28 Nano-Micro Lett. (2022) 14:161
+sensor showed high sensitivity to tactile pressure, with a  perception and promising in human–computer interaction.
+© The authors https://doi.org/10.1007/s40820-022-00911-8
+
+ 161 Page 11 of 28  Nano-Micro Lett. (2022) 14:161	
+To meet the potential of large-area skin tactile sensing in  e-skin sensor was fabricated. Due to the structural character‑
+daily life, the efficient preparation methods of breathable  istics of plants, the e-skin was naturally breathable based on 
+e-skin need to be realized. Zhou et al. developed a one-step  the stomata in leaves and petals. At the same time, the fiber 
+fabrication method of the breathable tactile sensor based on  structure of plants endows the sensor with intrinsic flexibil‑
+a self-assembled porous substrate [ 59 ]. As shown in Fig.  3 b,  ity and durability. The plant-based e-skin could maintain low 
+−1 by a breath figure method, a porous thermoplastic polyu‑ resistance with 800 ­m  curvature without performance deg‑
+rethane (TPU) substrate was prepared, and the conductive  radation after being pressed over 5000 times. When used to 
+silver nanowires (AgNWs) were dip-coated on the substrate  detect human body motions, the e-skin had a high sensitivity 
+−1 and was embedded into the porous substrate by a heat press  of about 0.08 ­kPa , which was suitable for high-precision 
+process. This simple processing method greatly improved  body motion detecting. More significantly, the plant-based 
+the preparation efficiency of breathable e-skins. When used  sensor was biodegradable, with the aid of water, the e-skin 
+as a breathable tactile sensor, it showed high water vapor  realized quick degradation in natural conditions, which shows 
+−2 −1 permeability (23 mg ­cm  ­h ), excellent stability, and low  its application prospect in sustainable wearable systems.
+−1 sheet resistance (7.3 Ω ­sq ). Moreover, the porous TPU  Daily long-term body motion-detecting requires the high 
+tactile sensor was further integrated into a wireless touch  durability of breathable e-skins. Combining functional mate‑
+sensing system and realized a delicate tactile control of the  rials with traditional clothing fibers, which have time-tested 
+software interfaces. durability and biocompatibility, is a good solution to creat‑
+ing durable and skin-friendly e-skin. Wu et al. proposed an 
+all-textile-based breathable e-skin for long-term human body 
+motion monitoring [ 64 ]. The breathable e-skin was prepared  3.2  Breathable e‑Skins for Body Motion Detecting
+by following steps. First, the PVA nanofibers were prepared 
+by the electrospinning process and were used as the scaffold  Daily sports health management, sports medicine diagnosis, 
+of the silver to form a conductive network. Second, the silver  and medical rehabilitation training are inseparable from the 
+nanofibers were transferred to the top and bottom of a pre- accurate monitoring of human body motion. In daily life, 
+stretched silk-based spacer fabric layer to form the highly  as people have a higher pursuit of personal health, accurate 
+durable and breathable capacitive sensor. The realized breath‑ recording and judgment of daily movements can help them 
+able e-skin has ultrahigh stability, which can sustain repetitive  achieve healthy and reasonable sports effects. In the medical 
+compression for more than 20,000 times, suitable for long- field, if the patient’s motion can be quantitatively monitored, 
+term body motion- detecting in daily life. Besides, with high  the accuracy and efficiency of medical diagnosis can be 
+−1 sensitivity (0.283 ­kPa ) and fast response time, the e-skin  improved and the possibility of misdiagnosis can be reduced 
+can realize high-precision dynamic motion detecting. Most  [ 21 ]. Facing the long-term body motion monitoring needs 
+importantly, the e-skin can be integrated into daily wear gar‑ in daily life, and considering the wearing comfort and reli‑
+ments. As shown in Fig.  3 d, with the aid of a conductive- ability comprehensively, many excellent breathable e-skins 
+fabric-knitted inductor coil, the motion signals recorded by  for body motion detection have been developed [ 60 – 64 ]. 
+the textile e-skin can be transferred to the mobile terminal  In this section, we will introduce some typical breathable 
+wirelessly. The whole breathable textile-based motion detect‑ motion-detecting e-skins for daily body motion monitoring.
+ing system can realize high-precision motion monitoring and  As a breathable e-skin sensor for daily use, if it is low cost 
+signal transmission, which demonstrates its potential in daily  and degradable, it will be conducive to large-scale application 
+exercise analysis and early warning of diseases. in daily physiological signal monitoring. To create a biode‑
+gradable, disposable, and breathable e-skin for daily long-term 
+body motion monitoring, Elsayes et al .  developed a plant- 3.3  Breathable e‑Skins for Respiratory Monitoring
+based sustainable e-skin [ 63 ]. The fabrication process of the 
+breathable body motion monitoring e-skin is shown in Fig.  3 c.  Daily static or dynamic wearable respiratory monitoring is 
+By using leaf skeletons loaded with AgNWs as the highly con‑ of great significance for disease prevention and health man‑
+ductive top and bottom electrodes, and using the freeze-dried  agement [ 12 ]. In particular, sleep apnea syndrome which can 
+rose petals as the dielectric layer, a capacitive motion-detecting 
+1 3
+
+161 	   Page 12 of 28 Nano-Micro Lett. (2022) 14:161
+greatly decrease people’s quality of life, and the COVID-19  sleep apnea–hypopnea syndrome (OSAHS), which shows 
+epidemic in recent years are all remind people to pay more  the clinical diagnostic value of the high-precision signals it 
+attention to daily respiratory monitoring. Based on the social  can be recorded.
+needs, in recent years, many excellent breathable e-skin res‑
+piratory monitoring sensors have been developed to meet 
+the needs of daily long-term wear respiratory monitoring  3.4  Breathable e‑Skins for Pulse Sensing
+[ 25 ,  65 ,  66 ]. In this section, we will briefly introduce two 
+typical breathable respiratory monitoring e-skins for daily  Pulse is one of the most important physiological signals of 
+long-term respiratory monitoring. the human body, which can reflect the basic state of human 
+In long-term sleep respiration monitoring, the weak  health [ 67 ]. People’s attention to cardiovascular disease has 
+breathing signal has high requirements on the sensitivity of  also led to the birth of many wearable pulse monitoring 
+the respiratory sensors, and the usage scenarios in the sleep  devices, among which, the development of breathable e-skin 
+state have high requirements on the comfort and breathabil‑ pulse sensors suitable for daily long-term wear is particu‑
+ity of the sensor. By highly simulating the function of real  larly prominent in recent years [ 68 ]. In this section, we will 
+skin in structure, Yue et al. realized a self-powered, low-cost,  introduce two typical breathable pulse sensors and explain 
+and highly sensitive respiratory sensor by electrostatic spin‑ why they are suitable for daily pulse monitoring.
+ning [ 66 ]. As shown in Fig.  3 e, by using the bead polyvi‑ With the extensive use of wearable electronics, a lot of 
+nylidene fluoride (PVDF) nanofibers to simulate the dermal  e-waste is generated, which has gradually developed into 
+papillae of human skin and combining the collagen aggre‑ a serious environmental problem. If low-cost, daily-use 
+gate nanofibers, the realized sensor shows high sensitivity  wearable devices can achieve good functions while easy to 
+−1 (0.32 V ­kPa ). The breathable skin-inspired respiratory  degrade, they will be competent for large-scale applications 
+sensor can record the breathing state during sleep clearly,  in the consumer market. For developing a wearable pulse 
+and it is also biocompatible with the skin and does not cause  monitoring sensor suitable for daily use, Guo et al. proposed 
+discomfort to the wearer because of its light-weight, soft‑ an easily degradable and low-cost breathable pulse sensor 
+ness, and good breathability. Besides, the respiratory sensor  [ 67 ]. As shown in Fig.  3 g, the sensor was made of breathable 
+can also be used to monitor humidity and pulse, which can  and recyclable tissue paper coated with MXene and encap‑
+be combined with the respiratory monitoring function to  sulated with biodegradable PLA films. The heart beats an 
+form a comprehensive evaluation system of human sleep  average of 100,000 times in a day, and the signals are weak 
+quality. on the skin surface, the acquired sensor should be highly 
+Apart from the sleep state, in daily respiratory monitor‑ sensitive (with a 10.2 Pa low detection limit) and durable 
+ing, if the frequency, intensity, and interval of respiration  (can sustain over 10,000 cycles of press). It is worth noting 
+can be monitored comprehensively without feeling, it is of  that the e-skin sensor can be degraded in the NaOH solution 
+great significance for health management and disease diag‑ in two weeks, which shows its potential in daily large-scale 
+nosis. Such imperceptible sensors can be implemented in an  applications.
+all-nanofiber fashion. Peng et al. used the multilayer poly‑ On the surface of the human body, the pulse is a tiny 
+acrylonitrile and polyamide 66 nanofibers to fabricate an  physiological signal, which requires the high sensitivity of 
+all-nanofiber breathable respiratory sensor [ 25 ]. As shown  the sensor. Meanwhile, the interference of human activities 
+in Fig.  3 f, the sensor consists of four layers of nanofibers  in daily life raised higher requirements for the signal moni‑
+including the top encapsulation polyamide 66 layer, the  toring range of the pulse sensor. However, it has always 
+electrification layers consist of the Au coated polyacryloni‑ been a challenging research topic to develop flexible and 
+trile layer, the Au coated polyamide 66 layer and the bottom  breathable sensors with high sensitivity and a large meas‑
+polyacrylonitrile substrate layer. The acquired breathable,  uring range. Sharma et al. used a hydrogen-bond-triggered 
+flexible, and self-powered e-skin can monitor the respiratory  hybrid nanofibrous membrane to solve this problem [ 68 ]. 
+signal of the human in real-time with detailed respiration  As shown in Fig.  3 h, the fabric sensing material consists 
+frequency, intensity, and interval information. They also  of a polymer electrolyte made of poly (vinyl alcohol) and 
+used the e-skin to comprehensively evaluate the obstructive  the superhydrophilic bis(trifluoromethane) sulfonamide 
+© The authors https://doi.org/10.1007/s40820-022-00911-8
+
+ 161 Page 13 of 28  Nano-Micro Lett. (2022) 14:161	
+lithium salt. The ­Ti C T  MXene is introduced into the  in the human skin surface humidity, the water loss of the 
+3 2 x
+polymer electrolyte to realize an ion confinement effect,  cuticle can be assessed, and some typical skin diseases 
+which helps the fabricated breathable pulse sensor obtain  can be preliminarily diagnosed based on the acquired skin 
+−1 high sensitivities of 5.5 ­kPa  in the 0 ~ 30 kPa measur‑ surface humidity information.
+−1 ing range and 1.5 ­kPa  in the 30 ~ 250 kPa measuring  To ensure reliable skin surface humidity measurements, 
+range. When used to detect the pulse signal of a human,  the interface environment between human skin and e-skin 
+the sensor can clearly distinguish dicrotic peaks, main  should be stable. The human body can ensure the relative 
+peaks, and predicrotic peaks from the waveform. Based  stability of the internal environment through a variety of 
+on these parameters, related cardiovascular diseases can  self-regulation mechanisms. Among many tissues and 
+be diagnosed. organs used to regulate the balance of the human internal 
+environment. Yeon et al. inspired by the sweat pore, pro‑
+posed a perforated e-skin that can efficiently assist in the 
+excretion of sweat from the sensor-skin interface [ 70 ]. As  3.5  Breathable e‑Skins for Skin Surface Humidity 
+shown in Fig.  4 b, the layout of the e-skin is similar to the  Sensing
+art of paper-cut. The holes on it allow the sweat to spread 
+out and help to maintain the normal physiological activities  The skin surface humidity is of great significance to 
+of the skin. Between the holes, some exquisitely designed  human health, which can be used to judge the development 
+kirigami patterns were made to increase the flexibility of the  of skin diseases and assess the metabolic level of humans. 
+e-skin and ensure the wearing’s comfortability. Besides, this  Current e-skin sensors are ideal for monitoring epidermal 
+breathable structure required a delicate sensor components  moisture because they fit tightly with the skin. However, 
+layout to ensure the smooth realization of humidity detection  to avoid the e-skin affecting the normal moisture changes 
+function. The acquired e-skin showed high moisture trans‑ of the skin, its breathability is essential. In this section, 
+mittance up to 94.54% (± 7.33%), indicating that the e-skin  we will introduce the recent excellent work in the field of 
+could perform its function even when the wearer sweating a  the breathable skin surface humidity e-skin, learning the 
+lot. Besides, a long-term skin surface humidity monitoring  preparation processes of their breathable structures, device 
+experiment (over one week) was successfully carried out  performances, and applications.
+without disturbing the daily activities of the wearer. With  To make the skin surface humidity condition as close 
+good mechanical reliability, conformability, and high detect‑ as possible to the bare skin condition, the e-skin needs to 
+ing performance, the sweat pore-inspired breathable e-skin  be breathable and as imperceptible as possible. Matsu‑
+is promising for long-term skin surface humidity monitoring  kawa et al. used a nanomesh-based e-skin to record the 
+in daily life. skin impedance and acquire the skin surface humidity [ 69 ] 
+(Fig.  4 a). With porous PVA nanomesh substrate coated 
+with a gold conductive layer, the e-skin achieved high 
+3.6  Breathable e‑Skins for Body Temperature Sensing water vapor permeability and high conductivity. Since 
+the nanomesh was soft, biocompatible, and flexible when 
+Body temperature is an important indicator of our health  attached to the human skin, the wearer did not feel the 
+conditions, and it is also an important indicator of the dis‑ existence of the e-skin, and no allergy or redness was dis‑
+ease or wound progression [ 71 ]. Body temperature is a phys‑ covered during the long-term wearing. Compared to the 
+iological parameter that changes continuously and dynami‑ rigid humidity detecting probes used clinically, the flexible 
+cally. Compared with a single measurement, continuous  nanomesh-based e-skin caused no significant pressure on 
+daily body temperature monitoring has more important clini‑ the skin surface to disturb the normal skin environment. 
+cal significance [ 72 ]. Temperature monitoring e-skins are  In addition, the breathable structure of the e-skin sensor 
+suitable for long-term continuous body temperature moni‑ ensured that the skin could normally emit moisture so that 
+toring, which has developed rapidly in recent years [ 73 – 75 ].  the measured humidity value was accurate. By using the 
+Since the range of body temperature is not large even under  nanomesh-based e-skin to continuously record the changes 
+different circumstances, the monitoring accuracy of the 
+1 3
+
+161 	   Page 14 of 28 Nano-Micro Lett. (2022) 14:161
+ 
+© The authors https://doi.org/10.1007/s40820-022-00911-8
+
+ 161 Page 15 of 28  Nano-Micro Lett. (2022) 14:161	
+graphene nanoplates. When used to monitor the human body  bioimpedance tattoo-like e-skin [ 55 ]. CVD graphene was 
+temperature, the e-skin shows high precision, high response  transferred onto the human skin with the help of PMMA 
+speed, and high stability in a 20 ~ 50 °C large detecting  and tattoo paper. The tattoo-like e-skin can realize intimate 
+range, which shows its capability in daily long-term body  location-stable contact with skin, which ensures that the 
+temperature monitoring. dynamic impedance can be measured stably to calculate 
+Due to their unique application environments, e-skins may  blood pressure while ensuring breathability and comfort. 
+face long-term sweat erosion and complex environmental  The e-skin can achieve an accuracy that exceeds previous 
+damage. This puts forward a high demand for their stability.  reports with 0.06 ± 2.5 mmHg (diastolic blood pressure) 
+In addition, to avoid affecting the breathability of the e-skin,  and 0.2 ± 3.6 mmHg (systolic blood pressure). Besides, the 
+it is necessary to design a breathable package so that it not  e-skin does not interfere with patients during daily wear, 
+only does not affect the temperature signal monitoring but  suitable for continuous blood pressure monitoring.
+also protects the device to the maximum extent. Luo et al.  Glucose concentration is an important physiological 
+proposed a superhydrophobic and breathable textile-based  parameter for the daily healthy diet and the management of 
+e-skin for body temperature sensing [ 75 ]. The preparation  diabetes. Compared to invasive glucose monitoring meth‑
+process of the e-skin is shown in Fig.  4 d. First, the elastic  ods, epidermal glucose monitoring with the e-skin is more 
+textile was modified by polydopamine. Second, the MXene  suitable for daily use. Li et al. proposed a skin-like, micro‑
+nanoplates were coated on the surface of the polydopamine  mesh-based e-skin for glucose monitoring [ 76 ]. As shown 
+with the help of plenty of functional groups on the MXene  in Fig.  4 e, first, the self-supporting Ni micromesh was fabri‑
+nanoplates that can absorb tightly on the polydopamine  cated by direct laser writing and selective electrodeposition 
+layer. Third, a PDMS layer was used to package the e-skin to  to form a breathable scaffold for the catalyst. Then, ­Cu O 
+2
+avoid the MXene being oxidized or destroyed while forming  was grown on the micromesh by electrochemical deposi‑
+a superhydrophobic layer. With high hydrophobic and high  tion. With a self-supporting structure, the e-skin shows 
+breathability, the e-skin was easy to clean and comfortable  high conformability to the skin surface. Here is the working 
+to wear. With the excellent photo-electro-thermal response,  mechanism of the e-skin: the sweat glucose is converted 
+the breathable e-skin showed a wide temperature measur‑ to gluconolactone by ­Cu O, resulting in a current change 
+2
+ing range, high sensitivity, and high repeatability, meaning  according to the glucose concentration. The current change 
+that it was competitive in smart wearable body temperature  can be measured by the e-skin. During the real-time glucose 
+monitoring devices. concentration monitoring, the e-skin shows high sensitiv‑
+−2 −1 ity (15,420 µA ­cm  ­mM ), low-detecting limit (50 nM), 
+and fast response time (< 2 s), which shows the breathable 
+glucose sensor is qualified for the daily glucose monitoring. 3.7  Other Breathable e‑Skin Sensors
+Continuous monitoring of cardiac sound is crucial for the 
+prevention and diagnosis of cardiovascular diseases. Cardiac  In addition to the breathable e-skin for the daily monitoring 
+sound is characterized by low frequency and low intensity,  of several physiological parameters listed above, there are 
+and its long-term monitoring requires high sensitivity and  also ingeniously designed breathable e-skin sensors for the 
+high comfort for breathable e-skins. Nayeem et al. developed  daily monitoring of many other physiological signals such 
+an all-nanofiber-based breathable mechano-acoustic sensor  as blood pressure, glucose, cardiac sound, and human voice 
+for ultrasensitive long-term cardiac sound monitoring [ 77 ].  [ 55 ,  76 – 79 ]. In this section, we will introduce several typical 
+The sensor consists of three layers of nanofibers (Fig.  4 f).  breathable e-skin sensors for other physiological information 
+The top and bottom electrode layers were made of Au-coated  acquisition in daily life.
+polyurethane nanomesh, and a PVDF nanomesh was used  Continuous monitoring of blood pressure in daily life is 
+as the piezoelectric layer. The all-nanofiber-based structure  important for analyzing a variety of cardiac health condi‑
+shows excellent breathability, which can be reflected by its  tions. Realizing non-obtrusive blood pressure monitoring 
+−2 −1  ­d  water vapor permeability. With ultra-high  12.4 kg ­m is still a meaningful and challenging task. To achieve high 
+−1 sensitivity (10,050.6 mV ­Pa ) in the low-frequency range  precision, non-obtrusive daily continuous blood pressure 
+(< 500 Hz), the e-skin realized long-term (10 h) monitoring  monitoring, Kireev et al. proposed a breathable graphene 
+1 3
+
+161 	   Page 16 of 28 Nano-Micro Lett. (2022) 14:161
+of the cardiac sound with a high signal-to-noise ratio (SNR)  lens successfully recorded the signals of the rabbit without 
+(40.9 dB), which shows its potential in daily cardiovascular  causing abnormalities in its eye. The breathable contact lens 
+health monitoring. sensor can be used to diagnose retinopathy and can serve as 
+Speaking is an important way for people to interact with  a good platform for carrying more physiological sensors. 
+the outside world. For some disabled people, even though  Besides, it is suitable for daily use and it can place a less 
+they can’t vocalize, their larynxes can vibrate, which may  psychological burden on the wearer than traditional oph‑
+be further converted into meaningful sound messages. The  thalmic devices.
+human voice sensor is a vital tool to accomplish this trans‑ In summary, taking typical epidermal physiological sig‑
+formation process. Since people often interact with the out‑ nals as examples, the development of breathable e-skin 
+side world in daily life, the voice sensor needs to be comfort‑ sensors in recent years is introduced. Based on the sensing 
+able to wear and breathable. Chao et al. realized a breathable  requirements of different physiological signals, we summa‑
+MXene-protein e-skin for ultrasensitive human voice detec‑ rized their characteristics including sensor types, breathabil‑
+tion [ 78 ]. The schematic illustration of the breathable e-skin  ity, materials, and fabrication methods. To facilitate parallel 
+is shown in Fig.  4 g. The porous substrate of the e-skin was  comparison, the characteristics of those typical breathable 
+made from natural silk obtained from the silkworm by elec‑ e-skin sensors are listed in Table  2 . Because the suitable 
+trospinning. The ­Ti monitoring sites of different physiological signals are differ‑ C T  MXene nanoplates were attached 
+3 2 x
+ent, the monitoring methods of the same physiological signal  to the silk substrate through supramolecular interactions and 
+may also different, and the breathability, materials, and fab‑ formed the MXene-silk sensing layer. The electrode layer 
+rication methods for specific sensors need to be individually  was made of silk substrate with MXene-ink printed electrode 
+designed. Besides, for daily long-term physiological signal  pattern. After the face-to-face assembly, the two layers were 
+monitoring, like the e-skin electrode, the sensing materi‑ integrated and formed a breathable e-skin for human voice 
+als need good breathability, wear comfort, and stability. To  monitoring. The sensor presented ultrahigh sensitivity in a 
+meet the above development requirements and ensure good  wide range (0 ~ 39.3 kPa) and good mechanical durability 
+breathability, Electrospinning is becoming the preferred  (remains stable after 10,000 cycles of loading–unloading 
+choice of breathable e-skin sensors. tests), which was promising in daily human voice detecting.
+Contact lenses, which are in direct contact with eyeballs 
+and tears, are a very promising e-skin platform that can be 
+4  Breathable e‑Skin Systems endowed with many functions for daily health monitoring. 
+However, the human eye is a relatively fragile part, which 
+has high requirements for the irritation-free design, the bio‑ Breathable e-skin systems for daily health monitoring are 
+compatible material, and the breathable structures of contact  becoming a research hotspot these years. To become more 
+lenses. Wei et al. proposed a breathable and irritation-free  suitable for long-term use in daily life, breathable e-skins 
+contact lens sensor based on metal-coated nanomesh to real‑ have gradually developed from the device level that can 
+ize long-term electroretinogram recording during daily wear  only detect physiological signals to the system level. This 
+[ 79 ]. A thin-film nanomesh prepared by the electrospinning  trend has led to several important changes: (1) The breath‑
+polyacrylonitrile (PAN) was used to form a transparent and  able e-skin can detect more kinds of physiological signals 
+breathable substrate suitable for prolonged contact with the  by integrating a variety of breathable sensors and electrodes 
+eyeball. After being coated by an Au layer, the Au-PAN  [ 22 ,  80 – 85 ]. (2) The breathable e-skins are becoming more 
+−1  resistance at 95.1% trans‑ nanomesh shows ~ 51.23 Ω ­sq integrated. Apart from the basic physiological signal moni‑
+mittance. To increase its adhesion to the hydrated hydrogel,  toring function, they are endowed with signal storage, signal 
+a layer of PEDOT:PSS was coated on the Au-PAN nano‑ processing, signal transmission, disease treatment, and other 
+mesh by the electrochemical deposition to form a connec‑ functions [ 71 ,  86 – 90 ], which are suitable for daily independ‑
+tor between the nanomesh and the hydrogel (Fig.  4 h). The  ent work to realize the in-situ sensing-processing-diagnosis 
+acquired breathable contact lens shows high breathability,  capability. (3) e-Skins are getting smarter. They can use 
+good wettability, and biocompatibility. When used to moni‑ intelligent algorithms to classify or diagnose physiologi‑
+tor the electroretinogram signals in a rabbit’s eye, the contact  cal signals to assess health conditions and even diagnose 
+© The authors https://doi.org/10.1007/s40820-022-00911-8
+
+ 161
+3 Summary of the breathability, materials, and fabrication methods of the typical breathable e-skin sensors listed in Sect. 
+Table 2   
+1 3
+
+161 	   Page 18 of 28 Nano-Micro Lett. (2022) 14:161
+diseases [ 5 ,  31 ,  91 – 93 ]. In the following sections, we will  In addition to monitoring multiple physiological sig‑
+introduce the breathable e-skin systems developed with these  nals, the breathable e-skin can be integrated with a variety 
+three changes and show their advantages in daily healthcare. of functions including display and information interaction 
+to realize a daily physiological signal monitoring system. 
+Based on their ingenious large-scale multifunctional textile  4.1  Multifunctional Breathable e‑Skin Systems
+[ 80 ], He et al. realized a versatile textile-based breathable 
+e-skin system [ 84 ]. As shown in Fig.  5 b, by integrating  Human health assessment and disease diagnosis are usually 
+the fiber sensor, the textile display, the fiber battery, and  not based on a single physiological signal, but on a combi‑
+the microprocessor, the realized textile-based breathable  nation of multiple physiological signals to conclude. Facing 
+e-skin can realize a whole physiological signal monitoring- the need of monitoring a variety of physiological signals of 
++ 2+ processing-diagnosis function. The real-time ­Na  and ­Ca   the human body and the demand of performing other func‑
+concentration in human sweat can be recorded and displayed  tions, the breathable e-skins are becoming multifunctional 
+on the textile e-skin, and the physiological information can  [ 22 ,  75 ,  80 – 84 ]. In this section, taking the typical breath‑
+be transferred to mobile devices or hospitals for further  able e-skin systems developed in recent years as examples, 
+processing. Besides, the entire system can be integrated  we will discuss the multifunctional challenges faced by the 
+with garments easily and its applications can be extended  breathable e-skin and corresponding solutions, and introduce 
+to processing other physiological signals, meaning that it  design ideas and characteristics of multifunctional breath‑
+is suitable for daily long-term multiple physiological signal  able e-skin systems.
+monitoring. The textile-based breathable e-skin system is  To realize the monitoring of various physiological signals, 
+promising in personal health management in daily life and is  the breathable e-skin system has been endowed with more 
+especially useful for the early diagnosis of diseases. functions. On the one hand, this requires that the sensitivity 
+and range of sensors on the e-skin can meet the monitoring 
+4.2  Integrated Breathable e‑Skin Systems needs of various physiological signals. On the other hand, in 
+addition to the range of measurements, the e-skin needs to 
+be sensitive only to desired physiological signals and insen‑ The integration of breathable e-skin is becoming a develop‑
+sitive to irrelevant ones. To realize an all-in-one breathable  ing trend in recent years. During the long-term daily wearing 
+e-skin with anti-jamming capability, Liu et al. proposed a  process, if the collected physiological signals can be pro‑
+multifunctional e-skin system based on strain sensing which  cessed in situ, or if the e-skin system can realize in situ diag‑
+is insensitive to pressure and bending [ 83 ]. The e-skin sys‑ nosis and treatment, the wearer will get great convenience. 
+tem was prepared through the following steps: First, the con‑ In fact, in addition to the basic physiological signal monitor‑
+ductive fibers were proposed by growing copper on viscose  ing function, more and more breathable e-skin systems are 
+fibers through a polymer-assisted metal deposition method  endowed with signal processing, transmission, diagnosis, 
+(Fig.  5 a). Second, the conductive fibers were woven into  treatment, self-supply, or other functions, and the degree 
+breathable strain sensors by an embroidery machine. The  of integration is greatly improved [ 72 ,  86 – 89 ]. In this sec‑
+device performance can be flexibly adjusted by the design  tion, we will introduce two typical full-integrated breathable 
+of the fiber size and the weaving method. The acquired  e-skin systems and demonstrate the advantages of improved 
+e-skin system shows high sensitivity and a large measuring  integration for breathable e-skins.
+range to strain (with a gauge factor up to 49.5 in 0 ~ 100%).  Zhang et al. realized a fully integrated breathable e-skin 
+More significantly, it can neglect pressure and bending noise  system that could be used in long-term monitoring and trans‑
+signals. As shown in Fig.  5 a, the breathable e-skin could  ferring of the body temperature and motions [ 89 ]. Based on 
+detect a variety of strain-based physiological signals includ‑ paper made from cellulose microfibers combined with gra‑
+ing chewing, speaking, breath, finger bending, walking, etc.  phene oxide, the realized graphene-cellulose paper acquired 
+This multifunctional, anti-jamming, and breathable e-skin  good washability and breathability. The temperature sen‑
+system is ideal for detecting physiological signals in daily  sor and pressure sensor were made on the same piece of 
+life with complex environmental interferences. graphene-cellulose paper by the laser-scribing method and 
+© The authors https://doi.org/10.1007/s40820-022-00911-8
+
+ 161 Page 19 of 28  Nano-Micro Lett. (2022) 14:161	
+1 3
+
+161 	   Page 20 of 28 Nano-Micro Lett. (2022) 14:161
+the thermal reduction method, respectively. To realize a  diagnosis and wound treatment capabilities, which shows 
+fully integrated system with long-term signal sensing and  its significant development prospects in patient monitoring, 
+transferring abilities, as shown in Fig.  5 c, they integrated  human–computer interaction, and other fields.
+the two sensors, an FPCB, and a microcontroller to form a 
+breathable e-skin system with physiological signal sensing, 
+processing, and transferring abilities. The acquired tem‑ 4.3  Intelligent Breathable e‑Skin Systems
+perature and motion signals can be further transferred wire‑
+lessly to a smartphone for display. With high breathability  The development of artificial intelligence provides a new 
+and washability, the e-skin system can be worn for at least  opportunity for e-skin systems to be widely used in daily 
+7 days without causing discomfort to the wearer or block‑ life. Traditional e-skin systems may have the ability of physi‑
+ing the release of sebum and sweat, while the system itself  ological signal monitoring, storage, and transmission, but 
+maintains good performance. The fully integrated breathable  most of them have shortcomings in signal processing and 
+e-skin system may create a new era of long-term, daily-use  feedback. If an e-skin system cannot interact with the wearer 
+healthcare electronics. and analyze the collected signals efficiently, it may hinder 
+If the breathable e-skin system can not only monitor and  its large-scale application. Facing these problems, many 
+diagnose physiological signals but also has disease treat‑ researchers are trying to intelligently process the physiologi‑
+ing ability, the constructed doctor-like system is of great  cal signals collected by the e-skin to improve the physiologi‑
+significance for the rehabilitation of disease in daily life  cal signal processing efficiency and assist doctors in disease 
+and can alleviate the shortage of medical resources. Gong  diagnosis, or try to enable e-skin systems to autonomously 
+et al. developed a breathable e-skin system with tempera‑ give feedback to the wearer [ 5 ,  31 ,  90 – 93 ]. In this section, 
+ture sensing and wound infection treatment capabilities [ 72 ].  we will introduce typical research on the breathable e-skin 
+As shown in Fig.  5 d, the temperature sensing module of  system with intelligent diagnosis function and the e-skin 
+the e-skin was prepared by screen printing silver ink on the  system with intelligent feedback capability.
+breathable substrate. The substrate was made from cross- The analysis of human attention through the EEG signal 
+linked electrospinning moxifloxacin-hydrochloride-loaded  is of great significance for driving safety-enhancing, fatigue 
+poly (N-isopropyl acrylamide-co–N-methylol acrylamide)  monitoring, and psychological state assessment. To improve 
+nanomesh with thermo-responsive. The breathable e-skin  the efficiency of signal analysis, Qiao et al. combined the 
+system was attached to the wound to monitor temperature  breathable graphene nanomesh e-skin and the intelligent 
+changes in real-time and wirelessly transmits the information  algorithm for EEG analysis to form an intelligent breathable 
+to a smartphone. The working principle of the e-skin system  EEG system [ 5 ]. By using the breathable graphene nano‑
+is as follows: The e-skin system is attached to the wound,  mesh mentioned in Sect.  2.4  as the EEG electrode to collect 
+and the temperature sensing module on it can monitor the  the high-quality EEG signal [ 31 ], and using a multilayer 
+body temperature continuously and transmit it wirelessly  convolutional neural network (CNN) to analyze the EEG 
+to a smartphone in real-time. Once the temperature sens‑ signals intelligently. As shown in Fig.  5 e, since the EEG 
+ing module detects an abnormal temperature change (which  signal has low intensity and contains both time domain and 
+indicates that the wound is infected), the control module  frequency domain information, a concatenated CNN model 
+of the e-skin system makes the heating module heat the  was applied to improve the accuracy of the EEG diagnosis. 
+thermo-responsive electrospinning substrate to release the  By dividing people’s attention into five levels and intelli‑
+moxifloxacin hydrochloride, which can eliminate the wound  gently classified EEG signals recorded by breathable e-skin 
+infection. In particular, the breathable and biocompatible  electrodes, the classification accuracy of the intelligent 
+e-skin is particularly suited for use at the wound site, and its  breathable e-skin system can reach 99% for training sets and 
+heating power facilitates wound healing in addition to aiding  48.7% for test sets. This intelligent breathable e-skin system 
+drug release. Besides, temperature modules on the e-skin  may shed light on the “doctor-like” disease early warning 
+can be used for heating and sensing temperature at the same  system and the daily-use mental health monitoring systems.
+time, facilitating the realization of a multifunctional sys‑ In Sect.  4.2 , we have mentioned integrated breathable sys‑
+tem. This doctor-like system has both physiological signal  tems that can transfer the physiological signal wirelessly to a 
+© The authors https://doi.org/10.1007/s40820-022-00911-8
+
+ 161 Page 21 of 28  Nano-Micro Lett. (2022) 14:161	
+smartphone for waveform display or further processing [ 72 ,  the breathability of e-skin with a higher density of functions 
+89 ]. However, if there is a breathable e-skin system that can  or modules and (2) how to choose the appropriate wearing 
+interact with humans and direct feedback analysis results of  position and system layout under the condition of higher 
+the acquired physiological information, such a closed-loop  integration, so as to ensure the simultaneous high-quality 
+system would greatly improve the flexibility of use. Sim  collection of various physiological signals, etc. In the next 
+et al. used the metal oxide semiconductor nanomembrane to  section, we will discuss some aspects of the development of 
+form an imperceptible and breathable closed-loop e-skin sys‑ breathable e-skin for physiological signal monitoring.
+tem [ 93 ]. As shown in Fig.  5 f, the breathable e-skin system 
+consists of ReRAM and FET arrays, distributed temperature 
+5  Discussion and Outlook sensors, UV sensors, strain sensors, and thermal stimulators. 
+All devices are flexible and were prepared on a breathable 
+IZO nanomembrane and connected by the serpentine Au  In the above sections, we systematically introduce breathable 
+electrodes. The system could monitor physiological signals  e-skins for daily physiological signal monitoring developed 
+including body temperature, motions, and UV light which  in recent years. By dividing them into breathable e-skin 
+had a great impact on human health. Most importantly, it  electrodes, breathable e-skin sensors, and breathable e-skin 
+demonstrated outstanding capabilities in human–machine  systems, we introduce them in detail, sort out their design 
+interaction. By detecting and analyzing human motions,  ideas, manufacturing processes, performances, and applica‑
+the e-skin system could control a robotic hand with high  tions and show their advantages in long-term physiological 
+sensitivity. Besides, if the e-skin system was attached to a  signal monitoring, respectively.
+prosthesis to touch objects or people with different tempera‑ In the above sections, the characteristics of breathable 
+tures, the feeling of temperature “perceived” by the pros‑ e-skins in recent years are summarized through a parallel 
+thesis will be given to the human by the thermal stimulator  comparison of different physiological signal monitoring 
+in the breathable e-skin attached to the human skin. This  types, breathabilities, materials, and fabrication methods 
+closed-loop smart e-skin system is not only suitable for daily  of some typical examples. In the fabrication methods and 
+wear because of its breathability and imperceptibility but can  materials, an outstanding feature is that electrospinning fab‑
+also realize timely feedback of acquired information, which  rics based on organic materials play an important role in 
+shows its promising prospects in human–machine interfaces  breathable e-skin electrodes and sensors. This is attributed 
+for healthcare. to the fast, simple, low-cost, and customizable character‑
+In summary, in view of the systematic development trend  istics of the electrospinning process; breathability comes 
+of breathable e-skin, new types of breathable e-skin sys‑ from the porous structure of the electrospun fabrics and 
+tems with multifunction, integration, or intelligence for  wear comfort and conformal attachment brought by the thin 
+daily health monitoring are introduced with examples. The  and soft characteristics of the electrospun fabrics. Moreo‑
+systematic development trend of breathable e-skin enables  ver, good attachment of the electrospun fabrics may lead to 
+e-skin to have more physiological signal monitoring capa‑ better signal monitoring quality and device stability, which 
+bilities and integrate more functions, while the e-skin sys‑ helps to avoid the interference of the wearing of e-skin to 
+tem may collect, process, and transmit signals in situ and  human daily activities and avoid the interference of human 
+even realize intelligent diagnosis or act as human–computer  daily activities to the performance of e-skin. Apart from the 
+interaction, which adapts to the needs of daily long-term use  electrospinning e-skin, substrate-free or tattoo-like e-skin 
+of e-skin. However, our classification of systems into three  has also made great progress because it is easier to achieve 
+categories does not mean that each e-skin system has only a  breathable and senseless attachment to the skin. However, 
+specific set of characteristics. In recent years, many excellent  facing the daily long-term wearing, they must overcome the 
+reports on breathable e-skin systems have made breathable  reduction of durability and stability that comes from the lack 
+e-skins combine two or three of these characteristics includ‑ of substrate, as well as overcome the challenges of process‑
+ing multifunctional, integrated, and intelligent, not just one.  ing difficulty and device reliability.
+In addition, the systematic trend brings new problems to be  For the breathability of e-skin, in Sects.  2  and  3 , we 
+solved for breathable e-skin, including: (1) how to ensure  compared them in Tables  1  and  2 , respectively. During 
+1 3
+
+161 	   Page 22 of 28 Nano-Micro Lett. (2022) 14:161
+comparisons, we found that there are various evaluation  of preparation technology, their costs have been reduced 
+methods for the breathability of e-skin, and the standards  compared with traditional precious metal materials, etc., 
+are not uniform. Although a considerable amount of work  both in terms of materials and fabricating methods; (5) 
+has been done to evaluate breathability through water vapor  their biocompatibility and stability are consistent with 
+permeability, experimental conditions for measuring the  daily long-term skin wear requirements. In conclusion, 
+breathability of e-skin by water vapor also varied. For exam‑ with the development of related materials, the breathable 
+ple, some work uses ambient temperature and pressure to  e-skin based on novel low-dimensional nanomaterials is 
+test vapor permeability, while others facing wearable appli‑ expected to develop vigorously in the next period. Based 
+cations, use the body temperature to test vapor permeabil‑ on the analysis of various advanced breathable e-skin in 
+ity. Besides, the environment humidity, test equipment, and  recent years, we believe that the future breathable e-skins 
+recording time are different. This prevents the evaluation of  may have the following three important development 
+breathability and parallel comparison of e-skins with differ‑ directions: (1) The breathable e-skins are becoming more 
+ent breathability. Moreover, for parameters used to evalu‑ multifunctional to monitor, process, transfer, or even ana‑
+ate the breathability of the e-skin, such as sweat transport  lyze more kinds of signals. (2) The breathable e-skins 
+rate (STR) and vapor transmission rate (VTR), at present,  are becoming more systematic. With a higher integration 
+there are more VTR tests for breathable e-skin than STR  level, the e-skin can complete a variety of tasks in situ and 
+tests. This is partly due to the difficulty of carrying out STR  become an all-in-one system. (3) The breathable e-skins 
+tests. However, STR may be a better parameter to reflect  are becoming smarter. Their information processing effi‑
+the breathability of the e-skin, which is suitable for daily  ciency will be greatly improved and the function of signal 
+long-term wear application scenarios. Generally speaking,  diagnosis can be realized. In the following sections, we 
+for film breathability tests, ISO 9239–1995 is the widely  are no longer limited to the examples of the breathable 
+recognized test standard that has been referred to by many  e-skin, but take the recently advanced e-skin for physio‑
+researchers. At present, increasing the porosity of the sub‑ logical signal monitoring as examples to forecast the three 
+strate is a widely used method to improve the breathability  development directions and discuss their main challenges, 
+of the e-skin. The subsequent research on the layout of com‑ respectively.
+ponents and circuits on the substrate as well as increasing 
+the porosity while ensuring the reliability and stability of the 
+e-skin are the current research focus. 5.1  Breathable e‑Skins are Becoming Multifunctional
+It can be seen from the above sections that novel low-
+dimensional nanomaterials such as graphene, carbon  For a variety of physiological signals that require daily 
+nanotubes, and MXene play an important role in the study  monitoring, breathable e-skin can be used as a platform to 
+of breathable e-skin due to their excellent performances  carry multiple physiological signal sensors and electrodes, 
+[ 5 ,  13 ,  31 ,  36 ,  37 ,  49 ,  55 ,  67 ,  68 ,  74 ,  75 ,  78 ,  89 ]. Apart  which can greatly improve the monitoring efficiency. It can 
+from their advantages, the common advantages of the  assess the health status of people or give early warning 
+novel low-dimensional nanomaterials in the application  of diseases by analyzing multiple physiological signals 
+of breathable e-skin include: (1) They have many physical  comprehensively, which is beneficial to improve the accu‑
+and chemical advantages when used as electrode conduc‑ racy and reliability of the analysis made by the breathable 
+tive materials, including the large specific surface area and  e-skin. However, as e-skins are becoming multifunctional, 
+flexibility suitable for the adhesion to a flexible interface  some key problems are gradually exposed. Lin et al. pro‑
+like human skin, which helps reduce the electrode–skin  posed that the e-skin with more functions should consider 
+contact impedance and ensuring high-quality signal acqui‑ the reasonable layout of modules on the e-skin platform to 
+sition; (2) easy to realize liquid phase processing, suitable  avoid mutual signal interference [ 94 ] (Fig.  6 a). Besides, in 
+for dip coating, spraying, and other simple processes to  daily long-term wearing applications, the interference of 
+fabricate breathable e-skin; (3) good electrical proper‑ human daily activities and the external environment to the 
+ties, suitable for acting as conductive materials of e-skin  monitored signals should be fully considered in the design 
+electrodes, sensors, and systems; (4) due to the progress 
+© The authors https://doi.org/10.1007/s40820-022-00911-8
+
+ 161 Page 23 of 28  Nano-Micro Lett. (2022) 14:161	
+to achieve a small volume e-skin with a complete in-situ  e-skin system, its integration degree is also gradually 
+1 3
+
+161 	   Page 24 of 28 Nano-Micro Lett. (2022) 14:161
+6  Conclusion signal monitoring-processing-feedback close-loop. Efficient 
+signal processing largely depends on the system with a larger 
+volume and higher computing power at the back end. In  In this paper, we systematically review the recent develop‑
+addition, power consumption is also an important obstacle  ment of breathable e-skins for daily physiological monitor‑
+to the real-time processing and wireless transmission of the  ing. The typical breathable e-skins are introduced and dis‑
+signals monitored by the e-skin. With the gradual solution  cussed in detail by dividing them into electrodes, sensors, 
+of these problems, highly integrated and systematic e-skin  and systems, and we sort out their design ideas, manufactur‑
+will be able to realize the daily health management and early  ing processes, performances, applications, and state their 
+warning functions similar to doctors and play an important  advantages in long-term physiological signal monitoring. 
+role in human–machine interaction. Moreover, the new development directions and challenges 
+of the breathable e-skin are discussed and prospected. It is 
+believed that with the continuous development of breathable 
+e-skin, a multifunctional, highly integrated, and intelligent  5.3  Breathable e‑Skins are Becoming Smarter
+breathable e-skin with the complete and efficient “signal 
+sensing-transmission-diagnosis” capability will be devel‑ The human body produces a large number of physiological 
+oped and will play a critical role in daily long-term health‑ signals all the time. Since many health problems and dis‑
+care like a real doctor. eases are not necessarily detected by physiological signal 
+monitoring in a specific period, a breathable e-skin suitable 
+Acknowledgements   This work was supported by the National Key 
+for daily long-term physiological signal monitoring has huge 
+R&D Program 2021YFC3002201 of China, the National Natural 
+advantages over simple hospital checkups. However, in the  Science Foundation (U20A20168, 61874065, 51861145202) of 
+China. The authors are also thankful for the support of the Research  face of massive physiological signal analysis requirements, 
+Fund from the Beijing Innovation Center for Future Chip, the Inde‑ the information processing efficiency and power consump‑
+pendent Research Program of Tsinghua University (20193080047).
+tion of traditional e-skins are not adequate. To resolve such 
+contradictions, some intelligent algorithms with high infor‑ Funding   Open access funding provided by Shanghai Jiao Tong 
+University. mation processing efficiency and low power consumption 
+have been developed to give intelligent detection or signal 
+Open Access   This article is licensed under a Creative Commons  processing capability to wearable e-skins [ 8 ,  93 ] (Fig.  6 e). 
+Attribution 4.0 International License, which permits use, sharing, 
+In contrast, the problems that need to be solved during the  adaptation, distribution and reproduction in any medium or format, 
+development of intelligent e-skin systems are emerging. For  as long as you give appropriate credit to the original author(s) and 
+the source, provide a link to the Creative Commons licence, and  example, due to the limitation of data volume and power 
+indicate if changes were made. The images or other third party 
+consumption, it is still a challenge to realize real-time signal 
+material in this article are included in the article’s Creative Com‑
+processing by intelligent algorithms. Whether it is possible  mons licence, unless indicated otherwise in a credit line to the 
+material. If material is not included in the article’s Creative Com‑ or necessary to rapidly process and feedback physiological 
+mons licence and your intended use is not permitted by statutory  information at every moment is a problem to be considered. 
+regulation or exceeds the permitted use, you will need to obtain 
+In addition, if in-situ processing or diagnosis of physiologi‑ permission directly from the copyright holder. To view a copy of 
+cal signals is realized by means such as edge computation,  this licence, visit  http://​creat​iveco​mmons.​org/​licen​ses/​by/4.​0/ .
+whether the obtained conclusions meet the requirements of 
+medical diagnosis remains to be studied. Moreover, to apply 
+intelligent algorithms in wearable e-skins, it is necessary to 
+References
+know how to simultaneously reduce power consumption and 
+improve computing efficiency. With the continuous solution  	1.	 S. Zhang, S. Li, Z. Xia, K. Cai, A review of electronic skin: 
+of these problems and the development of the intelligent  soft electronics and sensors for human health. J. Mater. Chem. 
+8 B  (5), 852–862 (2020).  https://​doi.​org/​10.​1039/​c9tb0​2531f degree of the breathable e-skin, it may be possible to real‑
+	2.	 J.C. Yang, J. Mun, S.Y. Kwon, S. Park, Z. Bao et al., Electronic  ize the daily-use breathable e-skin with medical diagnostic 
+skin: recent progress and future prospects for skin-attachable 
+ability. devices for health monitoring, robotics, and prosthetics. Adv. 
+© The authors https://doi.org/10.1007/s40820-022-00911-8
+
+ 161 Page 25 of 28  Nano-Micro Lett. (2022) 14:161	
+3 31 Technol.  (11), 1800178 (2018).  https://​doi.​org/​10.​1002/​admt.​ Mater.  (48), 1904765 (2019).  https://​doi.​org/​10.​1002/​adma.​
+20180​0178 20190​4765
+	16.	 C. Hou, Z. Xu, W. Qiu, R. Wu, Y. Wang et al., A biodegrada‑ 	3.	 W. Navaraj, C. Smith, R. Dahiya, Chapter 5—E-skin and wear‑
+ble and stretchable protein-based sensor as artificial electronic  able systems for health care.  Wearable Bioelectronics , pp. 
+15 skin for human motion detection. Small  (11), 1805084  133-178 (2020).  https://​doi.​org/​10.​1016/​B978-0-​08-​102407-​
+(2019).  https://​doi.​org/​10.​1002/​smll.​20180​5084 2.​00006-0
+	17.	 J. Oh, S.G. Jang, S. Moon, J. Kim, H.K. Park et al., Air-per‑ 	4.	 T.P.D. Shareena, D. Mcshan, A.K. Dasmahapatra, P.B. 
+meable waterproofing electrocardiogram patch to monitor full- Tchounwou, A review on graphene-based nanomaterials in 
+11 day activities for multiple days. Adv. Healthc. Mater.  (12),  biomedical applications and risks in environment and health. 
+10 2102703 (2022).  https://​doi.​org/​10.​1002/​adhm.​20210​2703 Nano-Micro Lett.  , 53 (2018).  https://​doi.​org/​10.​1007/​
+s40820-​018-​0206-4 	18.	 L. Guo, L. Sandsjö, M. Ortiz-Catalan, M. Skrifvars, Sys‑
+tematic review of textile-based electrodes for long-term and  	5.	 Y. Qiao, X. Li, J. Wang, S. Ji, T. Hirtz et al., Intelligent and 
+continuous surface electromyography recording. Text. Res. J.  multifunctional graphene nanomesh electronic skin with high 
+90 18 (2), 227–244 (2020).  https://​doi.​org/​10.​1177/​00405​17519​ comfort. Small  (7), 2104810 (2022).  https://​doi.​org/​10.​
+858768 1002/​smll.​20210​4810
+	19.	 A.J. Golparvar, M.K. Yapici, Graphene smart textile-based‑ 	6.	 Y. Lee, J. Park, A. Choe, S. Cho, J. Kim et al., Mimicking 
+wearable eye movement sensor for electro-ocular control  human and biological skins for multifunctional skin electron‑
+166 30 and interaction with objects. J. Electrochem. Soc.  (9),  ics. Adv. Funct. Mater.  (20), 1904523 (2020).  https://​doi.​
+B3184–B3193 (2019).  https://​doi.​org/​10.​1149/2.​02419​07jes org/​10.​1002/​adfm.​20190​4523
+	20.	 G. Acar, O. Ozturk, A.J. Golparvar, T.A. Elboshra, K.  	7.	 C.G. Núñez, L. Manjakkal, R. Dahiya, Energy autonomous 
+Böhringer et al., Wearable and flexible textile electrodes for  electronic skin. Npj Flex. Electron. (2019).  https://​doi.​org/​10.​
+8 biopotential signal monitoring: a review. Electronics  (5),  1038/​s41528-​018-​0045-x
+479 (2019).  https://​doi.​org/​10.​3390/​elect​ronic​s8050​479 	8.	 B. Shih, D. Shah, J. Li, T.G. Thuruthel, Y.L. Park et al., Elec‑
+	21.	 O. Yue, X. Wang, X. Liu, M. Hou, M. Zheng et al., Spider- tronic skins and machine learning for intelligent soft robots. 
+5 web and ant-tentacle doubly bio-inspired multifunctional  Sci. Robot.  (41), eaaz9239 (2020).  https://​doi.​org/​10.​1126/​
+self-powered electronic skin with hierarchical nanostructure.  sciro​botics.​aaz92​39
+8 Adv. Sci.  (15), 2004377 (2021).  https://​doi.​org/​10.​1002/​ 	9.	 J. Wei, J. Xie, P. Zhang, Z. Zou, H. Ping et al., Bioinspired 3D 
+advs.​20200​4377 printable, self-healable, and stretchable hydrogels with multi‑
+	22.	 Y. Shi, X. Wei, K. Wang, D. He, Z. Yuan et al., Integrated  ple conductivities for skin-like wearable strain sensors. ACS. 
+13 all-fiber electronic skin toward self-powered sensing sports  Appl. Mater. Interfaces  (2), 2952–2960 (2021).  https://​doi.​
+13 systems. ACS. Appl. Mater. Interfaces  (42), 50329–50337  org/​10.​1021/​acsami.​0c195​12
+(2021).  https://​doi.​org/​10.​1021/​acsami.​1c134​20 	10.	 Y.W. Cai, X.N. Zhang, G.G. Wang, G.Z. Li, D.Q. Zhao et al., 
+	23.	 M. Li, K. Chang, W. Zhong, C. Xiang, W. Wang et al., A  A flexible ultra-sensitive triboelectric tactile sensor of wrin‑
+highly stretchable, breathable and thermoregulatory elec‑ kled PDMS/MXene composite films for E-skin. Nano Energy 
+81 tronic skin based on the polyolefin elastomer nanofiber  , 105663 (2021).  https://​doi.​org/​10.​1016/j.​nanoen.​2020.​
+486 membrane. Appl. Surf. Sci.  , 249–256 (2019).  https://​ 105663
+doi.​org/​10.​1016/j.​apsusc.​2019.​04.​271 	11.	 Y. Zheng, R. Yin, Y. Zhao, H. Liu, D. Zhang et al., Conductive 
+	24.	 Y. Zhao, Y. Huang, W. Hu, X. Guo, Y. Wang et al., Highly  MXene/cotton fabric based pressure sensor with both high 
+sensitive flexible strain sensor based on threadlike span‑ sensitivity and wide sensing range for human motion detection 
+420 dex substrate coating with conductive nanocomposites for  and E-skin. Chem. Eng. J.  , 127720 (2021).  https://​doi.​org/​
+28 wearable electronic skin. Smart Mater. Struct.  (3), 035004  10.​1016/j.​cej.​2020.​127720
+(2019).  https://​doi.​org/​10.​1088/​1361-​665X/​aaf3ce 	12.	 X. Peng, K. Dong, C. Ye, Y. Jiang, S. Zhai et al., A breathable, 
+	25.	 X. Peng, K. Dong, C. Ning, R. Cheng, J. Yi et al., All- biodegradable, antibacterial, and self-powered electronic skin 
+nanofiber self-powered skin-interfaced real-time respiratory  based on all-nanofiber triboelectric nanogenerators. Sci. Adv. 
+6 monitoring system for obstructive sleep apnea-hypopnea  (26), eaba9624 (2020).  https://​doi.​org/​10.​1126/​sciadv.​aba96​
+31 syndrome diagnosing. Adv. Funct. Mater.  (34), 2103559  24
+(2021).  https://​doi.​org/​10.​1002/​adfm.​20210​3559 	13.	 S.K. Ameri, R. Ho, H. Jang, L. Tao, Y. Wang et al., Graphene 
+11 	26.	 Y.J. Hong, H. Jeong, K.W. Cho, N. Lu, D.H. Kim, Wearable  electronic tattoo sensors. ACS Nano  (8), 7634–7641 (2017). 
+and implantable devices for cardiovascular healthcare: from  https://​doi.​org/​10.​1021/​acsna​no.​7b021​82
+monitoring to therapy based on flexible and stretchable elec‑ 	14.	 Z. Pei, Q. Zhang, Q. Li, C. Ji, Y. Liu et al., A fully 3D printed 
+29 tronics. Adv. Funct. Mater.  (19), 1808247 (2019).  https://​ electronic skin with bionic high resolution and air permeable 
+doi.​org/​10.​1002/​adfm.​20180​8247 602 porous structure. J. Colloid Interf. Sci.  , 452–458 (2021). 
+	27.	 T. Sanna, H.C. Diener, R.S. Passman, V.D. Lazzaro, R.A.  https://​doi.​org/​10.​1016/j.​jcis.​2021.​06.​041
+Bernstein et al., Cryptogenic stroke and underlying atrial  	15.	 W. Yang, R. Cao, X. Zhang, H. Li, C. Li, Air-permeable 
+370 fibrillation. New Engl. J. Med.  (26), 2478–2486 (2014).  and washable paper-based triboelectric nanogenerator based 
+https://​doi.​org/​10.​1056/​NEJMo​a1313​600 on highly flexible and robust paper electrodes. Adv. Mater. 
+1 3
+
+161 	   Page 26 of 28 Nano-Micro Lett. (2022) 14:161
+2 	28.	 H.C. Jung, J.H. Moon, D.H. Baek, J.H. Lee, Y.Y. Choi et al.,  Adv.  (11), e1601185 (2015).  https://​doi.​org/​10.​1126/​sci‑
+CNT/PDMS composite flexible dry electrodes for long-term  adv.​16011​85
+59 ECG monitoring. IEEE. T. Bio-Med. Eng.  (5), 1472–1479  	41.	 L. Tian, B. Zimmerman, A. Akhtar, K.J. Yu, M. Moore 
+(2012).  https://​doi.​org/​10.​1109/​TBME.​2012.​21902​88 et al., Large-area MRI-compatible epidermal electronic 
+	29.	 S. Zheng, W. Li, Y. Ren, Z. Liu, X. Zou et al., Moisture- interfaces for prosthetic control and cognitive monitoring. 
+3 wicking, breathable, and intrinsically antibacterial electronic  Nat. Biomed. Eng.  (3), 194–205 (2019).  https://​doi.​org/​10.​
+skin based on dual-gradient poly(ionic liquid) nanofiber  1038/​s41551-​019-​0347-x
+34 membranes. Adv. Mater.  (4), 2106570 (2021).  https://​ 	42.	 S.H. Byun, J.Y. Sim, Z. Zhou, J. Lee, R. Qazi et al., Mechan‑
+doi.​org/​10.​1002/​adma.​20210​6570 ically transformative electronics, sensors, and implantable 
+5 	30.	 L. Eskandarian, A. Toossi, F. Nassif, S.G. Rostami, S. Ni  devices. Sci. Adv.  (11), eaay0418 (2019).  https://​doi.​org/​
+et al., 3D-knit dry electrodes using conductive elastomeric  10.​1126/​sciadv.​aay04​18
+fibers for long-term continuous electrophysiological moni‑ 	43.	 X. Yang, S. Wang, M. Liu, L. Li, Y. Zhao et  al., All-
+toring. Adv. Mater. Technol. (2022).  https://​doi.​org/​10.​1002/​ nanofiber-based janus epidermal electrode with directional 
+admt.​20210​1572 sweat permeability for artifact-free biopotential monitoring. 
+18 	31.	 Y. Qiao, X. Li, J. Jian, Q. Wu, Y. Wei et al., Substrate-free  Small  (12), 2106477 (2022).  https://​doi.​org/​10.​1002/​smll.​
+multilayer graphene electronic skin for intelligent diagnosis.  20210​6477
+12 ACS Appl. Mater. Interfaces  (44), 49945–49956 (2020).  	44.	 Y.T. Kwon, J.J.S. Norton, A. Cutrone, H.R. Lim, S. Kwon 
+https://​doi.​org/​10.​1021/​acsami.​0c124​40 et al., Breathable, large-area epidermal electronic systems 
+	32.	 A.M. Boukadoum, P.Y. Ktonas, EOG-based recording and  for recording electromyographic activity during operant con‑
+165 automated detection of sleep rapid eye movements: a criti‑ ditioning of H-reflex. Biosens. Bioelectron.  (1), 112404 
+cal review, and some recommendations. Psychophysiology  (2020).  https://​doi.​org/​10.​1016/j.​bios.​2020.​112404
+23 (5), 598–611 (1986).  https://​doi.​org/​10.​1111/j.​1469-​8986.​ 	45.	 A. Miyamoto, S. Lee, N.F. Cooray, S. Lee, M. Mori et al., 
+1986.​tb006​78.x Inflammation-free, gas-permeable, lightweight, stretchable 
+12 	33.	 Y. Nam, B. Koo, A. Cichocki, S. Choi, GOM-Face: GKP,  on-skin electronics with nanomeshes. Nat. Nanotech.  (9), 
+EOG, and EMG-based multimodal interface with application  907–913 (2017).  https://​doi.​org/​10.​1038/​nnano.​2017.​125
+61 to humanoid robot control. IEEE Trans. Biomed. Eng.  (2),  	46.	 G. Deng, Y.C. Qiao, N.Q. Deng, X.S. Li, Q. Wu et al., A 
+453–462 (2014).  https://​doi.​org/​10.​1109/​TBME.​2013.​22809​ flexible electroencephalography electronic skin based on gra‑
+00 phene. 5th IEEE Electron Devices Technology & Manufactur‑
+	34.	 R. Rac-Lubashevsky, H.A. Slagter, Y. Kessler, Tracking  ing Conference, 1–3 (2021).  https://​doi.​org/​10.​1109/​EDTM5​
+real-time changes in working memory updating and gat‑ 0988.​2021.​94208​50
+7 ing with the event-based eye-blink rate. Sci. Rep.  , 2547  	47.	 J.H. Mckay, A.M. Feyissa, U. Sener, C. D’Souza, C. Smelick 
+(2017).  https://​doi.​org/​10.​1038/​s41598-​017-​02942-3 et al., Time is brain: the use of EEG electrode caps to rapidly 
+	35.	 R. Barea, L. Boquete, J.M. Rodriguez-Ascariz, S. Ortega,  diagnose nonconvulsive status epilepticus. J. Clin. Neuro‑
+36 E. Lopez, Sensory system for implementing a human-com‑ physiol.  (6), 460–466 (2019).  https://​doi.​org/​10.​1097/​WNP.​
+11 puter interface based on electrooculography. Sensors  (1),  00000​00000​000603
+310–328 (2011).  https://​doi.​org/​10.​3390/​s1101​00310 	48.	 G.B. Tseghai, B. Malengier, K.A. Fante, L.V. Langenhove, 
+	36.	 S.K. Ameri, M. Kim, I.A. Kuang, W.K. Perera, M. Alshiekh  The status of textile-based dry EEG eelectrodes. Autex. Res. 
+21 et al., Imperceptible electrooculography graphene sensor  J.  (1), 63–70 (2021).  https://​doi.​org/​10.​2478/​aut-​2019-​0071
+2 system for human-robot interface. Npj 2D Mater. Appl.  ,  	49.	 D.H. Ho, P. Hong, J.T. Han, S.Y. Kim, S.J. Kwon et al., 
+19 (2018).  https://​doi.​org/​10.​1038/​s41699-​018-​0064-4 3D-printed sugar scaffold for high-precision and highly sen‑
+7 	37.	 A.J. Golparvar, M.K. Yapici, Toward graphene textiles in  sitive active and passive wearable sensors. Adv. Sci.  (1), 
+wearable eye tracking systems for human-machine interac‑ 1902521 (2020).  https://​doi.​org/​10.​1002/​advs.​20190​2521
+12 tion. Beilstein J. Nanotechnol.  , 180–189 (2021).  https://​ 	50.	 J.J. Kim, L.K. Allison, T.L. Andrew, Vapor-printed polymer 
+doi.​org/​10.​3762/​bjnano.​12.​14 electrodes for long-term, on-demand health monitoring. Sci. 
+5 	38.	 T.H. Hsieh, M.H. Liu, C.E. Kuo, Y.H. Wang, S.F. Liang,  Adv.  (3), eaaw0463 (2019).  https://​doi.​org/​10.​1126/​sciadv.​
+Home-use and real-time sleep-staging system based on eye  aaw04​63
+masks and mobile devices with a deep learning model. J.  	51.	 S. Lee, D. Sasaki, D. Kim, M. Mori, T. Yokota et al., Ultrasoft 
+41 Med. Biol. Eng.  (5), 659–668 (2021).  https://​doi.​org/​10.​ electronics to monitor dynamically pulsing cardiomyocytes. 
+1007/​s40846-​021-​00649-5 14 Nat. Nanotech.  (2), 156–160 (2019).  https://​doi.​org/​10.​
+	39.	 M. Isik, T. Lonjaret, H. Sardon, R. Marcila, T. Herve et al.,  1038/​s41565-​018-​0331-8
+Cholinium-based ion gels as solid electrolytes for long- 	52.	 S. Yao, P. Swetha, Y. Zhu, Nanomaterial-enabled wearable 
+3 term cutaneous electrophysiology. J. Mater. Chem. C  (34),  7 sensors for healthcare. Adv. Healthc. Mater.  (1), 1700889 
+8942–8948 (2015).  https://​doi.​org/​10.​1039/​C5TC0​1888A (2018).  https://​doi.​org/​10.​1002/​adhm.​20170​0889
+	40.	 Y. Liu, J.J.S. Norton, R. Qazi, Z. Zou, K.R. Ammann et al.,  	53.	 W.D. Li, K. Ke, J. Jia, J.H. Pu, X. Zhao et al., Recent advances 
+Epidermal mechano-acoustic sensing electronics for cardi‑ in multiresponsive flexible sensors towards e-skin: a delicate 
+ovascular diagnostics and human-machine interfaces. Sci. 
+© The authors https://doi.org/10.1007/s40820-022-00911-8
+
+ 161 Page 27 of 28  Nano-Micro Lett. (2022) 14:161	
+18 	66.	 O. Yue, X. Wang, M. Hou, M. Zheng, Z. Bai et al., Skin- design for versatile sensing. Small  (7), 2103734 (2022). 
+inspired wearable self-powered electronic skin with tunable  https://​doi.​org/​10.​1002/​smll.​20210​3734
+sensitivity for real-time monitoring of sleep quality. Nano  	54.	 Y. Guo, X. Wei, S. Gao, W. Yue, Y. Li et al., Recent advances 
+91 Energy  , 106682 (2022).  https://​doi.​org/​10.​1016/j.​nanoen.​ in carbon material-based multifunctional sensors and their 
+2021.​106682 applications in electronic skin systems. Adv. Funct. Mater. 
+31 	67.	 Y. Guo, M. Zhong, Z. Fang, P. Wan, G. Yu, A wearable tran‑ (40), 2104288 (2021).  https://​doi.​org/​10.​1002/​adfm.​20210​
+sient pressure sensor made with MXene nanosheets for sen‑ 4288
+sitive broad-range human-machine interfacing. Nano Lett.  	55.	 K. Kireev, K. Sel, B. Ibrahim, N. Kumar, A. Akbari et al., 
+19 (2), 1143–1150 (2019).  https://​doi.​org/​10.​1021/​acs.​nanol​ Continuous cuffless monitoring of arterial blood pressure via 
+ett.​8b045​14 graphene bioimpedance tattoos. Nat. Nanotechnol. (2022). 
+	68.	 S. Sharma, A. Chhetry, S. Zhang, H. Yoon, C. Park et al.,  https://​doi.​org/​10.​1038/​s41565-​022-​01145-w
+Hydrogen-bond-triggered hybrid nanofibrous membrane- 	56.	 X. Lin, Y. Bing, F. Li, H. Mei, S. Liu et al., An all-nanofiber-
+based wearable pressure sensor with ultrahigh sensitivity over  based, breathable, ultralight electronic skin for monitoring 
+15 a broad pressure range. ACS Nano  (3), 4380–4393 (2021).  physiological signals. Adv. Mater. Technol. (2022).  https://​
+https://​doi.​org/​10.​1021/​acsna​no.​0c078​47 doi.​org/​10.​1002/​admt.​20210​1312
+	69.	 R. Matsukawa, A. Miyamoto, T. Yokota, T. Someya, Skin  	57.	 Y. Liu, J. Tao, W. Yang, Y. Zhang, J. Li et al., Biodegrad‑
+impedance measurements with nanomesh electrodes for moni‑ able, breathable leaf vein-based tactile sensors with tunable 
+9 toring skin hydration. Adv. Healthc. Mater.  (22), 2001322  18 sensitivity and sensing range. Small  (8), 2106906 (2022). 
+(2020).  https://​doi.​org/​10.​1002/​adhm.​20200​1322 https://​doi.​org/​10.​1002/​smll.​20210​6906
+	70.	 H. Yeon, H. Lee, Y. Kim, D. Lee, Y. Lee et al., Long-term  	58.	 S. Lee, S. Franklin, F.A. Hassani, T. Yokota, M.O.G. Nay‑
+reliable physical health monitoring by sweat pore-inspired per‑ eem et al., An all-nanofiber-based, breathable, Nanomesh 
+7 forated electronic skins. Sci. Adv.  (27), eabg8459 (2021).  pressure sensor for monitoring finger manipulation without 
+https://​doi.​org/​10.​1126/​sciadv.​abg84​59 370 sensory interference. Science  (6519), 966–970 (2020). 
+	71.	 Z. Cui, F.R. Poblete, Y. Zhu, Tailoring the temperature coef‑ https://​doi.​org/​10.​1126/​scien​ce.​abc97​35
+ficient of resistance of silver nanowire nanocomposites and  	59.	 W. Zhou, S. Yao, H. Wang, Q. Du, Y. Ma et al., Gas-permea‑
+their application as stretchable temperature sensors. ACS  ble, ultrathin, stretchable epidermal electronics with porous 
+11 Appl. Mater. Interfaces  (19), 17836–17842 (2019).  https://​ 14 electrodes. ACS Nano  (5), 5798–5805 (2020).  https://​doi.​
+doi.​org/​10.​1021/​acsami.​9b040​45 org/​10.​1021/​acsna​no.​0c009​06
+	72.	 M. Gong, P. Wan, D. Ma, M. Zhong, M. Liao et al., Flex‑ 	60.	 W. Du, J. Nie, Z. Ren, T. Jiang, L. Xu et al., Inflammation-
+ible breathable nanomesh electronic devices for on-demand  free and gas-permeable on-skin triboelectric nanogenerator 
+29 therapy. Adv. Funct. Mater.  (26), 1902127 (2019).  https://​ 51 using soluble nanofibers. Nano Energy  , 260–269 (2018). 
+doi.​org/​10.​1002/​adfm.​20190​2127 https://​doi.​org/​10.​1016/j.​nanoen.​2018.​06.​026
+	73.	 W. Jeong, S. Lee, S. Yoo, S. Park, H. Choi et al., A hierarchical  	61.	 Z. Jiang, M. Osman, G. Nayeem, K. Fukuda, S. Ding et al., 
+metal nanowire network structure for durable, cost-effective,  Highly stretchable metallic nanowire networks reinforced 
+stretchable, and breathable electronics. ACS Appl. Mater.  by the underlying randomly distributed elastic polymer 
+13 Interfaces  (50), 60425–60432 (2021).  https://​doi.​org/​10.​ nanofibers via interfacial adhesion improvement. Adv. 
+1021/​acsami.​1c185​38 31 Mater.  (37), 1903446 (2019).  https://​doi.​org/​10.​1002/​
+	74.	 Q. Wang, S. Ling, X. Liang, H. Wang, H. Lu et al., Self- adma.​20190​3446
+healable multifunctional electronic tattoos based on silk and  	62.	 Y. Li, J. Xiong, J. Lv, J. Chen, D. Gao et al., Mechanically 
+29 graphene. Adv. Funct. Mater.  (16), 1808695 (2019).  https://​ interlocked stretchable nanofibers for multifunctional wearable 
+doi.​org/​10.​1002/​adfm.​20180​8695 78 triboelectric nanogenerator. Nano Energy  , 105358 (2020). 
+	75.	 J. Luo, S. Gao, H. Luo, L. Wang, X. Huang et al., Super‑ https://​doi.​org/​10.​1016/j.​nanoen.​2020.​105358
+hydrophobic and breathable smart MXene-based textile for  	63.	 A. Elsayes, V. Sharma, K. Yiannacou, A. Koivikko, A. 
+multifunctional wearable sensing electronics. Chem. Eng. J.  Rasheed et al., Plant-based biodegradable capacitive tactile 
+406 , 126898 (2021).  https://​doi.​org/​10.​1016/j.​cej.​2020.​126898 pressure sensor using flexible and transparent leaf skeletons 
+	76.	 Y.L. Li, Y.H. Liu, L.S. Chen, J.L. Xu, A conformable, gas- as electrodes and flower petal as dielectric layer. Adv. Sus‑
+4 permeable, and transparent skin-like micromesh architecture  tain. Syst.  (9), 2000056 (2020).  https://​doi.​org/​10.​1002/​adsu.​
+10 for glucose monitoring. Adv. Healthc. Mater.  (18), 2100046  20200​0056
+(2021).  https://​doi.​org/​10.​1002/​adhm.​20210​0046 	64.	 R. Wu, L. Ma, A. Patil, C. Hou, S. Zhu et al., All-textile elec‑
+	77.	 M.O.G. Nayeem, S. Lee, H. Jin, N. Matsuhisa, H. Jinno et al.,  tronic skin enabled by highly elastic spacer fabric and conduc‑
+11 All-nanofiber-based, ultrasensitive, gas-permeable mechanoa‑ tive fibers. ACS Appl. Mater. Interfaces  (36), 33336–33346 
+coustic sensors for continuous long-term heart monitoring.  (2019).  https://​doi.​org/​10.​1021/​acsami.​9b109​28
+117 PANS  (13), 7063–7070 (2020).  https://​doi.​org/​10.​1073/​ 	65.	 K. Zhou, W. Xu, Y. Yu, W. Zhai, Z. Yuan et al., Tunable and 
+pnas.​19209​11117 nacre-mimetic multifunctional electronic skins for highly 
+17 	78.	 M. Chao, L. He, M. Gong, N. Li, X. Li et al., Breathable  stretchable contact-noncontact sensing. Small  (31), 
+­Ti 2100542 (2021).  https://​doi.​org/​10.​1002/​smll.​20210​0542 C T  MXene/protein nanocomposites for ultrasensitive 
+3 2 x
+1 3
+
+161 	   Page 28 of 28 Nano-Micro Lett. (2022) 14:161
+3 medical pressure sensor with degradability in solvents. ACS  Mater. Technol.  (11), 1800209 (2018).  https://​doi.​org/​10.​
+15 Nano  (6), 9746–9758 (2021).  https://​doi.​org/​10.​1021/​acsna​ 1002/​admt.​20180​0209
+no.​1c004​72 	89.	 H. Zhang, R. He, H. Liu, Y. Niu, Z. Li et al., A fully integrated 
+	79.	 S. Wei, R. Yin, T. Tang, Y. Wu, Y. Liu et al., Gas-permeable,  wearable electronic device with breathable and washable 
+irritation-free, transparent hydrogel contact lens devices with  properties for long-term health monitoring. Sens. Actuat. A 
+322 metal-coated nanofiber mesh for eye interfacing. ACS Nano  Phys.  , 112611 (2021).  https://​doi.​org/​10.​1016/j.​sna.​2021.​
+13 (7), 7920–7929 (2019).  https://​doi.​org/​10.​1021/​acsna​no.​ 112611
+9b023​05 	90.	 K.I. Jang, S.Y. Han, S. Xu, K.E. Mathewson, Y. Zhang et al., 
+	80.	 X. Shi, Y. Zuo, P. Zhai, J. Shen, Y. Yang et al., Large-area  Rugged and breathable forms of stretchable electronics with 
+591 display textiles integrated with functional systems. Nature  ,  adherent composite substrates for transcutaneous monitoring. 
+5 240–245 (2021).  https://​doi.​org/​10.​1038/​s41586-​021-​03295-8 Nat. Commun.  , 4779 (2014).  https://​doi.​org/​10.​1038/​ncomm​
+s5779 	81.	 H. Chae, H.J. Kwon, Y.K. Kim, Y. Won, D. Kim et al., Laser-
+processed nature-inspired deformable structures for breathable  	91.	 Q. Hua, J. Sun, H. Liu, R. Bao, R. Yu et al., Skin-inspired 
+and reusable electrophysiological sensors toward controllable  highly stretchable and conformable matrix networks for mul‑
+9 home electronic appliances and psychophysiological stress  tifunctional sensing. Nat. Commun.  , 224 (2018).  https://​doi.​
+11 monitoring. ACS Appl. Mater. Interfaces  (31), 28387– org/​10.​1038/​s41467-​017-​02685-9
+28396 (2019).  https://​doi.​org/​10.​1021/​acsami.​9b063​63 	92.	 X. Zhao, L.Y. Wang, C.Y. Tang, X.J. Zha, Y. Liu et al., Smart 
+	82.	 Z. Hui, R. Chen, J. Chang, Y. Gong, X. Zhang et al., Solution- ­Ti C T  MXene fabric with fast humidity response and joule 
+3 2 x
+processed sensing textiles with adjustable sensitivity and lin‑ heating for healthcare and medical therapy applications. ACS 
+14 ear detection range enabled by twisting structure. ACS Appl.  Nano  (7), 8793–8805 (2020).  https://​doi.​org/​10.​1021/​acsna​
+12 Mater. Interfaces  (10), 12155–12164 (2020).  https://​doi.​org/​ no.​0c033​91
+10.​1021/​acsami.​0c005​64 	93.	 K. Sim, Z. Rao, Z. Zou, F. Ershad, J. Lei et al., Metal oxide 
+	83.	 Z. Liu, Y. Zheng, L. Jin, K. Chen, H. Zhai et al., Highly breath‑ semiconductor nanomembrane-based soft unnoticeable multi‑
+able and stretchable strain sensors with insensitive response  functional electronics for wearable human-machine interfaces. 
+31 5 to pressure and bending. Adv. Funct. Mater.  (14), 2007622  Sci. Adv.  (8), eaav9653 (2019).  https://​doi.​org/​10.​1126/​sci‑
+(2021).  https://​doi.​org/​10.​1002/​adfm.​20200​7622 adv.​aav96​53
+	84.	 J. He, C. Lu, H. Jiang, F. Han, X. Shi et al., Scalable pro‑ 	94.	 X. Lin, F. Li, Y. Bing, T. Fei, S. Liu et al., Biocompatible mul‑
+duction of high-performing woven lithium-ion fibre bat‑ tifunctional E-skins with excellent self-healing ability enabled 
+597 13 teries. Nature  , 57–63 (2021).  https://​doi.​org/​10.​1038/​ by clean and scalable fabrication. Nano-Micro Lett.  , 200 
+s41586-​021-​03772-0 (2021).  https://​doi.​org/​10.​1007/​s40820-​021-​00701-8
+	85.	 Z. Ma, Q. Huang, Q. Xu, Q. Zhuang, X. Zhao et al., Permeable  	95.	 X. Li, P. Zhu, S. Zhang, X. Wang, X. Luo et al., A self-sup‑
+superelastic liquid-metal fibre mat enables biocompatible and  porting, conductor-exposing, stretchable, ultrathin, and recy‑
+20 monolithic stretchable electronics. Nat. Mater.  , 859–868  clable kirigami-structured liquid metal paper for multifunc‑
+16 (2021).  https://​doi.​org/​10.​1038/​s41563-​020-​00902-3 tional E-skin. ACS Nano  (4), 5909–5019 (2022).  https://​
+doi.​org/​10.​1021/​acsna​no.​1c110​96 	86.	 L. Zhang, J. He, Y. Liao, X. Zeng, N. Qiu et al., A self-pro‑
+tective, reproducible textile sensor with high performance  	96.	 C. Wang, C. Pan, Z. Wang, Electronic skin for closed-loop 
+7 13 towards human-machine interactions. J. Mater. Chem. A  (46),  systems. ACS Nano  (11), 12287–12293 (2019).  https://​doi.​
+26631–26640 (2019).  https://​doi.​org/​10.​1039/​C9TA1​0744D org/​10.​1021/​acsna​no.​9b065​76
+	87.	 N. Rodeheaver, H. Kim, R. Herbert, H. Seo, W.H. Yeo, Breath‑ 	97.	 Y. Yu, J. Nassar, C. Xu, J. Min, Y. Yang et al., Biofuel-pow‑
+able, wireless, thin-film wearable biopatch using noise-reduc‑ ered soft electronic skin with multiplexed and wireless sensing 
+4 5 tion mechanisms. ACS Appl. Electron. Mater.  (1), 503–512  for human-machine interfaces. Sci. Robot.  (41), eaaz7946 
+(2022).  https://​doi.​org/​10.​1021/​acsae​lm.​1c011​07 (2019).  https://​doi.​org/​10.​1126/​sciro​botics.​aaz79​46
+	88.	 D. Shin, C. Shen, M. Sanghadasa, L. Lin, Breathable 3D 
+supercapacitors based on activated carbon fiber veil. Adv. 
+© The authors https://doi.org/10.1007/s40820-022-00911-8

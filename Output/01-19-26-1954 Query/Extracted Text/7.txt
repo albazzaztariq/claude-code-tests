@@ -1,0 +1,135 @@
+This website uses cookies to ensure you get the best experience.
+
+Learn more about DOAJ’s privacy policy.
+
+Hide this message
+
+Open Global Trusted
+
+The Directory of Open Access Journals
+
+Main actions
+
+•  Support
+
+○  Institutions and libraries
+
+○
+
+•  Search
+
+Menu
+
+Secondary actions
+
+•  Search
+
+○  Journals ○  Articles
+
+•  Documentation
+
+○  API ○  OAI-PMH ○  Widgets ○  Public data dump ○  OpenURL ○  XML ○  Metadata help ○  Preservation
+
+•  About
+
+○  About DOAJ ○  DOAJ at 20 ○  DOAJ team ○  Ambassadors ○  Foundation and Advisory Boards ○  Editorial Policy Advisory Group ○  Volunteers ○  News
+
+•  Support
+
+○  Institutions and libraries ○  Publishers ○  Institutional and library supporters ○  Funders
+
+•  Apply
+
+○  Application form ○  Guide to applying ○  Transparency & best practice
+
+○  Publisher information ○  Licensing & copyright
+
+•  Login
+
+•  Login
+
+Close×
+
+Quick search
+
+Journals Articles Search by keywords: In the field: In all fields Title ISSN Subject Publisher Country of publisher Search
+
+Bioengineering (Jun 2018)
+
+Smart Wound Dressings for
+
+Diabetic Chronic Wounds
+
+•  Elizabeth Gianino, •  Craig Miller, •  Jordon Gilmore
+
+Affiliations
+
+Elizabeth Gianino Bioengineering Department, Clemson University, Clemson, SC 29632, USA Craig Miller Bioengineering Department, Clemson University, Clemson, SC 29632, USA Jordon Gilmore Bioengineering Department, Clemson University, Clemson, SC 29632, USA
+
+DOI https://doi.org/10.3390/bioengineering5030051 Journal volume & issue Vol. 5, no. 3 p. 51
+
+Abstract
+
+Read online
+
+Given their severity and non-healing nature, diabetic chronic wounds are a significant concern to the 30.3 million Americans diagnosed with diabetes mellitus (2015). Peripheral arterial diseases, neuropathy, and infection contribute to the development of these wounds, which lead to an increased incidence of lower extremity amputations. Early recognition, debridement, offloading, and controlling infection are imperative for timely treatment.
+
+However, wound characterization and treatment are highly subjective and based largely on the experience of the treating clinician. Many wound dressings have been designed to address particular clinical presentations, but a prescriptive method is lacking for identifying the particular state of chronic, non-healing wounds. The authors suggest that recent developments in wound dressings and biosensing may allow for the quantitative, real-time representation of the wound environment, including exudate levels, pathogen concentrations, and tissue regeneration. Development of such sensing capability could enable more strategic, personalized care at the onset of ulceration and limit the infection leading to amputation. This review presents an overview of the pathophysiology of diabetic chronic wounds, a brief summary of biomaterial wound dressing treatment options, and biosensor development for biomarker sensing in the wound environment.
+
+Keywords
+
+•  diabetes •  chronic wounds •  smart wound dressing
+
+•  biochemical sensor
+
+Published in Bioengineering
+
+ISSN 2306-5354 (Online) Publisher MDPI AG Country of publisher Switzerland LCC subjects Technology Science: Biology (General) Website https://www.mdpi.com/journal/bioengineering
+
+About the journal
+
+WeChat QR code
+
+[image] Close Back to top
+
+Search
+
+•  Journals •  Articles
+
+Documentation
+
+•  API •  OAI-PMH •  Widgets
+
+•  Public data dump •  OpenURL •  XML •  Metadata help •  Preservation
+
+About
+
+•  About DOAJ •  DOAJ at 20 •  DOAJ team •  Ambassadors •  Foundation and Advisory Boards •  Editorial Policy Advisory Group •  Volunteers •  News
+
+Support
+
+•  Institutions and libraries •  Publishers •  Institutional and library supporters •  Funders
+
+Apply
+
+•  Application form •  Guide to applying •  Transparency & best practice •  Publisher information •  Licensing & copyright
+
+Stay up to date
+
+•  Bluesky •  Facebook •  Github •  Instagram
+
+Open Global Trusted
+
+The Directory of Open Access Journals
+
+© DOAJ 2026 default by all rights reserved unless otherwise
+
+•  Cottage Labs
+
+Content on this site is licensed under a Creative Commons
+
+Attribution-ShareAlike 4.0 International (CC BY-SA 4.0) license.
+
+Copyrights and related rights for article metadata waived via CC0 1.0 Universal (CC0) Public Domain Dedication.
+
+Photos used throughout the site by David Jorre, Jean-Philippe Delberghe, JJ Ying, Luca Bravo, Brandi Redd, & Christian Perner from Unsplash.

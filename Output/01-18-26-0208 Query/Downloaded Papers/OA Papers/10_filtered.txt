@@ -1,0 +1,60 @@
+ponents and circuits on the substrate as well as increasing 
+the porosity while ensuring the reliability and stability of the 
+e-skin are the current research focus. 5.1  Breathable e‑Skins are Becoming Multifunctional
+It can be seen from the above sections that novel low-
+dimensional nanomaterials such as graphene, carbon  For a variety of physiological signals that require daily 
+nanotubes, and MXene play an important role in the study  monitoring, breathable e-skin can be used as a platform to 
+of breathable e-skin due to their excellent performances  carry multiple physiological signal sensors and electrodes, 
+[ 5 ,  13 ,  31 ,  36 ,  37 ,  49 ,  55 ,  67 ,  68 ,  74 ,  75 ,  78 ,  89 ].
+
+ECG electrodes Moisture-wicking and  Water vapor transmission rate  Dual-gradient poly (ionic  Electrospinning [ 29 ]
+antibacterial e-skin (WVT) ~ 70% liquid) nanofibers
+−2 −1 3D conductive textile  20 g ­m  ­h Conductive elastomeric  Industrial-scale knitting  [ 30 ]
+e-skin melt-spun filaments machine
+Substrate-free e-skin hardly affects skin perspira‑ Laser-scribed graphene Sacrificial layer process [ 31 ]
+tion
+EOG electrodes Tattoo-like e-skin Breathable CVD graphene Sacrificial layer process [ 36 ]
+[ 19 ,  37 ] Textile-based e-skin Breathable Graphene-coated commer‑ Dip coating graphene 
+cial fabrics oxide on fabrics and 
+reducing
+Soft-fabric-based e-skin Breathable 20% silver and 80% poly‑ Dip coated silver on the  [ 38 ]
+amide, sponge package sponge
+−2 −1 EMG electrodes All-nanofiber-based e-skin 1748.09 g ­m  ­d HPAN, PU, and AgNWs Electrospinning and  [ 43 ]
+vacuum filtration
+−1 −2 E-beam evaporating and  [ 44 ] Strain-limiting e-skin WVT = 3.13 ± 0.18 g ­h  ­m Gold electrode, polyimide 
+etching supporting and packag‑
+ing layer, porous elasto‑
+mer-fabric substrate
+−1 Inflammation-free e-skin 0.11 g ­day Au-coated PVA nanofibers Magnetron sputtering and  [ 45 ]
+sacrificial layer process
+−1 [ 5 ] LSG-PU nanomesh e-skin 0.067 g ­day Laser-scribed graphene,  Electrospinning process  EEG electrodes
+attached it to the fingertip to monitor the force felt by the  and glucose.
+
+When used to 
+silver nanowires (AgNWs) were dip-coated on the substrate  detect human body motions, the e-skin had a high sensitivity 
+−1 and was embedded into the porous substrate by a heat press  of about 0.08 ­kPa , which was suitable for high-precision 
+process.
+
+Besides, with high  the accuracy and efficiency of medical diagnosis can be 
+−1 sensitivity (0.283 ­kPa ) and fast response time, the e-skin  improved and the possibility of misdiagnosis can be reduced 
+can realize high-precision dynamic motion detecting.
+
+If low-cost, daily-use 
+gate nanofibers, the realized sensor shows high sensitivity  wearable devices can achieve good functions while easy to 
+−1 (0.32 V ­kPa ).
+
+The ­Ti C T  MXene is introduced into the  in the human skin surface humidity, the water loss of the 
+3 2 x
+polymer electrolyte to realize an ion confinement effect,  cuticle can be assessed, and some typical skin diseases 
+which helps the fabricated breathable pulse sensor obtain  can be preliminarily diagnosed based on the acquired skin 
+−1 high sensitivities of 5.5 ­kPa  in the 0 ~ 30 kPa measur‑ surface humidity information.
+−1 ing range and 1.5 ­kPa  in the 30 ~ 250 kPa measuring  To ensure reliable skin surface humidity measurements, 
+range.
+
+−1 ing range and 1.5 ­kPa  in the 30 ~ 250 kPa measuring  To ensure reliable skin surface humidity measurements, 
+range.
+
+The sensor presented ultrahigh sensitivity in a 
+meet the above development requirements and ensure good  wide range (0 ~ 39.3 kPa) and good mechanical durability 
+breathability, Electrospinning is becoming the preferred  (remains stable after 10,000 cycles of loading–unloading 
+choice of breathable e-skin sensors. tests), which was promising in daily human voice detecting.

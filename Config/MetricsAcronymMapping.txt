@@ -1,0 +1,115 @@
+# Acronym to Phrase Mapping
+# Generated from MetricsSearchable.txt
+# Total: 110 acronym mappings
+
+=== ACRONYM MAPPINGS ===
+AC‑ASTM -> Liquid Absorption Capacity
+AC‑J -> Absorbent Capacity
+AOTI -> Accumulative One-Way Transport Index
+AP‑ASTM -> % wet‑through
+AP‑EN -> Water Resistance
+AP‑ISO -> Water Resistance
+ARB -> Absorption Rate Bottom
+ART -> Absorption Rate Top
+AR‑J -> Absorption Rate
+AT‑ASTM -> Sink Time
+AT‑J -> Absorption Time / Sink Time
+BAR -> Absorption Rate Bottom
+CP -> Capillary Pressure
+CPI -> Course per inch
+DI -> Drying Index
+DI‑J -> Quick Drying Index
+DR‑EN -> Target Moisture Content
+DR‑ISO -> Target Moisture Content
+DT‑EN -> Drying Time to Target Moisture
+EHF -> Evaporative Heat Flux
+EHF‑EN -> Evaporative Heat Loss
+EHF‑ISO -> Evaporative Heat Loss
+EHF‑J -> Evaporative Heat Flux
+HF -> Heat Flux
+HF‑ISO -> Heat Flux
+HH -> Hydrostatic Head
+HP -> Hydrostatic Head
+HP‑ASTM -> Thermal Absorptivity
+HP‑EN -> Hydrostatic Head
+HP‑ISO -> Hydrostatic Head
+HWA -> Horizontal Wicking Area
+HWH -> Horizontal Wicking Area
+HWH‑J -> Horizontal Wicking Area
+HWR -> Horizontal Wicking Area
+kPa -> kilopascals, which is a unit measuring a material's resistance to water
+LA -> Liquid Absorption
+LA‑J -> Liquid Absorption
+MAR -> Maximum Absorption Rate
+MARB -> Maximum Absorption Rate Bottom
+MART -> Maximum Absorption Rate Top
+MC -> Moisture Content
+MC‑J -> Moisture Content
+MMC -> Moisture Management Capacity Index
+MR -> Moisture Regain
+MR‑J -> Moisture Regain
+MVTR -> Water Vapor Transmission Rate
+MVTR‑ASTM -> % wet‑through
+MRb -> Maximum Wetted Radius Bottom
+MRt -> Maximum Wetted Radius Top
+MWRB -> Maximum Wetted Radius Bottom
+MWRT -> Maximum Wetted Radius Top
+OMMC -> Overall Moisture Management Capacity/Capability
+OWTC -> One Way Transport Capability
+QAR -> Qualitative Absorbency Rating
+QAR‑AATCC -> Qualitative Absorbency Rating
+QAR‑ASTM -> Qualitative Absorbency Rating
+QDI -> Quick Drying Index
+RMC -> Remaining Moisture Content
+RMC‑EN -> Remaining Moisture Content for Each Layer
+RMC‑ISO -> Remaining Moisture Content for Each Layer
+RMC‑J -> Remaining Moisture Content
+Rᵦ -> Maximum Wetted Radius Bottom
+Rₜ -> Maximum Wetted Radius Top
+SS -> Spreading Speed
+SS‑J -> Spreading Speed
+STR -> Surface Temperature Recovery Time
+STR‑J -> Surface Temperature Recovery Time
+SSb -> Bottom Spreading Speed
+Sᵦ -> Bottom Spreading Speed
+SSt -> Top Spreading Speed
+TAR -> Absorption Rate Top
+TCW -> Time to Complete Wetting
+TCW‑J -> Time to Complete Wetting
+VWA -> Vertical Wicking Area
+VWH -> Vertical Wicking Area
+VWH‑J -> Vertical Wicking Area
+VWR -> Vertical Wicking Area
+WA -> Water Absorption
+WA‑ASTM -> Water Absorption
+WPI -> Wales per inch
+WR -> Water Resistance
+WR‑ASTM -> Thermal Absorptivity
+WR‑EN -> Water Resistance
+WR‑ISO -> Water Resistance
+WT -> Wetting Time
+WTB -> Wetting Time Bottom
+WTT -> Wetting Time Top
+WT‑J -> Overall Moisture Management Capacity/Capability
+WVP -> Water Vapour Permeability
+WVPC -> Water Vapour Permeability Coefficient
+WVPC‑ASTM -> % wet‑through
+WVPC‑J -> Water Vapour Permeability Coefficient
+WVP‑ASTM -> % wet‑through
+WVP‑ISO -> Water Vapour Permeability
+WVP‑J -> Water Vapour Permeability
+WVTR -> Water Vapor Transmission Rate
+WVTR‑ASTM -> % wet‑through
+WVTR‑J -> Water Vapour Transmission Rate
+WTAvg -> Average Wetting Time
+Rct -> Water Vapor Resistance
+Rct‑J -> Water Vapor Resistance
+Rct‑ISO -> Water Vapor Resistance
+Rct‑EN -> Water Vapor Resistance
+qmax -> Thermal Absorptivity
+Qmax‑J -> Thermal Absorptivity
+Qmax‑GB -> Thermal Absorptivity
+Qmax‑ASTM -> Thermal Absorptivity
+q″ -> Heat Flux
+α -> Thermal Diffusivity
+α‑ISO -> Thermal Diffusivity

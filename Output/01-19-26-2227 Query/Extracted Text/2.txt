@@ -1,0 +1,1085 @@
+Skip to main content
+
+Advertisement
+
+[image] [image] Log in
+
+Menu Find a journal Publish with us Track your research
+
+Search
+
+1. Home
+
+plasma treatment of textile
+
+materials
+
+•  Review •  Published: 12 June 2015
+
+•  Volume 50, pages 5913–5943, (2015) •  Cite this article
+
+Save article View saved research [image] Journal of Materials Science Aims and scope Submit manuscript
+
+•  R. Abd Jelil ORCID: orcid.org/0000-0002-1656-65731
+
+• 29k Accesses
+
+• 249 Citations
+
+• 6 Altmetric
+
+•  Explore all metrics
+
+Abstract
+
+In recent years, plasma treatment technology has attracted more attention in the textile industry, as it seems to be a promising economically and ecologically sound alternative to conventional wet- chemical processing techniques. Plasma surface treatment is a relatively simple process that is clean, solvent-free, time saving, and environmentally friendly. Moreover, plasma treatments offer the possibility to obtain typical textile finishes without changing the key textile properties. The efficiency of plasma treatment depends on several factors including the nature of the substrate and the treatment operating
+
+conditions. However, the application of plasma technology to different kinds of textile materials has not been fully exploited. This paper presents a review of the current literature on the surface modification of textiles by low-temperature plasma (LTP) technology. Its main objectives are to (i) investigate the influence of LTP treatment on the surface properties of natural and man made textile materials, (ii) outline the contribution of LTP treatment towards sustainable development, and (iii) examine the hurdles that LTP has to overcome in the textile industry.
+
+This is a preview of subscription content, log in via an institution to check access.
+
+Access this article
+
+Log in via an institution
+
+Subscribe and save
+
+Springer+ from $39.99 /Month
+
+•  Starting from 10 chapters or articles per month •  Access and download chapters and articles from more than 300k books and 2,500 journals •  Cancel anytime
+
+View plans
+
+Buy Now
+
+Buy article PDF USD 39.95
+
+Price excludes VAT (USA) Tax calculation will be finalised during checkout.
+
+Instant access to the full article PDF.
+
+Institutional subscriptions
+
+Fig. 1 [image] Fig. 2 [image] Fig. 3 [image] Fig. 4 [image] Fig. 5 [image] Fig. 6 [image] Fig. 7 [image] Fig. 8 [image] Fig. 9
+
+[image] Fig. 10 [image] Fig. 11 [image]
+
+Similar content being viewed by others
+
+[image]
+
+Review of Plasma Surface Engineering Technology
+
+Toward Sustainable Textile Materials
+
+Article 15 May 2024 [image]
+
+Advancements in Plasma Technology for Textile Surface
+
+Modification
+
+Chapter © 2025 [image]
+
+Plasma Innovations: Revolutionizing Sustainable Textile
+
+Treatments
+
+Chapter © 2025 Discover the latest articles, books and news in related subjects, suggested using machine learning.
+
+Explore related subjects
+
+•  Atmospheric pressure plasmas •  Low Temperature Plasma •  Plasma Medicine •  Plasma processing •  Textile Engineering •  Laser Material Processing
+
+References
+
+1. Shishoo R (2007) Plasma technologies for textiles. Woodhead Publishing Limited, Cambridge, p 15
+
+Google Scholar
+
+2. Nasadil P, Bensovsky PB (2008) Plasma in textile treatment. In: the 2nd central European symposium on plasma chemistry, Brno, Czech Republic, 31st August–4th September
+
+3. Radetic M, Jovancic P, Puac N et al (2007) Environmental impact of plasma application to textiles. J Phys 71:1–11
+
+Google Scholar
+
+4. Chan CM, Ko TM, Hiraoka H (1996) Polymer surface modification by plasmas and photons. Surf Sci Rep 24:1–54
+
+Google Scholar
+
+5. Herbert T (2007) Atmospheric-pressure cold plasma processing technology. In: Shishoo R (ed) Plasma technologies for textiles.
+
+Woodhead Publishing Limited, Cambridge, pp 79–128
+
+Google Scholar
+
+6. Leroux F, Perwuelz A, Campagne C et al (2006) Atmospheric air- plasma treatments of polyester textile structures. J Adhes Sci Technol 20:939–957
+
+Google Scholar
+
+7. Shin Y, Yoo D (2008) Surface characterization of PET nonwoven fabric treated by He/O2 atmospheric pressure plasma. J Appl Polym Sci 108:785–790
+
+Google Scholar
+
+8. Karahan HA, Ozdogan E (2008) Improvements of surface functionality of cotton fibers by atmospheric plasma treatment.
+
+Fiber polym 9:21–26
+
+Google Scholar
+
+9. Takke V, Behary N, Perwuelz A et al (2009) Studies on the atmospheric air- plasma treatment of PET (Polyethylene Terephtalate) woven fabrics: effect of process parameters and of ageing. J Appl Polym Sci 114:348–357
+
+Google Scholar
+
+10. Vesel A, Mozetic M, Strnad S et al (2010) Plasma modification of viscose textile. Vacuum 84:79–82
+
+Google Scholar
+
+11. Ibrahim NA, Hashem MM, Eid MA et al (2010) Eco-friendly plasma treatment of linen-containing fabrics. J Text Inst 101:1035–1049
+
+Google Scholar
+
+12. Ibrahim NA, El-Hossamy M, Hashem MM et al (2008) Novel pretreatment processes to promote linen-containing fabrics properties. Carbohydr Polym 74:880–891
+
+Google Scholar
+
+13. Rashed UM, Ahmed H, Al-Halwagy A et al (2009) Surface characteristics and printing properties of PET fabric treated by atmospheric dielectric barrier discharge plasma. Eur Phys J Appl Phys 45:1–7
+
+Google Scholar
+
+14. Radetic M, Jocic D, Jovancic P et al (2000) The effect of low- temperature plasma pre-treatment on wool printing. Text Chem Color Am Dyest Report 32:55–60
+
+Google Scholar
+
+15. Kan CW, Yuen C, Tsoi W (2011) Using atmospheric pressure plasma for enhancing the deposition of printing paste on cotton
+
+fabric for digital ink-jet printing. Cellulose 18:827–839
+
+Google Scholar
+
+16. Yaman N, Ozdogan E, Seventekin N et al (2009) Plasma treatment of polypropylene fabric for improved dyeability with soluble textile dyestuff. Appl Surf Sci 255:6764–6770
+
+Google Scholar
+
+17. El-Zawahry MM, Ibrahim NA, Eid MA (2006) The impact of nitrogen plasma treatment upon the physical-chemical and dyeing properties of wool. Polym Plastic Technol Eng 45:1123–1132
+
+Google Scholar
+
+18. Oktem T, Seventekin N, Ayhan H et al (2000) Modification of polyester and polyamide fabrics by different in situ plasma polymerization methods. Turk J Chem 24:275–285
+
+Google Scholar
+
+19. Lommatzsch U, Pasedag D, Baalmann A et al (2007) Atmospheric pressure plasma jet treatment of polyethylene surface for adhesion improvement. Plasma Process Polym 4:S1041–S1045
+
+Google Scholar
+
+20. Thurston MR, Clay DJ, Schulte DM (2007) Effect of atmospheric plasma on polymer surface energy and adhesion. J Plast Film Sheeting 23:63–78
+
+Google Scholar
+
+21. Zemljic LF, Persin Z, Stenius P (2009) Improvement of chitosan absorption onto cellulosic fabrics by plasma treatment.
+
+Biomacromolecules 10:1181–1187
+
+Google Scholar
+
+22. Shenton MJ, Stevens GC (2001) Surface modification of polymer surfaces: atmospheric plasma versus vacuum plasma treatments.
+
+J Phys D Appl Phys 34:2761–2768
+
+Google Scholar
+
+23. Hossain MM, Hegemann D (2011) Substrate independent dyeing of synthetic textiles treated with low-pressure plasmas. In: Hauser PJ (ed) Textile dyeing, InTech, pp 173–194. http:// www.intechopen.com/books/textile-dyeing/substrate-independent- dyeing-of-synthetic-textiles-treated-with-low-pressure-plasmas Accessed 15 June 2014
+
+24. Tendero C, Tixier C, Tristant P et al (2006) Atmospheric pressure plasmas: a review. Spectrochim Acta B 61:2–30
+
+Google Scholar
+
+25. Grace JM, Gerenser LJ (2003) Plasma treatment of polymers. J Dispersion Sci Technol 24:305–341
+
+Google Scholar
+
+26. Denes FS, Manolache S (2004) Macromolecular plasma- chemistry: an emerging field of polymer science. Prog Polym Sci 29:815–885
+
+Google Scholar
+
+27. Kang JY, Sarmadi M (2004) Plasma treatment of textiles: synthetic polymer-based textiles. AATCC Rev 4:29–33
+
+Google Scholar
+
+28. Hegemann D (2006) Plasma polymerization and its applications in textiles. Indian J Fiber Text Res 31:99–115
+
+Google Scholar
+
+29. Morent R, De Geyter N, Verschuren J et al (2008) Non-thermal plasma treatment of textiles. Surf Coat Technol 202:3427–3449
+
+Google Scholar
+
+30. Kale KH, Desai AN (2011) Atmospheric pressure plasma treatment of textiles using non-polymerising gases. Indian J Fiber Text Res 36:289–299
+
+Google Scholar
+
+31. Prat R, Shi MK, Clouet F (1997) Interactions of cold plasmas with polymers and their model molecules: degradation vs.
+
+functionalization. J Macromol Sci A 34:471–488
+
+Google Scholar
+
+32. Buyle G (2009) Nanoscale finishing of textiles via plasma treatment Materials Technology. Mater Technol 24:46–51
+
+Google Scholar
+
+33. Wang CX, Du M, Qui YP (2011) Uniformity and penetration of surface modification effects of atmospheric pressure plasma jet into textile materials. Adv Mater Res 331:356–359
+
+Google Scholar
+
+34. Wang CX, Ren Y, Qiu YP (2007) Penetration depth of atmospheric pressure plasma surface modification into multiple layers of polyester fabrics. Surf Coat Technol 202:77–83
+
+Google Scholar
+
+35. Finson E, Kaplan SL, Wood L (1995) Plasma treatment of webs and films. In: 38th annual technical conference proceedings, Society of Vacuum Coaters, Chicago, April 2–7
+
+36. Shahidi S, Wiener J, Ghoranneviss M (2013) Surface modification methods for improving the dyeability of textiles fabrics. In: Gunay M (ed) Eco-friendly textile dyeing and finishing. InTech, Rijeka, pp 33–52
+
+Google Scholar
+
+37. Garcia JL, Asadinezhad A, Pachernik J et al (2010) Cell
+
+proliferation of HaCaT Keratinocytes on collagen films modified by argon plasma treatment. Molecules 15:2845–2856
+
+Google Scholar
+
+38. Matthews SR, Hwang YJ, McCord MG et al (2004) Investigation into etching mechanism of polyethylene terephthalate (PET) films treated in helium and oxygenated-helium atmospheric plasmas. J Appl Polym Sci 94:2383–2389
+
+Google Scholar
+
+39. Taylor GN, Wolf TM (1980) Oxygen plasma removal of thin polymer films. Polym Eng Sci 20:1087–1092
+
+Google Scholar
+
+40. Sprang N, Theirich D, Engemann J (1995) Plasma and ion beam surface treatment ofpolyethylene. J Surf Coat Technol 74–75:689– 695
+
+Google Scholar
+
+41. Zeuner M, Meichsner J, Poll HU (1995) Oxidative decomposition of polymethylmethacrylate (PMMA) in plasma etching. Plasma Sources Sci Technol 4:406–415
+
+Google Scholar
+
+42. Gaur S and Vergason G (2000) Plasma polymerization: theory and practice. In: 43rd annual technical conference proceedings,
+
+Denver, April 15–20
+
+43. Yun YI, Kim KS, Uhm SJ et al (2004) Aging behavior of oxygen plasma-treated polypropylene with different crystallinities. J Adhes Sci Technol 18:1279–1291
+
+Google Scholar
+
+44. Morra M, Occhiello E, Garbassi F (1989) Contact angle hysteresis on oxygen plasma treated polypropylene surfaces. J Colloid Interface Sci 132:504–508
+
+Google Scholar
+
+45. Morra M, Occhiello E, Marola R et al (1990) On the ageing of oxygen plasma-treated polydimethylsiloxane surfaces. J Colloid Interface Sci 137:11–24
+
+Google Scholar
+
+46. Yasuda H, Charlson EJ, Charlson EM et al (1991) Dynamics of surface property change in response to changes in environmental conditions. Langmuir 7:2394–2400
+
+Google Scholar
+
+47. Murakami T, Kuroda S, Osawa Z (1998) Dynamics of polymeric solid surfaces treated by oxygen plasma: plasma-induced increases in surface molecular mobility of polystyrene. J Colloid Interface Sci 200:192–194
+
+Google Scholar
+
+48. Murakami T, Kurodo S, Osawa Z (1998) Dynamics of polymeric solid surfaces treated with oxygen Plasma: effect of Aging Media after Plasma Treatment. J Colloid Interface Sci 202:37–44
+
+Google Scholar
+
+49. Dellavolpe C, Fambri L, Fenner R et al (1994) Air-plasma treated polyethylene fibres: effect of time and temperature ageing on fiber surface properties and on fiber-matrix adhesion. J Mater Sci 29:3919–3925. doi:10.1007/BF00355950
+
+Google Scholar
+
+50. Kim KS, Ryu CM, Park CS et al (2003) Investigation of crystallinity effects on the surface of oxygen plasma treated low density polyethylene using X-ray photoelectron spectroscopy. Polymer 44:6287–6295
+
+Google Scholar
+
+51. Canal C, Molina R, Bertran E et al (2004) Wettability, ageing and recovery process of plasma-treated polyamide. J Adhes Sci Technol 18:1077–1089
+
+Google Scholar
+
+52. Morent R, De Geyter N, Leys C et al (2007) Study of the ageing behaviour of polymer films treated with a dielectric barrier
+
+discharge in air, helium and argon at medium pressure. Surf Coat Technol 201:7847–7854
+
+Google Scholar
+
+53. Brennan WJ, Feast WJ, Munro HS et al (1991) Investigation of the aging of plasma oxidized peek. Polymer 32:1527–1530
+
+Google Scholar
+
+54. Piao D, Uyama Y, Ikada Y (1991) Aging of plasma treated polymers. Kobunshi Ronbunshu 48:529–534
+
+Google Scholar
+
+55. Gupta B, Hilborn J, Hollenstein C et al (2000) Surface modification of polyester films by RF plasma. J Appl Polym Sci 78:1083–1091
+
+Google Scholar
+
+56. Yasuda H, Sharma AK, Yasuda T (1981) Effect of orientation and mobility of polymer molecules at surfaces on contact angle and its hysteresis. J Polym Sci Polym Phys 19:1285–1291
+
+Google Scholar
+
+57. Ferrero F (2003) Wettability measurements on plasma treated synthetic fabrics by capillary rise method. Polym Test 22:571–578
+
+Google Scholar
+
+58. Bhat NV, Bharati RN, Gore AV et al (2011) Effect of atmospheric
+
+pressure air plasma treatment on desizing and wettability of cotton fabrics. Indian J Fiber Text Res 36:42–46
+
+Google Scholar
+
+59. Lam Y, Kan C, Yuen C (2011) Physical and chemical analysis of plasma-treated cotton fabric subjected to wrinkle-resistant finishing. Cellulose 18:493–503
+
+Google Scholar
+
+60. Inbakumar S, Morent R, De Geyter N et al (2010) Chemical and physical analysis of cotton fabrics plasma-treated with a low pressure DC glow discharge. Cellulose 17:417–426
+
+Google Scholar
+
+61. Cai Z, Qiu Y (2008) Dyeing properties of wool fabrics treated with atmospheric pressure plasmas. J Appl Polym Sci 109:1257–1261
+
+Google Scholar
+
+62. Xu H, Peng S, Wang C et al (2009) Influence of absorbed moisture on antifelting property of wool treated with atmospheric pressure plasma. J Appl Polym Sci 113:3687–3692
+
+Google Scholar
+
+63. Naebe M, Cookson PG, Rippon J et al (2010) Effects of plasma treatment of wool on the uptake of sulfonated dyes with different hydrophobic properties. Text Res J 80:312–324
+
+Google Scholar
+
+64. Vrabic U, Jesih A, Svetec DG (2007) Physical and absorptive changes in plasma treated viscose fibers. Fibres Text East Eur 15:64–65
+
+Google Scholar
+
+65. Kramar A, Prysiazhnyi V, Dojcinovic B et al (2013) Antimicrobial viscose fabric prepared by treatment in DBD and subsequent deposition of silver and copper ions-Investigation of plasma aging effect. Surf Coat Technol 234:92–99
+
+Google Scholar
+
+66. Persin Z, Vesel A, Kleinschek KS et al (2012) Characterisation of surface properties of chemical and plasma treated regenerated cellulose fabrics. Text Res J 82:2078–2089
+
+Google Scholar
+
+67. McCord MG, Hwang YJ, Hauser PJ et al (2002) Modifying nylon and polypropylene fabrics with atmospheric pressure plasma. Text Res J 72:491–498
+
+Google Scholar
+
+68. Ferreira M, Solarski S, Vroman P et al. (2008) Improvement of the hydrophily of PLA nonwoven by plasma treatment. In: AUTEX 8th world textile conference, Biella, June 24–26
+
+69. Morent R, De Geyter N, Leys C et al (2007) Surface modification of non- woven textiles using a dielectric barrier discharge operating in air, helium and argon at medium pressure. Text Res J 77:471– 488
+
+Google Scholar
+
+70. Leroux F, Campagne C, Perwuelz A et al (2009) Atmospheric air plasma treatment of textile materials: textile structure influence on surface oxidation and silicon resin adhesion. Surf Coat Technol 203:3178–3183
+
+Google Scholar
+
+71. Hossain MM, Herrmann AS, Hegemann D (2006) Plasma hydrophilization effect on different textile structures. Plasma Process Polym 3:299–307
+
+Google Scholar
+
+72. Jelil RA, Zeng X, Koehl L et al (2012) Most relevant parameters of woven fabric structure controlling atmospheric air-plasma treatments. Text Res J 82:1859–1869
+
+Google Scholar
+
+73. Wang CX, Liu Y, Xu HL et al (2008) Influence of atmospheric pressure plasma treatment time on penetration depth of surface modification into fabric. Appl Surf Sci 254:2499–2505
+
+Google Scholar
+
+74. Kabajev M, Prosycevas I, Kazakeviciute G et al (2004) Plasma modification of structure and some properties of polyethylene therepthalate films and fibers. Mater Sci 10:173–176
+
+Google Scholar
+
+75. Samanta K, Jassal M, Agrawal AK (2006) Atmospheric pressure glow discharge plasma and its applications in textile. Indian J Fibre Text Res 31:83–98
+
+Google Scholar
+
+76. Samanta KK, Jassal M, Argawal AK (2009) Improvement in water and oil absorbency of textile substrate by atmospheric pressure cold plasma treatment. Surf Coat Technol 203:1336–1342
+
+Google Scholar
+
+77. Zhang CM, Fang KJ (2012) Aging of surface properties of polyester fabrics treated with atmospheric pressure plasma for inkjet printing. Surf Eng 28:306–310
+
+Google Scholar
+
+78. Shin Y, Son K, Yoo D II et al (2006) Functional finishing of nonwovens fabrics. I. Accessibility of surface modified PET spunbond by atmospheric pressure He/O2 plasma treatment. J Appl Polym Sci 100:4306–4310
+
+Google Scholar
+
+79. Hwang YJ, McCord MG, An JS et al (2005) Effects of helium atmospheric pressure plasma treatment on low-stress mechanical properties of polypropylene nonwovens fabrics. Text Res J 75:771–778
+
+Google Scholar
+
+80. De Geyter ND, Morent R, Leys C (2006) Surface modification of a polyester non-woven with a dielectric barrier discharge in air at medium pressure. Surf Coat Technol 201:2460–2466
+
+Google Scholar
+
+81. Armagan OG, Kayaoglu BK, Karakas HC et al (2014) Adhesion strength behaviour of plasma pre-treated and laminated polypropylene nonwoven fabrics using acrylic and polyurethane- based adhesives. J Ind Text 43:396–414
+
+Google Scholar
+
+82. Yaman N, Ozdogan E, Kocum IC et al (2009) Improvement surface properties of polypropylene and polyester fabrics by glow discharge plasma system under atmospheric condition. Tekst Konfeksiyon 1:45–51
+
+Google Scholar
+
+83. Hossain MM, Hegemann D, Herrmann AS et al (2006) Contact
+
+angle determination on plasma- treated poly(ethylene terephthalate) fabrics and foils. J Appl Polym Sci 102:1452–1458
+
+Google Scholar
+
+84. Da Silva RCL, Alves C, Nascimento JH et al (2012) Surface modification of polyester fabric by non-thermal plasma treatment. J Phys 406:12017–12026
+
+Google Scholar
+
+85. Wei Q, Li Q, Wang X et al (2006) Dynamic water absorption behavior of plasma-treated polypropylene nonwovens. Polym Test 25:717–722
+
+Google Scholar
+
+86. Tang L, Ren W, Li X et al (2010) Hydrophilic modification of PP nonwoven fabric by cold plasma. J Text Res 31:30–34
+
+Google Scholar
+
+87. Ren W, Cheng C, Wang R et al (2010) Effect of fiber surface morphology on the hydrophilicity modification of cold plasma- treated polypropylene nonwoven fabrics. J Appl Polym Sci 116:2480–2486
+
+Google Scholar
+
+88. Verschuren J, Van Herzele P, Clerk DK et al (2005) Influence of fiber surface purity on wicking properties of needle-punched
+
+nonwoven after oxygen plasma treatment. Text Res J 75:437–441
+
+Google Scholar
+
+89. Hocker H (2002) Plasma treatment of textile fibers. Pure Appl Chem 74:423–427
+
+Google Scholar
+
+90. Kale KH, Palaskar SS, Kasliwal PM (2012) A novel approach for functionalization of polyester and cotton textiles with continuous online deposition of plasma polymers. Indian J Fiber Text Res 37:238–244
+
+Google Scholar
+
+91. Parida D, Jassal M, Argawal AK (2012) Functionalization of cotton by in situ reaction, of styrene in atmospheric pressure plasma zone. Plasma Chem Plasma Process 32:1259–1274
+
+Google Scholar
+
+92. Chaivan P, Pasaja N, Boonyawan D et al (2005) Low- temperature plasma treatment for hydrophobicity improvement of silk. Surf Coat Technol 193:356–360
+
+Google Scholar
+
+93. Supasai T, Hodak SK, Paosawatyanyong B (2007) Effect of SF6 plasma treatment on hydrophobicity improvement of fabrics. J Fizik Malays 28:1–6
+
+Google Scholar
+
+94. Hodak SK, Supasai T, Paosawatyanyong B et al (2008) Enhancement of the hydrophobicity of silk fabrics by SF6 plasma.
+
+Appl Surf Sci 254:4744–4749
+
+Google Scholar
+
+95. Kamlangkla K, Paosawatyanyong B, Pavarajarn V et al (2010) Mechanical strength and hydrophobicity of cotton fabric after SF6 plasma treatment. Appl Surf Sci 256:5888–5897
+
+Google Scholar
+
+96. Tsoi WYI, Kan CW, Yuan CWM (2011) Using ageing effect for hydrophobic modification of cotton fabric with atmospheric pressure plasma. BioResources 6:3424–3439
+
+Google Scholar
+
+97. Samanta KK, Joshi AG, Jassal M et al (2012) Study of hydrophobic finishing of cellulosic substrate using He/1,3- butadiene plasma at atmospheric pressure. Surf Coat Technol 213:65–76
+
+Google Scholar
+
+98. Panda PK, Jassal M, Agrawal AK (2013) Functionalization of cellulosic substrate using He/dodecyl acrylate plasma at atmospheric pressure. Surf Coat Technol 225:97–105
+
+Google Scholar
+
+99. Paosawatyanyong B, Kamlangkla K, Hodak SK (2010) Hydrophobic and hydrophilic surface nano-modification of PET fabric by plasma process. J Nanosci Nanotechnol 10:7050–7054
+
+Google Scholar
+
+100. Leroux F, Campagne C, Perwuelz A et al (2008) Fluorocarbon nano-coating of polyester fabrics by atmospheric air plasma with aerosol. Appl Surf Sci 254:3902–3908
+
+Google Scholar
+
+101. Iriyama Y, Yasuda T, Cho DL et al (1990) Plasma surface treatment on nylon fabrics by fluorocarbon compound. J Appl Polym Sci 39:249–264
+
+Google Scholar
+
+102. Karahan HA, Ozdogan E, Demir A et al (2009) Effects of atmospheric pressure plasma treatments on certain properties of cotton fabrics. Fibres Text East Eur 17:19–22
+
+Google Scholar
+
+103. Radetic M, Jovancic P, Puac N et al (2009) Plasma induced decolorization of indigo-dyed denim fabrics related to mechanical properties and fiber surface morphology. Text Res J 79:558–565
+
+Google Scholar
+
+104. Kan CW, Cahn K, Yuen CWM (1999) Low temperature plasma on wool substrates: the effect of the nature of the gas. Text Res J 69:407–416
+
+Google Scholar
+
+105. Kan CW, Yuen CWM (2005) Effect of low temperature plasma treatment on wool fabric properties. Fiber Polym 6:169–173
+
+Google Scholar
+
+106. Kan CW, Yuen CWM (2006) Low temperature plasma treatment for wool fabric. Text Res J 76:309–314
+
+Google Scholar
+
+107. Kulyk I, Scapinello M, Stefan M (2008) Textile fibres treatment with DBD atmospheric plasma discharge. In: AUTEX 8th world textile conference, Biella, June 24–26
+
+108. Goud VS (2012) Influence of plasma processing parameters on mechanical properties of wool fabrics. Indian J Fibre Text Res 37:292–298
+
+Google Scholar
+
+109. Wong KK, Tao XM, Yuen CWM et al (1999) Low temperature plasma treatment of linen. Text Res J 69:846–855
+
+Google Scholar
+
+110. Boonla K, Saikrasun S (2013) Influence of silk surface modification on via plasma treatments on adsorption kinetics of lac dyeing on silk. Text Res J 83:288–297
+
+Google Scholar
+
+111. Sinha E (2009) Effect of cold plasma treatment on macromolecular structure, thermal and mechanical behavior of jute fiber. J Ind Text 38:317–339
+
+Google Scholar
+
+112. Anwer MM, Bhuiyan AH (2012) Influence of low temperature plasma treatment on the surface, Optical and DC Electrical Properties of jute. IOSR JAP 1:16–22
+
+Google Scholar
+
+113. Kan CW, Yuen CWM (2009) Influence of low temperature plasma treatment on the properties of tencel and viscose rayon fibers.
+
+IEEE Trans Plasma Sci 37:1615–1619
+
+Google Scholar
+
+114. Zhongfu R, Xiaoliang T, Hong’en W et al (2007) Continuous modification treatment of polyester fabric by Ar-O2 (10:1) discharge at atmospheric pressure. J Ind Text 37:43–53
+
+Google Scholar
+
+115. Yip J, Chan K, Sin KM et al (2002) Low temperature plasma-
+
+treated nylon fabrics. J Mater Process Technol 123:5–12
+
+Google Scholar
+
+116. Garg S, Hurren C, Kaynakc A (2007) Improvement of adhesion of conductive polypyrrole coating on wool and polyester fabrics using atmospheric plasma treatment. Synth Met 157:41–47
+
+Google Scholar
+
+117. Vasiljevic J, Gorjanc M, Tomsic B et al (2013) The surface modification of cellulose fibres to create super-hydrophobic, oleophobic and self-cleaning properties. Cellulose 20:277–289
+
+Google Scholar
+
+118. Oliveira FR, Fernandes M, Carneiro N et al (2013) Functionalization of wool fabric with phase-change materials microcapsules after plasma surface modification. J Appl Polym Sci 128:2638–2647
+
+Google Scholar
+
+119. Bozaci E, Sever K, Sarikanat M et al (2013) Effects of the atmospheric plasma treatments on surface and mechanical properties of flax fiber and adhesion between fiber–matrix for composite materials. Compos Part B 45:565–572
+
+Google Scholar
+
+120. Felix JM, Carlsson CMG, Gatenholm P (1994) Adhesion
+
+characteristics of oxygen plasma-treated rayon fibers. J Adhes Sci Technol 8:163–180
+
+Google Scholar
+
+121. Cho H, Tabata I, Hisada K et al (2013) Characterization of copper- plated conductive fibers after pretreatment with supercritical carbon dioxide and surface modification using Lyocell fiber. Text Res J 83:780–793
+
+Google Scholar
+
+122. Graupner N, Albrecht K, Hegemann D et al (2013) Plasma modification of man-made cellulose fibers (Lyocell) for improved fiber/matrix adhesion in poly(lactic acid) composites. J Appl Polym Sci 128:4378–4386
+
+Google Scholar
+
+123. Wang T, Wang C, Qiu Y (2008) Surface modification of ultra high modulus polyethylene fibers by an atmospheric pressure plasma jet. J Appl Polym Sci 108:25–33
+
+Google Scholar
+
+124. Rahel J, Cernak M, Hudec I et al (2000) Surface modification of polyester monofilaments by atmospheric- pressure nitrogen plasma. Plasma Polym 5:119–127
+
+Google Scholar
+
+125. Cernakova L, Szabova R, Wolfova M et al (2007) Surface modification of polypropylene nonwoven after plasma activation at atmospheric pressure. Fibres Text East Eur 15:121–123
+
+Google Scholar
+
+126. Armagan OG, Kayaoglu BK, Karakas HC et al (2013) Improving the adhesion strength of polypropylene nonwoven laminated fabrics using low-pressure plasma. Fibres Text East Eur 21:96– 101
+
+Google Scholar
+
+127. Huang CY, Wu JY, Tsai CS et al (2013) Effects of argon plasma treatment on the adhesion property of ultra high molecular weight polyethylene (UHMWPE) textile. Surf Coat Technol 231:507–511
+
+Google Scholar
+
+128. Liu L, Jiang Q, Zhu T et al (2006) Influence of moisture regain of aramid fibers on effects of atmospheric pressure plasma treatment on improving adhesion with epoxy. J Appl Polym Sci 102:242–247
+
+Google Scholar
+
+129. Cai Z, Qiu Y, Zhang C et al (2003) Effect of atmospheric plasma treatment on desizing of PVA on cotton. Text Res J 73:670–674
+
+Google Scholar
+
+130. Cai Z, Qiu Y (2006) The mechanism of air/oxygen/helium
+
+atmospheric plasma action on PV. J Appl Polym Sci 99:2233–2237
+
+Google Scholar
+
+131. Cai Z, Hwang YJ, McCord M, et al. (2003) Desizing of cotton fabrics by helium atmospheric pressure plasma. In: the Fiber Society 2003 Spring Symposium, Loughborough, UK, 30 June–2 July
+
+132. Li X, Qiu Y (2012) The effect of plasma pre-treatment on NaHCO3 desizing of blended sizes on cotton fabrics. Appl Surf Sci 258:4939–4944
+
+Google Scholar
+
+133. Kan CW, Yuen CWM (2012) Effect of atmospheric pressure plasma treatment on the desizing and subsequent colour fading process of cotton denim fabric. Color Technol 128:356–363
+
+Google Scholar
+
+134. Peng S, Liu X, Sun J et al (2010) Influence of absorbed moisture on desizing of poly(vinyl alcohol) on cotton fabrics during atmospheric pressure plasma jet treatment. Appl Surf Sci 256:4103–4108
+
+Google Scholar
+
+135. Cai Z, Qiu Y, Hwang YJ et al (2003) The use of atmospheric plasma treatment in desizing PVA on viscose fabrics. J Ind Text
+
+32:223–232
+
+Google Scholar
+
+136. Bae PH, Hwang YJ, Jo HJ et al (2006) Size removal on polyester fabrics by plasma source ion implantation device. Chemosphere 63:1041–1047
+
+Google Scholar
+
+137. Li X, Qiu Y (2011) Comparison of plasma-aided desizing with conventional desizing of polyacrylate on PET fabrics. Adv Mater Res 311:713–717
+
+Google Scholar
+
+138. Li X, Lin J, Qiu Y (2012) Influence of He/O2 atmospheric pressure plasma jet treatment on subsequent wet desizing of polyacrylate on PET fabrics. Appl Surf Sci 258:2332–2338
+
+Google Scholar
+
+139. Sun D, Stylios GK (2004) Effect of low temperature plasma treatment on the scouring and dyeing of natural fabrics. Text Res J 74:751–756
+
+Google Scholar
+
+140. Kan CW (2007) Effect of low temperature plasma on different wool dyeing systems. Autex Res J 8:255–263
+
+Google Scholar
+
+141. Chvalinova R, Wiener J (2008) Sorption Properties of wool fibers after plasma treatment. Chem Listy 102:1473–1477
+
+Google Scholar
+
+142. Fang K, Wang S, Wang C et al (2008) Inkjet printing effects of pigment inks on silk fabrics surface-modified with O2 plasma. J Appl Polym Sci 107:2949–2955
+
+Google Scholar
+
+143. Ratnapandian S, Wang L (2011) Effect of atmospheric plasma treatment on pad-dyeing of natural dyes on wool. JFBI 4:267–276
+
+Google Scholar
+
+144. Wang C, Zhu L, Qiu Y (2008) Laser scanning confocal microscope characterization of dye diffusion in nylon 6 fibers treated with atmospheric pressure plasmas. J Appl Polym Sci 107:1471–1478
+
+Google Scholar
+
+145. Wang C, Wang C (2010) Surface pretreatment of polyester fabric for ink jet printing with radio frequency O2 plasma. Fiber Polym 11:223–228
+
+Google Scholar
+
+146. Yaman N, Ozdogan E, Seventekin N (2012) Improvement
+
+fastnesses and color strength of pigment printed textile fabric. J Eng Fiber Fabr 7:40–46
+
+Google Scholar
+
+147. Maamoun D, Ghalab S (2013) Plasma utilization for treating wool/ polyester blended fabric to improve its printability. Indian J Fiber text Res 38:180–185
+
+Google Scholar
+
+148. Shahidi S, Ghoranneviss M (2013) Sterilization of cotton fabrics using plasma treatment. Plasma Sci Technol 15:1031–1033
+
+Google Scholar
+
+149. Muller S, Zahn RJ, Koburger T et al (2010) Smell reduction and disinfection of textile materials by dielectric barrier discharges. Nat Sci 2:1044–1048
+
+Google Scholar
+
+150. Kostic M, Radic N, Obradovic BM et al (2008) Antimicrobial textile prepared by silver deposition on dielectric barrier discharge treated cotton/polyester fabric. Chem Ind Chem Eng Q 14:219–221
+
+Google Scholar
+
+151. Sophonvachiraporn P, Rujiravanit R, Sreethawong T et al (2011) Surface characterization and antimicrobial activity of chitosan- deposited DBD plasma-modified woven PET surface. Plasma
+
+Chem Plasma Process 31:233–249
+
+Google Scholar
+
+152. Shahidi S, Rezaee S, Hezavehi E (2014) Effect of dyeing on antibacterial efficiency of silver coated cotton fabrics. Eur Phys J Appl Phys 66:10801
+
+Google Scholar
+
+153. Malshe P, Mazloumpour M, El-Shafei A et al (2012) Functional military textile: plasma-induced graft polymerization of DADMAC for antimicrobial treatment on nylon-cotton blend fabric. Plasma Chem Plasma Process 32:833–843
+
+Google Scholar
+
+154. Kan CW, Chan K, Marcus YCW (2004) The possibility of low- temperature plasma treated wool fabric for industrial use. AUTEX Res J 4:37–44
+
+Google Scholar
+
+155. Cai Z, Qiu Y (2008) Effect on the anti-felt properties of atmospheric plasma treated wool. J Appl Polym Sci 107:1142–1146
+
+Google Scholar
+
+156. Mori M, von Arnim V, Dinkelmann A et al (2011) Modification of wool fibers by atmospheric pressure plasma treatment. J Text Inst 102:534–539
+
+Google Scholar
+
+157. Mori M, Inagaki N (2006) Relationship between anti-felting properties and physicochemical properties of wool treated with low-temperature plasma. RJTA 10:33–45
+
+Google Scholar
+
+158. Kan CW (2014) Plasma-assisted titanium dioxide wrinkle resistant treatment of cotton fabric. Int J Chem Eng App 5:219–222
+
+Google Scholar
+
+159. Kan CW, Lam YL, Yuen CWM, et al (2012) Using plasma treatment for enhancing conventional wrinkle-resistant finishing of cotton fabric. In: The 7th Asia-pacific international symposium on the basic and application of plasma technology (APSPT-7), Taipei, April 14–16
+
+160. Lam YL, Kan CW, Yuen CWM (2011) Effect of plasma pretreatment on the wrinkle-resistance properties of cotton fibers treated with a 1, 2, 3, 4-butanetetracarboxylic acid–sodium hypophosulfite system with titanium dioxide as a cocatalyst. J Appl Polym Sci 120:1403–1410
+
+Google Scholar
+
+161. Raslan WM, Rashed US, El-Sayad H et al (2011) Ultraviolet protection, flame retardancy and antibacterial properties of treated polyester fabric using plasma-nano technology. Mater Sci Appl
+
+2:1432–1442
+
+Google Scholar
+
+162. Ghoranneviss M, Shahidi S (2014) Flame retardant properties of plasma pretreated/metallic salt loaded cotton fabric before and after direct dyeing. J Fusion Energy 33:119–124
+
+Google Scholar
+
+163. Ghoranneviss M, Shahidi S (2014) Effect of plasma pretreatment followed by nanoclay loading on flame retardant properties of cotton fabric. J Fusion Energy 33:88–95
+
+Google Scholar
+
+164. Shahidi S (2014) Novel method for ultraviolet protection and flame retardancy of cotton fabrics by low-temperature plasma. Cellulose 21:757–768
+
+Google Scholar
+
+165. Hashemizad S, Haji A, Mireshghi SS (2014) Environmentally friendly plasma pretreatment for preparation of self-cleaning polyester fabric with enhanced deposition of TiO2 nanoparticles. J Biodivers Environ Sci 5:220–226
+
+Google Scholar
+
+166. Ibrahim NA, Eid BM, Youssef MA et al (2012) Functionalization of cellulose-containing fabrics by plasma and subsequent metal salt
+
+treatments. Carbohydr Polym 90:908–914
+
+Google Scholar
+
+167. Qi K, Xin JH, Daoud WA et al (2007) Functionalizing polyester fiber with a self-cleaning property using anatase TiO2 and low- temperature plasma treatment. Int J Appl Ceram Technol 4:554– 563
+
+Google Scholar
+
+168. Baghriche O, Rtimi S, Pulgarin C et al (2013) RF-plasma pretreatment of surfaces leading to TiO2 coatings with improved optical absorption and OH-radical production. Appl Catal B 130– 131:65–72
+
+Google Scholar
+
+169. Mihailovic D, Saponjic Z, Molina R et al (2010) Improved properties of oxygen and argon RF plasma-activated polyester fabrics loaded with TiO2 nanoparticles. ACS Appl Mater Interfaces 2:1700–1706
+
+Google Scholar
+
+170. Mejia MI, Marin JM, Restrepo G et al (2009) Self-cleaning modified TiO2-cotton pretreated by UVC-light (185 nm) and RF-plasma in vacuum and also under atmospheric pressure. Appl Catal B 91:481–488
+
+Google Scholar
+
+171. Mejia MI, Marin JM, Restrepo G et al (2009) Innovative UVC light (185 nm) and radio-frequency-plasma pretreatment of nylon surfaces at atmospheric pressure and their implications in photocatalytic processes. ACS Appl Mater Interfaces 1:2190–2198
+
+Google Scholar
+
+172. Kwon SO, Ko TJ, Yu ES et al (2014) Nanostructured self-cleaning lyocell fabrics with asymmetric wettability and moisture absorbency (part I). RSC Adv 4:45442–45448
+
+Google Scholar
+
+173. Chen KS, Liao SC, Lin SW et al (2012) Improvement of thermoplastic polyurethane nonwoven hydrophilicity by atmospheric pressure plasma treatment with He and N2 mixed gases. Jpn J Appl Phys 51:01AJ06.1–01AJ06.3
+
+Google Scholar
+
+174. Flor C, Hinestroza J (2010) Surface modification of polyester fabrics using low pressure air radio frequency plasma. Int J Fashion Des Technol Educ 3:119–127
+
+Google Scholar
+
+175. Kan CW, Yuen CWM (2008) Static properties and moisture content properties of polyester fabrics modified by plasma
+
+treatment and chemical finishing. Nucl Instr Methods Phys Res Sect B 266:127–132
+
+Google Scholar
+
+176. Samanta KK, Jassal M, Agrawal AK (2010) Antistatic effect of atmospheric pressure glow discharge cold plasma treatment on textile substrates. Fiber Polym 11:431–437
+
+Google Scholar
+
+177. El-Khatib EM, Raslan WM, El-Halwagy AA et al (2013) Effect of low temperature plasma treatment on the properties of wool/ polyester blend. RJTA 17:124–132
+
+Google Scholar
+
+178. Rombaldoni F, Mossotti R, Montarsolo A et al (2008) The effects of HMDSO plasma polymerization on physical, low-stress mechanical and surface properties of wool fabrics. AUTEX Res J 8:77–83
+
+Google Scholar
+
+179. Seki Y, Sarikanat M, Sever K et al (2010) Effect of the low and radio frequency oxygen plasma treatment of jute fiber on mechanical properties of jute fiber/polyester composite. Fiber Polym 11:1159–1164
+
+Google Scholar
+
+180. Gibeop N, Lee DW, Prasad CV et al (2013) Effect of plasma
+
+treatment on mechanical properties of jute fiber/poly (lactic acid) biodegradable composites. Adv Compost Mater 22:389–399
+
+Google Scholar
+
+181. Inbakumar S, Anukaliani A (2010) Effect of plasma treatment on surface of protein fabrics. J Phys 208:012111–012121
+
+Google Scholar
+
+182. Yip J, Chan K, Sin KM, et al. Surface modification of polyamides materials with low temperature plasma. http://faculty.mu.edu.sa/ public/uploads/1333614777.1552ewewepaper.pdf Accessed 25 Dec 2014
+
+183. El-Zeer DM, Salem AA (2014) Effect of atmospheric pressure glow discharge plasma on the surface modification and the printing properties of wool/polyamide blend. IJIAS 7:159–173
+
+Google Scholar
+
+184. Szabo OE, Csiszar E, Toth A (2015) Enhancing the surface properties of linen by non-thermal atmospheric air-plasma treatment. Open Chem 13:570–576
+
+Google Scholar
+
+185. Prakash C, Ramakrishnan G, Chinnadurai S et al (2013) Effect of plasma treatment on air and water-vapor permeability of bamboo knitted fabric. Int J Thermophys 34:2173–2182
+
+Google Scholar
+
+186. Yaman N, Ozdogan E, Seventekin N (2010) Evaluation of some of the physical properties of atmospheric plasma treated polypropylene fabric. J Text Inst 101:746–752
+
+Google Scholar
+
+187. Yaman N, Ozdogan E, Seventekin N (2012) Improving physical properties of polyamide fibers by using atmospheric plasma treatments. Tekst Konfeksiyon 2:102–105
+
+Google Scholar
+
+188. Ferri A, Rombaldoni F, Mazzuchetti G et al (2012) Thermal properties of wool fabrics treated in atmospheric pressure post- discharge plasma equipment. J Eng Fiber Fabr 7:75–81
+
+Google Scholar
+
+189. Rombaldoni F, Montarsolo A, Mazzuchetti G (2010) KES-F characterization and hand evaluation of oxygen plasma-treated wool fabrics dyed at temperature below the boil. Text Res J 80:1412–1421
+
+Google Scholar
+
+190. Shah S, Shah J (2013) Innovative Plasma Technology in Textile Processing: a Step towards Green Environment. Res J Eng Sci 2:34–39
+
+Google Scholar
+
+191. Perucca M, Benveniste G (2006) LCA comparative analysis of textile applications for oleophobic and hydrophobic properties.
+
+Public Report, ACTECO, 30 October 2006. http://www.davidlu.net/ LCA_oleophobic_PET_public.pdf?G=736&ln=jp. Accessed 01 July 2014
+
+192. Hauser PJ, El-Shafei A (2011) Atmospheric pressure plasma treatments for repellent textiles. AATCC Rev 11:70–74
+
+Google Scholar
+
+193. Pane S, Tedesco R, Greger R (2001) Acrylic fabrics treated with plasma for outdoor applications. J Ind Text 31:135–145
+
+Google Scholar
+
+194. Zhang J, France P, Radomyselskiy A et al (2003) Hydrophobic cotton fabric coated by a thin nanoparticulate plasma film. J Appl Polym Sci 88:1473–1481
+
+Google Scholar
+
+195. Davis R, El-Shafei A, Hauser P (2011) Use of atmospheric pressure plasma to confer durable water repellent functionality and antimicrobial functionality on cotton/polyester blend. Surf Coat Technol 205:4791–4797
+
+Google Scholar
+
+196. Ghoranneviss M, Moazzenchi B, Shahidi S et al (2006) Decolorization of Denim Fabrics with Cold Plasmas in the Presence of Magnetic Fields. Plasma Process Polym 3:316–321
+
+Google Scholar
+
+197. Hesse A, Thomas H, Hocker H (1995) Zero-AOX shrinkproofing treatment for wool top and fabric. Text Res J 65:355–361
+
+Google Scholar
+
+198. Kan CW, Yuen CWM (2009) A comparative study of wool fibre surface modified by physical and chemical methods. Fiber Polym 10:681–686
+
+Google Scholar
+
+199. Kan CW, Yuen CWM, Tsoi WYI et al (2010) Plasma pretreatment for polymer deposition- improving antifelting properties of wool.
+
+IEEE Trans Plasma Sci 38:1505–1511
+
+Google Scholar
+
+200. Souto AP, Oliveira FR, Fernandes M et al (2012) Influence of DBD plasma modification in the dyeing process of polyamide. J Text Eng 19:20–26
+
+Google Scholar
+
+201. Rakowski W (1989) Plasma modification of wool under industrial conditions. Melliand Textilber 70:780–785
+
+Google Scholar
+
+202. Li X, Qiu Y (2012) The application of He/O2 atmospheric pressure plasma jet and ultrasound in desizing of blended size on cotton fabrics. Appl Surf Sci 258:7787–7793
+
+Google Scholar
+
+203. Bulut MO, Devirenoglu C, Oksuz L et al (2014) Combination of grey cotton fabric desizing and gassing treatments with a plasma aided process. J Text Inst 105:828–841
+
+Google Scholar
+
+204. Cernak M, Cernakova L, Hudec I et al (2009) Diffusive coplanar surface barrier discharge and its applications for in-line processing of low-added-value materials. Eur Phys J Appl Phys 47:1–6
+
+Google Scholar
+
+205. Simor M, Rahel J, Vojtek P et al (2002) Atmospheric-pressure diffuse coplanar surface discharge for surface treatments. Appl Phys Lett 81:2716–2718
+
+Google Scholar
+
+206. Skacelova D, Fialova M, Stahel P et al (2011) Improvement of surface properties of reinforcing polypropylene fibers by atmospheric plasma treatment. In: 30th ICPIG conference proceedings, Belfast, UK, 28th August–2nd September
+
+207. Fialova M, Skacelova S, Stahel P et al (2012) Improvement of surface properties of reinforcing polypropylene fibers by atmospheric plasma treatment. Chem Listy 106:s1439–s1442
+
+Google Scholar
+
+208. Cernak M (2015) An apparatus and method for improving felting properties of animal fibres by plasma treatment. http:// www.google.com/patents/EP2488690A1?cl=en. Accessed 18 Mar 2015
+
+209. Stepanova V, Vorac J and Slavicek P (2012) Modification of the properties of animal fibers using dielectric barrier discharge at atmospheric pressure. In: ESCAMPIG XXI, Viana do Castelo, Portugal, pp 10–14
+
+210. Kan CW, Yuen CWM (2006) Textile modification with plasma treatment. RJTA 10:49–64
+
+Google Scholar
+
+211. Rawal DS, Kapoor A, Sharma HS et al (2011) A highly selective low pressure inductively coupled plasma etching process for GaAs using photoresist mask. Open Plasma Phys J 4:34–39
+
+Google Scholar
+
+212. Act-clean (2014) The way to cleaner production. http://act- clean.eu/index.php/Textile-low-pressure-plasma-technology- fla;100.358/1. Accessed 12 July 2014
+
+213. Andrew W (2004) NM tech, textile mills fight stains. http:// www.abqjournal.com/biz/262103 outlook11-22-04.htm (Accessed 06 June 2014
+
+214. Richter International (2014) Plasmawool. http:// www.richterinternational.ca/brands/plasmawool.html Accessed 12 June 2014
+
+215. Pavlovo Posad Shwal Manufactory (2014). http://platki.ru/en/about/ manufactory/. Accessed 15 August 2014
+
+216. Jhala PB, Nema SK, Mukherjee S (2009) Innovative atmospheric plasma technology for improving angora cottage industry’s competitiveness. http://www.fibre2fashion.com/industry-article/ pdffiles/17/1637.pdf Accessed 18 Oct 2014
+
+217. Shishoo R (2007) Plasma technologies for textiles. Woodhead Publishing Limited, Cambridge 22
+
+Google Scholar
+
+Download references
+
+Author information
+
+Authors and Affiliations
+
+1. Higher Institute of Fashion Professions of Monastir, 5000, Monastir, Tunisia
+
+R. Abd Jelil
+
+Authors
+
+1. R. Abd Jelil View author publications
+
+Search author on:PubMed Google Scholar
+
+Corresponding author
+
+Correspondence to R. Abd Jelil.
+
+Rights and permissions
+
+Reprints and permissions
+
+About this article
+
+[image]
+
+Cite this article
+
+Jelil, R.A. A review of low-temperature plasma treatment of textile materials. J Mater Sci 50, 5913–5943 (2015). https://doi.org/10.1007/ s10853-015-9152-4
+
+Download citation
+
+•  Received: 24 February 2015
+
+•  Accepted: 04 June 2015
+
+•  Published: 12 June 2015
+
+•  Issue date: September 2015
+
+•  DOI: https://doi.org/10.1007/s10853-015-9152-4
+
+Keywords
+
+•  Plasma Treatment •  Cotton Fabric •  Dielectric Barrier Discharge •  Jute Fiber •  Wool Fiber
+
+Access this article
+
+Log in via an institution
+
+Subscribe and save
+
+Springer+ from $39.99 /Month
+
+•  Starting from 10 chapters or articles per month
+
+•  Access and download chapters and articles from more than 300k books and 2,500 journals •  Cancel anytime
+
+View plans
+
+Buy Now
+
+Buy article PDF USD 39.95
+
+Price excludes VAT (USA) Tax calculation will be finalised during checkout.
+
+Instant access to the full article PDF.
+
+Advertisement
+
+Search
+
+Search by keyword or author
+
+Search
+
+Navigation
+
+•  Find a journal •  Publish with us •  Track your research
+
+Discover content
+
+•  Journals A-Z •  Books A-Z
+
+Publish with us
+
+•  Journal finder •  Publish your research •  Language editing •  Open access publishing
+
+Products and services
+
+•  Our products •  Librarians •  Societies •  Partners and advertisers
+
+Our brands
+
+•  Springer •  Nature Portfolio •  BMC •  Palgrave Macmillan •  Apress •  Discover
+
+•  Your privacy choices/Manage cookies •  Your US state privacy rights •  Accessibility statement •  Terms and conditions •  Privacy policy •  Help and support •  Legal notice •  Cancel contracts here
+
+73.203.120.4
+
+Not affiliated
+
+[image]
+
+© 2026 Springer Nature

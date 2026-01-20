@@ -1,0 +1,374 @@
+ARTICLE
+OPEN https://doi.org/10.1038/s41467-019-13569-5
+ﬁ All- ber tribo-ferroelectric synergistic electronics
+with high thermal-moisture stability and
+comfortability
+1,4 1,4 1 2 1 1 3 Weifeng Yang , Wei Gong , Chengyi Hou *, Yun Su , Yinben Guo , Wei Zhang , Yaogang Li ,
+3 1 * & Hongzhi Wang * Qinghong Zhang
+1234567890():,;
+Developing fabric-based electronics with good wearability is undoubtedly an urgent demand
+for wearable technologies. Although the state-of-the-art fabric-based wearable devices have
+ ﬁ shown unique advantages in the eld of e-textiles, further efforts should be made before
+ “ ” achieving electronic clothing  due to the hard challenge of optimally unifying both promising
+ﬁ electrical performance and comfortability in single device. Here, we report an all- ber tribo-
+ferroelectric synergistic e-textile with outstanding thermal-moisture comfortability. Owing to
+ﬁ a tribo-ferroelectric synergistic effect introduced by ferroelectric polymer nano bers, the
+  − 2 maximum peak power density of the e-textile reaches 5.2 W m under low frequency
+motion, which is 7 times that of the state-of-the-art breathable triboelectric textiles. Elec-
+ﬁ tronic nano ber materials form hierarchical networks in the e-textile hence lead to moisture
+wicking, which contributes to outstanding thermal-moisture comfortability of the e-textile.
+ﬁ The all- ber electronics is reliable in complicated real-life situation. Therefore, it is an idea
+prototypical example for electronic clothing.
+1
+  3 Engineering Research Center of Advanced  
+4 These authors contributed equally: Weifeng  
+;  zhangqh@dhu.edu.cn ;  wanghz@dhu.edu.cn
+1
+
+ARTICLE NATURE COMMUNICATIONS | https://doi.org/10.1038/s41467-019-13569-5
+A long with the springing up vigorous emergence of wear- layers) for constructing tribo-ferroelectric synergistic enhance-
+able electronics, closely related issues of endurance and ment effect. Electrospinning was adopted to induce rich ferro-
+ β wearability have become an important bottleneck  dipoles electric -phase as well as the steering polarization of CF 2   18 , 19 ﬁ ﬁ restricting its development. Electronic textiles (e-textiles), as a (de ned as primary polarization) in P(VDF-TrFE) nano bers
+new generation wearable electronics, show promising wearability (Supplementary Figs. 1 and 2).
+ﬁ but still face many dif culties in terms of safety, practicality and Figure  1 b illustrates the ferroelectric charge and discharge
+1 , 2 ﬁ comfortability . The shortcoming is the inadequate wearable mechanism of the all- ber electronics. Regulating the electrostatic
+energy technology. It remains a challenge to optimally unify energy stored inside of P(VDF-TrFE) ferroelectricity in the form
+appropriate electrical properties and wearability in single energy of electric displacement polarization to promote charge transfer
+  3  ﬂ and super- device. For instance, exible rechargeable batteries between two tribo-polarity materials. From the perspective of
+  4  ﬁ require repeated charging, while the safety and sta- capacitors ferroelectric energy storage, when applied electric eld changes
+ﬁ bility are affected during frequent bending and deformation. continuously, the P(VDF-TrFE) nano bers act as an equivalent
+  5 , 6 20 Photovoltaic cells suffer similar issues of mechanical stability, . The capacitor for reciprocating charging and discharging
+ﬁ and also are highly dependent on working environment. Ther- energy density stored in P(VDF-TrFE) nano bers can be
+  7 , 8 made of low-dimensional materials are moelectric devices expressed as
+ﬂ exible but have very limited power density. Moreover, above
+P P Z Z m m  ﬁ technologies are hardly applied in ber- and fabric-like devices.
+ ¼    ¼    U  U E d P E d P U ð Þ 1   9 , 10 has shown great As a comparison, triboelectric technology s r
+ ﬁ ﬁ potential in the eld of e-textiles because of its high ef ciency in 0 P r
+low-frequency and random mechanical energy collection, as well
+where  U  is the energy for charging ferroelectricity during the
+as its various possibilities of material and device design including  ﬁ  and  U  are the energy stored in and increase of electric eld,  U s r ﬁ nano bers and fabrics. However, the power density of current
+released from ferroelectricity during the change of applied electric
+triboelectric textiles is generally low. Though coupling polarized ﬁ eld ( E ),  P  and  P  are the maximum and remnant polarization m r inorganic piezoelectric/ferroelectric nanoparticles to modify 21 – intensity, respectively. We used the Sawyer Tower method
+charge trapping capability can effectively increase electrical out-
+(Supplementary Fig. 3) to test the hysteresis loop of P(VDF-TrFE) – 11 13  ﬁ , the harsh polarization processes and dense lm mor- put ﬁ nano ber nonwovens (Fig.  1 c). The maximum and residual
+phology of materials severely limit its utility in textiles. Moreover,   − 2  μ under the polarization intensity are about 2.03 and 1.05 C cm
+few studies have considered the thermal-moisture stability and − 1  ﬁ electric eld intensity of 1000 kV cm , respectively. When
+comfortability of e-textiles, which are crucial indicators for  ﬁ applied electric eld increases in positive direction, the CF 2 14 , 15 . Especially for triboelectric textiles, evaluating wearability
+dipoles continuously turn and increase the polarization of
+electrical performance decay in changeable thermal-moisture
+ferroelectric phase rapidly until saturation (state 1 to 2). If
+conditions on body surface is a major issue that still need to be  ﬁ electric eld is reduced at this time, some dipoles will relax and 16 , 17 . addressed
+the polarization will gradually decrease (state 2 to 3). When the
+To develop e-textiles that simultaneously meet rigorous elec-  ﬁ electric eld decreases to 0, some dipoles remain polarized and  “ trical and wearable performance requirements, we set an all-
+exhibit a residual polarization intensity. ﬁ ” ﬁ ber  principle: First, we employ only nano ber materials in
+Figure  1 d is a schematic diagram of the tribo-ferroelectric
+producing tribo-ferroelectric synergistic effect so as to improve
+synergistic enhancement model in dual-ferroelectric polarized  ﬂ output of triboelectric devices while remain good exibility. ﬁ (DFP) e-textile. Owing to contact electri cation and electrostatic  ﬁ Second, all function layers of the device are built by ber net-
+induction, the electrons transfer from PA6 to P(VDF-TrFE)
+works to guarantee breathability and moisture permeability. ﬁ nano bers while charges are generated at fabric electrodes. ﬁ Third, nano ber network is constructed into hierarchical struc-  ﬁ Therefore, an electrostatic eld forms between dielectric and
+ture for realizing moisture wicking function of the e-textile.
+conductive materials which makes a secondary polarization on P
+Owing to above designs, the e-textile has a high electrical output ﬁ (VDF-TrFE) nano ber ferroelectricity corresponding to the state
+as well as outstanding thermal-moisture stability and comfort-
+1, 2, and 3 processes of the hysteresis loop (Fig.  1 c). Ferroelec-
+ability. The maximum peak power density of the e-textile reaches
+tricity is continuously charged and discharged in the cycle of   − 2 under low frequency (~2.5 Hz) motion, which is 7 5.2 W m
+contact and separation. The electrostatic energy stored in
+times that of the state-of-the-art breathable triboelectric textiles.
+ferroelectricity will promote charge transfer and improve ﬁ We also demonstrate several real-life applications of the all- ber
+performance of the e-textile, while the polarization of ferroelec-
+electronics readily as clothing, including powering the LCD,
+tricity can be promoted as a result of the increase of charge
+digital electroluminescent lattices and electronic watch, and
+density. According to the ferroelectric capacitance model
+monitoring human motions. It provides a practical and propag- 22 , 23 , the energy required for dipoles rotating to equili- theory
+able route for the development of next-generation electronic
+brium position can be expressed as:
+clothing.  
+d
+ð  θ  þ Þ ð Þ    þ Δ  ¼  μ    cos  1 2    E U  E  E D d p D
+Results
+ ﬁ The structure of the e-textile and the proposal of tribo- where  E ,  E ,  E ,  E ,  E  are the electric eld intensity between 0 D d p e
+ﬁ ferroelectric synergy model dielectric and conductive layer, inside the ferroelectric layer, inside . Figure  1 a depicts the all- ber tribo-
+the PA6 layer, generated by the other dipoles and acting on dipoles ferroelectric synergistic e-textile, which consists of four function
+ﬁ effectively, respectively.  D  and  d  are the thickness of ferroelectric fabric layers, including two nano ber nonwovens poly(vinylidene
+ μ  θ ﬂ ﬂ layer and PA6,  is dipole moment,  is the angle between dipole uoride-tri uoroethylene) (P(VDF-TrFE)) and polyamide 6
+ ﬁ ﬁ . When the thickness of PA6 layer is xed, the  E ,  d moment and  E (PA6) with opposite tribo-polarity for contact electri cation, e 0
+– –  remain unchanged. Therefore, the primary polarization and  E nickel copper (Ni Cu) fabric electrode for charge induction, and d
+direction and thickness  D  ( D  and  D ) of ferroelectricity the moisture-wicking fabric for directional water transport and DFP-o DFP-i
+ﬁ ﬁ are two crucial factors that signi cantly affect secondary rapid evaporation. The P(VDF-TrFE) nano bers also act as a
+ θ ﬁ polarization. The larger the , the easier it is for dipoles to go polymer ferroelectricity (de ned as inner/outer ferroelectric
+2 NATURE COMMUNICATIONS  |  (2019) 10:5541 | https://doi.org/10.1038/s41467-019-13569-5 | www.nature.com/naturecommunications
+
+ARTICLE NATURE COMMUNICATIONS | https://doi.org/10.1038/s41467-019-13569-5
+a b
+Moisture wicking fabric P m
+P(VDF-TrFE)
+Polarization Discharging Inner ferroelectric layer U r
+PA6
+U Charging s P P(VDF-TrFE) r
+Outer ferroelectric layer
+E b Conductive fabric
+Electric field
+
+U  and s
+ﬁ nano
+ μ PA6,
+3 NATURE COMMUNICATIONS  |  (2019) 10:5541 | https://doi.org/10.1038/s41467-019-13569-5 | www.nature.com/naturecommunications
+
+ARTICLE NATURE COMMUNICATIONS | https://doi.org/10.1038/s41467-019-13569-5
+Working mechanism of the tribo-ferroelectric synergistic equilibrium condition between human body and surrounding
+electronics environment, the e-textile itself should have the ability of . To better demonstrate the tribo-ferroelectric syner-
+“ ” breathing . gistic effect, we studied the performance of e-textiles with or
+ﬁ In our multilayer all- ber electronics, we demonstrate a without ferroelectricity, i.e., DFP, SFP, and unpolarized (UP) e-
+ﬁ moisture-wicking fabric based on bilayer hydrophilic nano ber textiles. An UP e-textile can be obtained through depolarization
+membranes with different pore sizes and a hydrophobic cotton of ferroelectric P(VDF-TrFE) (Supplementary Fig. 8, and Sup-
+membrane (Fig.  3 a and Supplementary Fig. 11). The functions of plementary Note 2). The charge density (Fig.  2 a), short-circuit
+each layer are as follows: (1) a hydrophilic polyacrylonitrile current (Fig.  2 b), surface potential (Fig.  2 c) and output voltage
+ﬁ (PAN) nano ber outer layer close to skin which was used to carry (Supplementary Fig. 9, and Supplementary Note 3) of UP, SFP
+away the sweat from human body, (2) a hydrophilic PA6 and DFP e-textiles were tested and compared, respectively. The
+ﬁ nano ber intermediate layer which absorbing sweat from the charge accumulation rate and surface charge density of DFP e-
+ﬁ PAN layer and rapidly diffusing, (3) a hydrophobic and textile are signi cantly higher than those of SFP and UP e-textiles.
+ ﬁ breathable cotton fabric as the inner layer which effectively We propose, for the rst time, a reasonable assumption to
+prevent liquid water in PA6 layer from diffusing to fabric demonstrate the effect of ferroelectric polarization on the surface
+ ﬁ electrode. Since all function layers of the device are built by charge transfer between opposite tribo-polarity polymer bers. It
+ ﬁ porous ber network, the air and moisture can effectively diffuse can be summarized that the ferroelectric polarization changes the
+from skin to environment then exchange heat and moisture with Fermi level at the surface of tribo-polarity polymers, resulting in a
+– 11 , 24 27 . According to the environment (Fig.  3 b). change in surface potential difference
+  28 , 29 surface states model and ANSYS simulation, as shown in When the human body is in a sweating state (Fig.  3 c), the sweat
+ﬁ ﬁ Fig.  2 d, a weak surface potential difference is formed between contacts with PAN micro bers, enters inter ber capillary channel
+– 31 33 PA6 (tribo-positive polymer) with unpolarized P(VDF-TrFE) . Whereas the pore and is dragged by the Laplace pressure
+(ferroelectric tribo-negative polymer). A small amount of elec- size of PAN is about 10 times larger than that of PA6 (Fig.  3 d, e),
+trons will transfer from PA6 to P(VDF-TrFE) until the Fermi they form a hierarchical network structure from micron to
+levels of contact surface are equal and reach an equilibrium state. nanometer. The Laplace pressure difference formed at the
+Due to the polarization of P(VDF-TrFE), the Fermi level of interface is
+contact surface is reduced. While the potential difference between
+γ θ γ θ 4 cos 4 cos PA6 and P(VDF-TrFE) is increased which enhances the amount PA6 PAN  Δ  ¼ ð Þ   P   3
+D D of electrons to transfer (Fig.  2 e). Furthermore, we introduced an nano micro
+inner ferroelectric layer P(VDF-TrFE) inside of PA6 which results
+ θ  θ where  and  are the contact angles (CA) of sweat with in an increase of Fermi level of PA6. In this case, the surface PA6 PAN
+ ﬁ PA6 and PAN bers,  D  and  D  is the pore size of PA6 and potential difference between two dielectric materials is further nano micro
+ ﬁ  γ PAN ber layer,  is the surface tension of water in air. The sweat increased and a large number of electrons are transferred from
+ﬁ  Δ located in the pores of PAN micro bers under the action of P PA6 to P(VDF-TrFE) (Fig.  2 f).
+ﬁ would penetrate into the pores of PA6 nano bers. Compared We further use the surface states model to illustrate the tribo-
+ﬁ ﬁ with PAN micro bers, PA6 nano bers have a higher sweat ferroelectric synergistic effect during materials contact and
+ﬁ penetration and spreading driving force as well as larger speci c separation. When P(VDF-TrFE) and PA6 (two opposite tribo-
+surface area, therefore have faster water evaporation rate  ﬁ ﬁ polarity polymers) rst contact, the contact electri cation is
+(Supplementary Fig. 12b). Furthermore, introduction of PA6 promoted due to the primary polarization effect. A large
+ﬁ bers layer can enhance the water uptake capacity of moisture amount of electrons are transferred and the Fermi levels of P
+wicking fabric, and also give rise to the wettability gradient (VDF-TrFE) and PA6 at contact surface is equal (Fig.  2 g
+34 , 35 – 11 , 24 27 . Thus, more sweat enrichment between PAN and PA6 layer . The separation of tribo-polarity materials Contact state)
+in PA6 layer will be more conducive to evaporation (Supple-  ﬁ leads to the internal electric eld between dielectric and
+mentary Fig. 12c, d, and Supplementary Note 5). Figure  3 f shows conductive layer, which promotes secondary polarization of
+the water evaporation rate of cotton, cotton-PAN and cotton- ferroelectricity (Fig.  1 c, d State 2) hence changes the Fermi
+PA6-PAN fabrics, among which cotton-PA6-PAN fabric has the levels of PA6 and P(VDF-TrFE) again (Fig.  2 g Separate state).
+fastest water evaporation rate. This proves that the hierarchical When tribo-polarity materials contact again, the residual
+ﬁ ﬁ network structure and high speci c surface area of nano ber polarization of ferroelectricity (Fig.  1 c, d State 3) will enhance
+composite membranes have directional water transport and the capability of capturing charges therefore extra charges will
+moisture wicking performance. Figure  3 g demonstrates the transfer after previous ones (Fig.  2 g Next contact state). The
+penetration and spreading behavior of water droplets on the Fermi level at the friction interface remains equal, thus
+surface of a moisture-wicking fabric (Supplementary Movie 1). It completing a cycle. These two effects couple and synergism
+shows that Laplace pressure facilitates the penetration and with each other until an equilibrium is built. Detailed
+spreading of water in cotton-PA6-PAN fabrics. The wicking description about charge transfer behavior of tribo-
+effect is expected to be helpful for creating comfortable ferroelectric synergistic mechanism is shown in Supplementary
+microenvironments to skin. Fig. 10, and Supplementary Note 4.
+Evaluating the wearability and electrical output performance
+ﬁ of the e-textile Construction of all- ber e-textile with high thermal-moisture . We performed various wearability tests on
+stability and comfortability individual functional fabrics and the integrated e-textile (Sup- . In addition to intrinsic mechanism
+plementary Fig. 13). Air permeability refers to the performance of in ideal model, complicated and changeable real-world environ-
+ﬁ gas molecules through the fabric and is the most basic property in ment factors are of signi cance in determining electronics per-
+36 . With the sequential superposition of layers, fabric permeability formance. Especially, wet environments are detrimental to
+− 1 ), fabric electrode-P from moisture-wicking layer (104.67 mm s electronics. The performance of the triboelectric devices may be
+− 16 , 17 , 30 1 ﬁ (VDF-TrFE) nano bers layer (84.90 mm s . In ), fabric electrode-P greatly suppressed by high humidity and liquid contact
+− 1 ﬁ ) to e-textile order to reduce the negative effects of surface humidity and wet of (VDF-TrFE)-PA6 nano bers layer (61.30 mm s
+− 1 (34.10 and 15.90 mm s human body on e-textiles, while maintaining the thermal ), the air permeability shows a gradual
+4 NATURE COMMUNICATIONS  |  (2019) 10:5541 | https://doi.org/10.1038/s41467-019-13569-5 | www.nature.com/naturecommunications
+
+ARTICLE NATURE COMMUNICATIONS | https://doi.org/10.1038/s41467-019-13569-5
+b c a
+0 18
+5 NATURE COMMUNICATIONS  |  (2019) 10:5541 | https://doi.org/10.1038/s41467-019-13569-5 | www.nature.com/naturecommunications
+
+ARTICLE NATURE COMMUNICATIONS | https://doi.org/10.1038/s41467-019-13569-5
+a b Skin
+Skin
+PAN Water droplet/sweat Water vapor
+PA6
+Cotton
+c
+Skin
+D micro
+D nano
+Air convection Environment
+d e f
+0.24 25 Evaporation of water (g) PAN Added water PAN PA6 Relative frequency (%) μ D = 0.456 ± 0.13  m PA6 PA6  20 0.18 μ = 4.454 ± 1.38  m D PAN 
+15 0.12 μ μ 4  m 2  m
+10 0.06 θ  θ  = 56° = 55°
+Cotton fabric 5 0.00 Cotton-PAN fabric
+Cotton-PA6-PAN fabric 0
+0 30 60 90 120 0 0.3 0.6 0.9 2.5 5.0 7.5
+c
+ﬁ
+− 1 ,
+6 NATURE COMMUNICATIONS  |  (2019) 10:5541 | https://doi.org/10.1038/s41467-019-13569-5 | www.nature.com/naturecommunications
+
+ARTICLE NATURE COMMUNICATIONS | https://doi.org/10.1038/s41467-019-13569-5
+a b
+2.0 120
+Moisture wicking fabric ( ) Moisture wicking fabric ( )
+Fabric electrode + P(VDF-TrFE) ( ) ) –2 Fabric electrode + P(VDF-TrFE) ( ) Water vaper transmission (g cm Fabric electrode + P(VDF-TrFE) + PA6 ( ) Fabric electrode + P(VDF-TrFE) + PA6 ( ) ) 1.5 ( ) + ( ) –1 ( ) + ( ) Air permeability (mm s ( ) + ( ) 80 ( ) + ( )
+1.0
+40
+0.5
+Temperature = 38 °C, Relative humidity = 86% 0 0
+0 20 40 60 80 100 0 12 24 36 48 60
+Pressure difference (Pa) Time (h)
+c d 1600
+0.12 ) With moisture wicking fabric –1 )  W  6 –1 Without moisture wicking fabric Fabrics  W  2 Guard ring 2
+ﬁ Figure ca-
+7 NATURE COMMUNICATIONS  |  (2019) 10:5541 | https://doi.org/10.1038/s41467-019-13569-5 | www.nature.com/naturecommunications
+
+ARTICLE NATURE COMMUNICATIONS | https://doi.org/10.1038/s41467-019-13569-5
+a b c d
+e 1 Energy 2 Energy store 3 Signal processing 4 Correction 5 Pressure
+harvesting and output and transmission circuit sensing
+VIN A 0
+Atmega 328P
+movement.
+ 5 d, and
+ﬁ
+gesture
+8 NATURE COMMUNICATIONS  |  (2019) 10:5541 | https://doi.org/10.1038/s41467-019-13569-5 | www.nature.com/naturecommunications
+
+ARTICLE NATURE COMMUNICATIONS | https://doi.org/10.1038/s41467-019-13569-5
+Pressure sensing unit; 6, Data reception and analysis unit (Fig.  5 e). uniformly deposited on fabric electrode-P(VDF-TrFE) nonwovens. The spinning
+parameters were as follows: voltage 20 kV, receiving distance 15 cm, propulsion E-textiles act as both energy harvesting and pressure sensing unit
+− 1 , needle inner diameter 0.2 mm. speed 0.2 mL h that functions as a self-powered sensor. The relationship between
+the units and the process of reading, correcting, wirelessly
+Preparation of the moisture-wicking fabric . PAN powder was dissolved in DMF transmitting, and real-time mapping of pressure sensing signals
+at 60 °C to prepare the PAN solution (16%, mass ratio). The PA6 and PAN are explained in detail in Supplementary Fig. 21a, b, and ﬁ nano bers were sequentially deposited onto the hydrophobic breathable cotton
+Supplementary Note 11. fabric by electrospinning. The spinning parameters of PAN were as follows: voltage
+− 1 15 kV, receiving distance 15 cm, propulsion speed 1.0 mL h , needle inner dia- The hardware connection and normal operating status of self-
+meter 0.5 mm. powered gesture monitoring system are shown in Fig.  5 f, g, and
+the wireless monitoring system is skillfully placed in a
+Fabrication of the e-textile . As shown in Fig.  1 a, a fabric electrode-P(VDF-TrFE)-  ﬁ polyurethane insole made by 3D printing. At a xed frequency
+ﬁ PA6 nano ber nonwoven fabric was sewn together with the moisture-wicking of 2 Hz, the e-textile was used to charge two commercial lithium ﬂ fabric and wrapped with te on tape. Similar to the above method, a fabric elec-
+’ batteries. Within 5.5 h, the battery s voltage increased from 3.01 V ﬁ trode-P(VDF-TrFE) nano ber nonwovens and a moisture-wicking fabric were
+sewn and packaged to obtain another part of the e-textile. Finally, two pieces of to 5.47 V. During the next 1.9 h, the wireless monitoring system
+fabric were pressed at a pressure of 5 MPa by cold-compacting post treatment to continued to work including signal acquisition, processing and
+ﬁ improve the interface bonding between the nano bers. The e-textile tested in transmission. The battery pack quickly discharged and the voltage experiment were uniformly sized to 4 × 6 cm (Supplementary Fig. 4).
+dropped from 5.47 V to 3.31 V (Fig.  5 h). During normal
+operation of the wireless monitoring system, we performed an Characterization and measurements . Ferroelectric properties of P(VDF-TrFE)
+electrical signal test on different parts of human foot (Supple- ﬁ nano ber nonwovens was tested by Radiant Precision Premier II (Supplementary
+mentary Fig. 21c, and Supplementary Movie 3). When different Fig. 3). Field emission scanning electron microscopy (SEM MERLIN, Carl Zeiss),
+ + X-ray diffractometry (D/max-2550VB  , Japan) and Contact Angle Analyzer parts of the foot are stressed, the contact position and area
+(OCA40Micro, Germany) were used to characterize the microscopic morphology, between tribo-polarity materials will be different, resulting in the ﬁ crystal phase and the contact angles of nano bers, respectively. The Keithley 2657
+respective electrical signals corresponding to the respective parts A and Keithley 6514 were used to test the electrical output performance of the e-
+of the foot. This is expected to be applied to foot motion textile. The surface potentials of the e-textile were determined using an electrostatic
+voltmeter (TREK 542A-2, USA), at a relative humidity of ~30%. Relative humidity correction, real-time access to exercise information and predic-
+was tested by humidity measuring instrument (GM620, Shanghai Tianzhi Intelli- tion of foot ulcers in diabetic patients.
+gent Technology Co., Ltd., China). The water evaporation rate was tested by
+moisture evaporation rate tester (FFZ191, Wenzhou Fangyuan Instrument Co.,
+− Ltd., China) based on GB/T 21655.1 2008 standard (Supplementary Fig. 13b). The Discussion
+fabric permeability to air was measured by the air permeability tester (YG461E,  “ ﬁ ” In summary, we set an all- ber  principle to design and apply an
+Wenzhou Fangyuan Instrument Co., Ltd., China) followed by GB/T 24218.15- ﬁ all- ber tribo-ferroelectric synergistic electronic with outstanding 2018 standard (Supplementary Fig. 13a). Water vapor transmission rate test was
+thermal-moisture stability and comfortability for extracting bio- measure by fabric moisture permeability testing apparatus (YG601H, Ningbo
+ﬁ Textile Instrument Factory, China) followed by GB/T 12704.1-2009 standard mechanical energy. Materials design that used only all-nano ber
+(Supplementary Fig. 13c). The thermal and evaporation resistance was assessed materials to constructing tribo-ferroelectric synergistic effect so as
+according to ASTM F1868 standard using a sweating guarded hotplate (SGHP, to improve output of triboelectric devices. All function layers of Northwest Testing Technology Corporation, US) (Supplementary Fig. 14, and
+ ﬁ the device are built by porous ber networks to guarantee Supplementary Note 6).
+ﬁ breathability and moisture permeability. And nano ber network
+is constructed into hierarchical structure for realizing moisture Data availability
+wicking function of the e-textile. We discussed the tribo-  ﬁ The data that support the ndings of this study are available from the corresponding
+ferroelectric synergistic mechanism in mechanical-to-electrical authors upon reasonable request.
+energy conversion behavior and moisture wicking mechanism of
+ﬁ hierarchical nano ber network in sweating state. Owing to above Received: 23 June 2019; Accepted: 13 November 2019;
+designs, the e-textile has a high electrical output as well as out-
+standing thermal-moisture comfortability. The maximum peak
+  − 2 under low power density of the e-textile can reach 5.2 W m
+frequency (~2.5 Hz) motion which is 7 times that of the existing
+’ breathable triboelectric textiles. And it s demonstrated to easily
+References power the LCD, digital electroluminescent lattices, electronic
+1. Zeng, W. et al. Fiber-based wearable electronics: a review of materials, watch and monitor motion signals. It is an idea prototypical –  26 fabrication, devices, and applications.  Adv. Mater. , 5310 5336 (2014).
+example for electronic clothing. 2. Gong, W. et al. Continuous and scalable manufacture of amphibious energy
+ 10 yarns and textiles.  Nat. Commun. , 868 (2019).
+ﬁ 3. Wang, Y. et al. 3D-printed all- ber li-ion battery toward wearable energy Methods
+ 27 storage.  Adv. Funct. Mater. , 1703140 (2017). 4  = Materials . P(VDF-TrFE) powder (70/30 mol%, M  1.5 × 10 , Piezotech, France), w ﬂ 4. Wu, X. et al. Micro uidic-spinning construction of black-phosphorus-hybrid 4 4  =  = PA6 pellets (M  6.0 × 10 , Arkema, France), PAN powder (M  1.5 × 10 , w w ﬁ  ﬂ micro bres for non-woven fabrics toward a high energy density exible Formosa Chemicals & Fiber Corporation, China), Hydrophobic breathable cotton  9 supercapacitor.  Nat. Commun. , 4573 (2018). fabric (Crystal Shine Red, China), Ni-Cu fabric electrode (X-Silver, China). Dime- 5. Wen, Z. et al. Self-powered textile for wearable electronics by hybridizing thylformamide (DMF), Acetone, Formic acid (Aladdin Chemistry Co., Ltd., China). ﬁ  2 ber-shaped nanogenerators, solar cells, and supercapacitors.  Sci. Adv. ,
+e1600097 (2016).
+ﬁ Preparation of fabric electrode-P(VDF-TrFE) nano ber nonwovens . P(VDF- 6. Jinno, H. et al. Stretchable and waterproof elastomer-coated organic
+TrFE) powder was dissolved in a mixture of DMF and acetone (3:2, mass ratio) at  2 photovoltaics for washable electronic textile applications.  Nat. Energy ,
+60 °C to prepare the P(VDF-TrFE) solution (20%, mass ratio). P(VDF-TrFE) – 780 785 (2017).
+ﬁ – nano bers were uniformly deposited on Ni Cu fabric electrode by electrospinning  ﬂ 7. Kim, S. J. et al. High-performance exible thermoelectric power generator
+(TEADFS-700, China). The spinning parameters were as follows: voltage 21 kV, –  10 using laser multiscanning lift-off process.  ACS Nano , 10851 10857 − 1 receiving distance 18 cm, propulsion speed 0.8 mL h , needle inner diameter (2016).
+0.5 mm. 8. Kim, S. J., We, J. H. & Cho, B. J. A wearable thermoelectric generator
+ 7 fabricated on a glass fabric.  Energy Environ. Sci. , 1959 (2014).
+9. Wang, Z. L. Triboelectric nanogenerators as new energy technology and self- ﬁ Preparation of fabric electrode-P(VDF-TrFE)-PA6 nano ber nonwovens . PA6
+powered sensors - principles, problems and perspectives.  Faraday Discuss. pellets were dissolved in a mixture of formic acid and acetic acid (4:1, mass ratio) at
+– 176 , 447 458 (2014). ﬁ 60 °C to prepare the PA6 solution (20%, mass ratio). PA6 nano bers were
+9 NATURE COMMUNICATIONS  |  (2019) 10:5541 | https://doi.org/10.1038/s41467-019-13569-5 | www.nature.com/naturecommunications
+
+ARTICLE NATURE COMMUNICATIONS | https://doi.org/10.1038/s41467-019-13569-5
+10. Wang, Z. L., Chen, J. & Lin, L. Progress in triboelectric nanogenerators as a 37. Yin, Y. et al. Stretchable and tailorable triboelectric nanogenerator constructed
+ﬁ  8 new energy technology and self-powered sensors.  Energy Environ. Sci. , by nano brous membrane for energy harvesting and delf-powered
+–  3 2250 2282 (2015). biomechanical monitoring.  Adv. Mater. Technol. , 1700370 (2018).
+11. Seung, W. et al. Boosting power-generating performance of triboelectric 38. Karthik, T., Senthilkumar, P. & Murugan, R. Analysis of comfort and moisture
+ﬁ nanogenerators via arti cial control of ferroelectric polarization and dielectric management properties of polyester/milkweed blended plated knitted fabrics
+–  7  47 properties.  Adv. Energy Mater. , 1600988 (2017). for active wear applications.  J. Ind. Text. , 897 920 (2016).
+ﬁ 12. Wang, J. et al. Achieving ultrahigh triboelectric charge density for ef cient 39. Zhu, L., Wang, X., Blanchonette, I. & Naebe, M. Thermal comfort properties
+–  8  89 energy harvesting.  Nat. Commun. , 88 (2017). of bifacial fabrics.  Text. Res. J. , 43 51 (2017).
+ ﬂ  ﬁ ﬁ 13. Zhang, C. et al. Fully rollable lead-free poly(vinylidene uoride)-niobate-based 40. He, H. & Yu, Z. Effect of air gap entrapped in re ghter protective clothing on
+ﬂ –  12  18 nanogenerator with ultra- exible nano-network electrodes.  ACS Nano , thermal resistance and evaporative resistance.  Autex Res. J. , 28 34 (2018).
+– 4803 4811 (2018). 41. ASTM F 1868. Standard test method for thermal and evaporative resistance of
+14. Mukhopadhyay, A. & Vinay Kumar, M. A review on designing the waterproof clothing materials using a sweating hot plate. (2014).
+breathable fabrics part I: fundamental principles and designing aspects of 42. Veith, G. M. et al. Shear thickening electrolytes for high impact resistant
+– –  37  2 breathable fabrics.  J. Ind. Text. , 225 262 (2008). batteries.  ACS Energy Lett. , 2084 2088 (2017).
+15. Bhuiyan, M. A. R., Wang, L., Shanks, R. A. & Ding, J. 43. Baker, L. B., Barnes, K. A., Anderson, M. L., Passe, D. H. & Stofan, J. R.
+– Polyurethane superabsorbent polymer-coated cotton fabric for Normative data for regional sweat sodium concentration and whole-body
+– –  54  34 thermophysiological wear comfort.  J. Mater. Sci. , 9267 9281 (2019). sweating rate in athletes.  J. Sports Sci. , 358 368 (2016).
+16. Kim, D., Lee, S., Ko, Y., Kwon, C. H. & Cho, J. Layer-by-layer assembly-
+induced triboelectric nanogenerators with high and stable electric outputs in
+Acknowledgements –  44 humid environments.  Nano Energy , 228 239 (2018).
+ ﬁ We gratefully acknowledge the nancial support by the Fundamental Research Funds for 17. Wen, R., Guo, J., Yu, A., Zhai, J. & Wang, Zl Humidity resistive triboelectric
+the Central Universities (2232019A3-02), DHU Distinguished Young Professor Program nanogenerator fabricated using metal organic framework composite.  Adv.
+(LZB2019002), Natural Science Foundation of China (No. 51603037), and the Innova-  29 Funct. Mater. , 1807655 (2019).
+tion Program of Shanghai Municipal Education Commission (2017-01-07-00-03- 18. Chang, C., Tran, V. H., Wang, J., Fuh, Y. K. & Lin, L. Direct-write
+E00055). C.H. thanks the Young Elite Scientists Sponsorship Program by CAST ﬁ piezoelectric polymeric nanogenerator with high energy conversion ef ciency.
+(2017QNRC001). W.G. thanks the Graduate Student Innovation Fund of Donghua –  10 Nano Lett. , 726 731 (2010).
+University (CUSF-DH-D-2019008). 19. Cheon, S. et al. High-performance triboelectric nanogenerators based on
+ ﬂ ﬁ electrospun polyvinylidene uoride-silver nanowire composite nano bers.
+ 28 Adv. Funct. Mater. , 1703778 (2018). Author contributions
+20. Tagantsev, A. K. & Stolichnov, I. A. Injection-controlled size effect on C.H., Q.Z., and H.W. guided the project. W.Y., W.G., C.H., and H.W. conceived the idea  ﬁ –  74 switching of ferroelectric thin lms.  Appl. Phys. Lett. , 1326 1328 (1999). and designed the experiment. W.Y., Y.S., Y.G., and W.Z. performed the experiments and 21. Katsouras, I. et al. The negative piezoelectric effect of the ferroelectric polymer measurements. Y.L. revised the manuscript. All authors analyzed the experimental data,  ﬂ –  15 84 (2016). poly(vinylidene uoride).  Nat. Mater. , 78  ﬁ drew the gures and prepared the manuscript. All authors discussed the results and 22. Chu, B. et al. A dielectric polymer with high electric energy density and fast reviewed the manuscript. –  313 discharge speed.  Science , 334 336 (2006).
+ﬁ 23. Pan, H. et al. Giant energy density and high ef ciency achieved in bismuth ferrite-
+Competing interests  ﬁ  9 based lm capacitors via domain engineering.  Nat. Commun. , 1813 (2018).
+24. Asadi, K., De Leeuw, D. M., De Boer, B. & Blom, P. W. Organic non-volatile The authors declare no competing interests.
+–  7 memories from ferroelectric phase-separated blends.  Nat. Mater. , 547 550
+(2008). Additional information
+25. Shin, K. S. et al. Ferroelectric coupling effect on the energy-band structure of
+Supplementary information  is available for this paper at  https://doi.org/10.1038/s41467- hybrid heterojunctions with self-organized P(VDF-TrFE) nanomatrices.  Adv.
+019-13569-5 . –  26 Mater. , 5619 5625 (2014).
+26. Li, J. C., Zhang, R. Q., Wang, C. L. & Wong, N. B. Effect of thickness on the
+Correspondence  and requests for materials should be addressed to C.H., Q.Z. or H.W.  ﬂ  ﬁ  ﬁ electronic structure of poly(vinylidene uoride) molecular lms from rst-
+ 75 principles calculations.  Phys. Rev. B , 155408 (2007).
+Peer review information  Nature Communications  thanks Hyeon-Jin Shin, Junyi Zhai 27. Moore, A. D.  Electrostatics and its Applications  (Wiley, New York, 1973).
+and the other, anonymous, reviewer(s) for their contribution to the peer review of this 28. Xu, C. et al. Raising the working temperature of a triboelectric nanogenerator
+work. Peer reviewer reports are available. ﬁ by quenching down electron thermionic emission in contact-electri cation.
+ 30 Adv. Mater. , e1803968 (2018).
+Reprints and permission information  is available at  http://www.nature.com/reprints ﬁ 29. Xu, C. et al. On the electron-transfer mechanism in the contact-electri cation
+ 30 effect.  Adv. Mater. , e1706790 (2018). ’ Publisher s note  Springer Nature remains neutral with regard to jurisdictional claims in 30. Nguyen, V. & Yang, R. Effect of humidity and pressure on the triboelectric ﬁ published maps and institutional af liations. –  2 nanogenerator.  Nano Energy , 604 608 (2013).
+31. McCulloh, K. A., Sperry, J. S. & Adler, F. R. Water transport in plants obeys
+’  421 Murray s law.  Nature , 939.32 (2003).
+ ﬁ Open Access  This article is licensed under a Creative Commons 32. Wang, X. et al. Biomimetic brous murray membranes with ultrafast water
+ 13 transport and evaporation for dmart moisture-wicking fabrics.  ACS Nano , Attribution 4.0 International License, which permits use, sharing,
+– 1060 1070 (2019). adaptation, distribution and reproduction in any medium or format, as long as you give
+33. Miao, D., Huang, Z., Wang, X., Yu, J. & Ding, B. Continuous, spontaneous, appropriate credit to the original author(s) and the source, provide a link to the Creative
+ ﬁ and directional water transport in the trilayered brous membranes for Commons license, and indicate if changes were made. The images or other third party
+ 14 functional moisture wicking textiles.  Small , e1801527 (2018). ’ material in this article are included in the article s Creative Commons license, unless
+ﬁ 34. Babar, A. A. et al. Breathable and colorful cellulose acetate-based nano brous indicated otherwise in a credit line to the material. If material is not included in the
+ 10 membranes for directional moisture transport.  ACS Appl. Mater. Interface , ’ article s Creative Commons license and your intended use is not permitted by statutory
+– 22866 22875 (2018). regulation or exceeds the permitted use, you will need to obtain permission directly from
+35. Yoo, S. & Roger, L. Moisture management properties of heat-resistant the copyright holder. To view a copy of this license, visit  http://creativecommons.org/
+—  ﬁ  ﬁ workwear fabrics Effects of hydrophilic nishes and hygroscopic ber licenses/by/4.0/ .
+–  74 blends.  Text. Res. J. , 995 1000 (2004).
+ﬁ 36. Peng, Y. et al. Nanoporous polyethylene micro bres for large-scale radiative
+–  1 cooling fabric.  Nat. Sustain , 105 112 (2018). © The Author(s) 2019
+10 NATURE COMMUNICATIONS  |  (2019) 10:5541 | https://doi.org/10.1038/s41467-019-13569-5 | www.nature.com/naturecommunications

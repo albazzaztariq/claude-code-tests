@@ -1,0 +1,60 @@
+Firstly, 3 g PVDF and 0.1 g carboxylic CNTs were dissolved  2  Experimental Section
+and stirred in 16.9 g DMF/Acetone mixed solution (3/2, 
+wt/wt) with 0.2 wt% LiCl addition.
+
+CNT-modified PVDF 
+2.1  Materials
+(C-PVDF) nanofibers membrane as the hydrophobic layer 
+was achieved by electrospinning technique.
+
+Thirdly, 2 g PAN was dissolved and 
+Acetone, and Dimethylformamide (DMF) were provided by 
+stirred in 18 g DMF solution with 0.2 wt% SDS addition.
+
+Fig-
+of ­Ti C T  at 2 θ  of 6.9° indicates the diffraction from the  ure  3 a, b shows the water contact angle (WCA) change of  3 2 x
+C T .
+
+Meanwhile, the  the DMWES-3 at 25 °C and 50% relative humidity (RH) 
+−2 −1 mean pore diameters generated of PAN layer and C-PVDF  can attain a WVTR of 13.99 kg ­m  ­d , which decreases 
+layer due to fiber interlaced with each other are 0.47 and  slightly with the increase in the electrospraying MXene/
+0.507 μm (Fig.
+
+WVTR of commercial e-PTFE (15.1 kg ­m  ­d ), indicat-
+The chemical properties of the DMWES membranes  ing good wear comfort.
+are performed by FT-IR (Fig.
+
+The electronic skin with heterogeneous  the obtained product was subjected to sequential washing 
+wettability was comprised of a hydrophobic layer of CNT- of 3 M HCl, then DI water until the pH = 7.
+
+The DMWES membrane showed excellent comprehen-
+sive pressure sensing performance, high sensitivity (maximum 
+−1 sensitivity of 548.09 ­kPa ), wide linear range, rapid response 
+and recovery time.
+
+In addition, the single-electrode triboelectric nanogenerator based on the DMWES can deliver a 
+−2 high areal power density of 21.6 µW ­m  and good cycling stability in high pressure energy harvesting.
+
+The direc- 2.3  Preparation of MXene/CNTs Conductive Ink
+tional moisture-wicking electronic skin (DMWES) showed 
+superior static sensing properties, high sensitivity in wide 
+Carboxylated CNTs (30 mg) was dispersed in 20 mL alco-
+−1 pressure range (maximum sensitivity of 548.09 ­kPa ), and 
+hol/water solution (5/5, v/v).
+
+Then, the CNTs solution dis-
+rapid response/recover time (28.4/39.1 ms).
+
+The DMWES-3 is observed to have  and separation test at 10 kPa; the current response under 
+the highest sensitivity value in comparison with the others,  pressure was stable even after 3,000 cycles (Fig.
+
+The sensitivity curve can be split into three parts:  is imposed on the electronic skin, the contact point in the 
+S1 exists in the low-pressure area (0–3.20 kPa), S2 lies in  conductive network of C-PVDF/MXene-CNTs increases 
+the middle-pressure area (3.20–6.30 kPa), and S3 lies in the  relatively.
+
+A significant decrease in the contact resistance 
+high-pressure area (6.30–20.0 kPa).
+
+The corresponding sen- ( R ) and bulk resistance ( R ) of the DMWES membrane 
+i b
+−1 sitivity of S1, S2, and S3 is 237.1, 548.09, and 75.7 ­kPa ,  will be observed.

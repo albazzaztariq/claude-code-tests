@@ -1,0 +1,143 @@
+This website uses cookies to ensure you get the best experience.
+
+Learn more about DOAJ’s privacy policy.
+
+Hide this message
+
+Open Global Trusted
+
+The Directory of Open Access Journals
+
+Main actions
+
+•  Support
+
+○  Institutions and libraries
+
+○
+
+•  Search
+
+Menu
+
+Secondary actions
+
+•  Search
+
+○  Journals ○  Articles
+
+•  Documentation
+
+○  API ○  OAI-PMH ○  Widgets ○  Public data dump ○  OpenURL ○  XML ○  Metadata help ○  Preservation
+
+•  About
+
+○  About DOAJ ○  DOAJ at 20 ○  DOAJ team ○  Ambassadors ○  Foundation and Advisory Boards ○  Editorial Policy Advisory Group ○  Volunteers ○  News
+
+•  Support
+
+○  Institutions and libraries ○  Publishers ○  Institutional and library supporters ○  Funders
+
+•  Apply
+
+○  Application form ○  Guide to applying ○  Transparency & best practice
+
+○  Publisher information ○  Licensing & copyright
+
+•  Login
+
+•  Login
+
+Close×
+
+Quick search
+
+Journals Articles Search by keywords: In the field: In all fields Title ISSN Subject Publisher Country of publisher Search
+
+Nano-Micro Letters (Mar 2023)
+
+Bioinspired All-Fibrous
+
+Directional Moisture-Wicking
+
+Electronic Skins for
+
+Biomechanical Energy
+
+Harvesting and All-Range
+
+Health Sensing
+
+•  Chuanwei Zhi, •  Shuo Shi, •  Shuai Zhang, •  Yifan Si, •  Jieqiong Yang, •  Shuo Meng, •  Bin Fei, •  Jinlian Hu
+
+Affiliations
+
+Chuanwei Zhi Department of Biomedical Engineering, City University of Hong Kong Shuo Shi Department of Biomedical Engineering, City University of Hong Kong Shuai Zhang Department of Biomedical Engineering, City University of Hong Kong Yifan Si Department of Biomedical Engineering, City University of Hong Kong Jieqiong Yang Department of Biomedical Engineering, City University of Hong Kong Shuo Meng Department of Biomedical Engineering, City University of Hong Kong Bin Fei Institute of Textiles and Clothing, The Hong Kong Polytechnic University Jinlian Hu Department of Biomedical Engineering, City University of Hong Kong
+
+DOI https://doi.org/10.1007/s40820-023-01028-2 Journal volume & issue Vol. 15, no. 1 pp. 1 – 17
+
+Abstract
+
+Read online
+
+Highlights Bioinspired directional moisture-wicking electronic skin (DMWES) was successfully realized by surface energy gradient and
+
+push–pull effect via the design of distinct hydrophobic-hydrophilic difference. The DMWES membrane showed excellent comprehensive pressure sensing performance with high sensitivity and good single-electrode triboelectric nanogenerator performance The superior pressure sensing and triboelectric performance enabled the DMWES for all-range healthcare sensing, including accurate pulse monitoring, voice recognition, and gait recognition.
+
+Abstract Electronic skins can monitor minute physiological signal variations in the human skins and represent the body’s state, showing an emerging trend for alternative medical diagnostics and human–machine interfaces. In this study, we designed a bioinspired directional moisture-wicking electronic skin (DMWES) based on the construction of heterogeneous fibrous membranes and the conductive MXene/CNTs electrospraying layer. Unidirectional moisture transfer was successfully realized by surface energy gradient and push–pull effect via the design of distinct hydrophobic-hydrophilic difference, which can spontaneously absorb sweat from the skin. The DMWES membrane showed excellent comprehensive pressure sensing performance, high sensitivity (maximum sensitivity of 548.09 kPa−1), wide linear range, rapid response and recovery time. In addition, the single- electrode triboelectric nanogenerator based on the DMWES can deliver a high areal power density of 21.6 µW m−2 and good cycling stability in high pressure energy harvesting. Moreover, the superior pressure sensing and triboelectric performance enabled the DMWES for all-range healthcare sensing, including accurate pulse monitoring, voice recognition, and gait recognition. This work will help to boost the development of the next-generation breathable electronic skins in the applications of AI, human–machine interaction, and soft robots.
+
+Keywords
+
+•  Bioinspired •  Electrospinning •  Electronic skin •  Directional moisture wicking •  MXene
+
+Published in Nano-Micro Letters
+
+ISSN 2311-6706 (Print) 2150-5551 (Online) Publisher SpringerOpen Country of publisher Germany LCC subjects Technology Website http://www.springer.com/40820
+
+About the journal
+
+WeChat QR code
+
+[image] Close Back to top
+
+Search
+
+•  Journals •  Articles
+
+Documentation
+
+•  API •  OAI-PMH •  Widgets •  Public data dump •  OpenURL •  XML •  Metadata help
+
+•  Preservation
+
+About
+
+•  About DOAJ •  DOAJ at 20 •  DOAJ team •  Ambassadors •  Foundation and Advisory Boards •  Editorial Policy Advisory Group •  Volunteers •  News
+
+Support
+
+•  Institutions and libraries •  Publishers •  Institutional and library supporters •  Funders
+
+Apply
+
+•  Application form •  Guide to applying •  Transparency & best practice •  Publisher information •  Licensing & copyright
+
+Stay up to date
+
+•  Bluesky •  Facebook •  Github •  Instagram •  Linkedin •  Mastodon • WeChat •  Atom feed
+
+Legal & admin
+
+Trusted
+
+The Directory of Open Access Journals
+
+© DOAJ 2026 default by all rights reserved unless otherwise specified.
+
+•  Accessibility •  Privacy •  Contact •  T&Cs •  Code of Conduct •  Media
+
+•  IS4OA
+
+Copyrights and related rights for article metadata waived via CC0 1.0 Universal (CC0) Public Domain Dedication.
+
+Photos used throughout the site by David Jorre, Jean-Philippe Delberghe, JJ Ying, Luca Bravo, Brandi Redd, & Christian Perner from Unsplash.

@@ -1,0 +1,13 @@
+{
+  "1_query_generation": 0.0,
+  "2_openalex_first_call": 1.977520227432251,
+  "3_openalex_pagination_avg": null,
+  "4_unpaywall_first_call": 0.3415944576263428,
+  "5_corpus_download_total": 17.499109745025635,
+  "6_text_extraction_first": 0.8892059326171875,
+  "7_metrics_match_first": 0.016256093978881836,
+  "8_llm_filter_first": 10.081894159317017,
+  "9_llm_extraction_first": 6.793468236923218,
+  "10_table_extraction_first": 55.28343343734741,
+  "11_final_output": 0.19922852516174316
+}
