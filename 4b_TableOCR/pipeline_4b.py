@@ -1,11 +1,17 @@
 """
-Pipeline 4b: Table Extraction with PaddleOCR + Surya
+Pipeline 4b: Table Extraction with PyMuPDF Hybrid Method
+
+HYBRID APPROACH:
+1. PaddleOCR PPStructure - Table detection (finds tables in PDFs)
+2. Surya TableRecPredictor - Table structure (rows/columns/cells)
+3. Surya DetectionPredictor - Text bbox detection
+4. PyMuPDF - Native PDF text extraction (33x faster than Surya OCR)
 
 PROCESS:
 1. Create copy of metadata Excel from Pipeline 3
-2. Extract tables from PDFs using PaddleOCR Layout + Surya OCR
+2. Extract tables from PDFs using hybrid approach
 3. Match table columns to MetricsSearchable.txt
-4. For PDFs with NO matching metrics -> mark as "TableExtraction: No Metrics" (red row)
+4. For PDFs with NO matching metrics -> mark as "No Metrics" (red row)
 5. Create final dataset Excel with extracted table values
 6. Save metadata copy and final dataset
 
@@ -15,8 +21,13 @@ INPUTS:
 - MetricsSearchable.txt (schema columns)
 
 OUTPUTS:
-- 4b_Metadata.xlsx (metadata copy with "TableExtraction: No Metrics" breakpoints)
+- 4b_Metadata.xlsx (metadata copy with "No Metrics" breakpoints)
 - 4b_FinalDataset.xlsx (extracted table values in schema format)
+
+LIMITATIONS:
+- Only works on native text tables (96.3% of academic PDFs)
+- Image-embedded tables are SKIPPED (3.7% of tables)
+- See: Docs-ProjectScripts/PyMuPDF_Hybrid_Method.md
 """
 
 import sys
@@ -27,9 +38,10 @@ import subprocess
 import json
 import time
 
-# Import timing utilities
+# Import timing and corpus utilities
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from Timers.timing_utils import save_timer
+from Utils.corpus_utils import load_corpus_json, convert_corpus_json_to_excel_data
 
 print("[DEBUG] Script starting...")
 
@@ -80,10 +92,10 @@ def extract_tables(pdf_folder: Path, output_folder: Path, metrics_file: Path, qu
     Returns:
         Path to phase2_results.json
     """
-    # Timer 10: First table extraction (track Phase 1 + Phase 2 for first PDF)
-    first_extraction_start = time.time()
+    # Timer 9: Total table extraction (track Phase 1 + Phase 2 for all PDFs)
+    extraction_start = time.time()
 
-    print("[1/5] Running table extraction (PaddleOCR + Surya)...\n")
+    print("[1/5] Running table extraction (YOLO + Surya)...\n")
 
     # Create output folder (crops go directly here, no Crops subfolder)
     output_folder.mkdir(parents=True, exist_ok=True)
@@ -91,14 +103,14 @@ def extract_tables(pdf_folder: Path, output_folder: Path, metrics_file: Path, qu
     metadata_json = output_folder / "phase1_metadata.json"
     results_json = output_folder / "phase2_results.json"
 
-    # PHASE 1: PaddleOCR table detection (subprocess)
-    print("  Phase 1: Detecting tables with PaddleOCR Layout...")
-    paddle_script = Path(__file__).parent / "paddle_phase1.py"
+    # PHASE 1: YOLO table cropping (subprocess - reuses detections from text extraction)
+    print("  Phase 1: Cropping tables from YOLO detections...")
+    yolo_script = Path(__file__).parent / "yolo_phase1.py"
 
     subprocess.run(
         [
             sys.executable,
-            str(paddle_script),
+            str(yolo_script),
             str(pdf_folder),
             str(output_folder),
             str(metadata_json)
@@ -112,27 +124,23 @@ def extract_tables(pdf_folder: Path, output_folder: Path, metrics_file: Path, qu
 
     print(f"  Phase 1 complete: {len(table_crops)} table crops detected\n")
 
-    # PHASE 2: Surya OCR text extraction (subprocess)
-    print("  Phase 2: Extracting text with Surya OCR...")
-    surya_script = Path(__file__).parent / "surya_phase2.py"
+    # PHASE 2: PyMuPDF Hybrid text extraction (direct call - no subprocess overhead)
+    print("  Phase 2: Extracting text with PyMuPDF Hybrid...")
 
-    subprocess.run(
-        [
-            sys.executable,
-            str(surya_script),
-            str(metadata_json),
-            str(metrics_file),
-            str(results_json)
-        ],
-        check=True
-    )
+    # Import and call directly instead of subprocess
+    from surya_phase2_pymupdf import process_tables
 
-    print(f"  Phase 2 complete: Results saved to {results_json.name}\n")
+    try:
+        process_tables(metadata_json, metrics_file, results_json)
+        print(f"  Phase 2 complete: Results saved to {results_json.name}\n")
+    except Exception as e:
+        print(f"  WARNING: Phase 2 failed with error: {e}")
+        print(f"  Continuing without table results\n")
 
-    # Save Timer 10: First table extraction (Phase 1 + Phase 2 time)
-    first_extraction_time = time.time() - first_extraction_start
+    # Save Timer 9: Total table extraction (Phase 1 + Phase 2 time for all PDFs)
+    extraction_time = time.time() - extraction_start
     if query_folder:
-        save_timer(query_folder, "10_table_extraction_first", first_extraction_time)
+        save_timer(query_folder, "9_table_extraction_total", extraction_time)
 
     # Clean up metadata JSON files (keep only table crop images)
     print("  Cleaning up temporary metadata files...")
@@ -151,16 +159,13 @@ def extract_tables(pdf_folder: Path, output_folder: Path, metrics_file: Path, qu
     return results_json
 
 
-def create_final_dataset_from_tables(results_data, schema_columns: list, metadata_excel_wb, pdf_num_col, breakpoint_col) -> tuple:
+def create_final_dataset_from_tables(results_data, schema_columns: list) -> tuple:
     """
     Create final dataset Excel from table extraction results.
 
     Args:
         results_data: Either Path to phase2_results.json or the data itself (list/dict)
         schema_columns: List of metric columns from MetricsSearchable.txt
-        metadata_excel_wb: Loaded metadata workbook
-        pdf_num_col: Column index for PDF Number
-        breakpoint_col: Column index for Breakpoint
 
     Returns:
         (all_extractions dict, no_metrics_pdfs list)
@@ -188,7 +193,7 @@ def create_final_dataset_from_tables(results_data, schema_columns: list, metadat
         if len(found_metrics) == 0:
             # No matching metrics in tables
             no_metrics_pdfs.append(pdf_num)
-            print(f"    [NO METRICS] Will mark as 'TableExtraction: No Metrics'")
+            print(f"    [NO METRICS] Will mark as 'No Metrics'")
             continue
 
         # Fuzzy match found metrics to schema
@@ -246,22 +251,22 @@ def create_final_dataset_from_tables(results_data, schema_columns: list, metadat
     return all_extractions, no_metrics_pdfs
 
 
-def run_pipeline_4b(pdf_folder: Path, metadata_excel: Path) -> tuple:
+def run_pipeline_4b(pdf_folder: Path) -> tuple:
     """
     Run complete Pipeline 4b.
 
     Args:
         pdf_folder: Folder containing PDFs (from Pipeline 3)
-        metadata_excel: Metadata Excel from Pipeline 3
 
     Returns:
-        (metadata_copy_path, final_dataset_path)
+        (metadata_excel_path, final_dataset_path)
     """
+    query_folder = pdf_folder.parent
+
     print("=" * 80)
     print("PIPELINE 4b: TABLE EXTRACTION")
     print("=" * 80)
     print(f"PDF Folder: {pdf_folder}")
-    print(f"Metadata Excel: {metadata_excel}")
     print("=" * 80)
     print()
 
@@ -269,24 +274,12 @@ def run_pipeline_4b(pdf_folder: Path, metadata_excel: Path) -> tuple:
     schema_columns = load_schema_columns()
     print(f"Loaded schema: {len(schema_columns)} metrics\n")
 
-    # Determine query folder (pdf_folder is "OA Papers" or "Non-OA Papers", so go up 2 levels)
-    query_folder = pdf_folder.parent.parent
-
-    # Create metadata copy
-    metadata_copy_path = query_folder / "4b_Metadata.xlsx"
-    print(f"Creating metadata copy: {metadata_copy_path.name}")
-    shutil.copy(metadata_excel, metadata_copy_path)
-    print(f"  Copied from: {metadata_excel.name}\n")
-
-    # Load metadata workbook
-    wb = load_workbook(metadata_copy_path)
-    ws = wb.active
-
-    headers = [cell.value for cell in ws[1]]
-    pdf_num_col = headers.index("PDF Number") + 1
-    breakpoint_col = headers.index("Breakpoint") + 1
-
-    red_fill = PatternFill(start_color="FF6B6B", end_color="FF6B6B", fill_type="solid")
+    # Load corpus metadata from JSON
+    print(f"Loading corpus metadata...")
+    all_papers = load_corpus_json(query_folder)
+    # Filter to only papers with study_number (exclude failed downloads)
+    papers_by_num = {p["study_number"]: p for p in all_papers if "study_number" in p}
+    print(f"  Loaded {len(all_papers)} papers\n")
 
     # Run table extraction (save to Table Crops in Query folder)
     output_folder = query_folder / "Table Crops"
@@ -296,31 +289,69 @@ def run_pipeline_4b(pdf_folder: Path, metadata_excel: Path) -> tuple:
 
     # Process results
     all_extractions, no_metrics_pdfs = create_final_dataset_from_tables(
-        results_json, schema_columns, wb, pdf_num_col, breakpoint_col
+        results_json, schema_columns
     )
 
     # Update metadata for PDFs with no metrics
     print("[3/5] Updating metadata for PDFs with no table metrics...\n")
 
     for pdf_num in no_metrics_pdfs:
-        # Find row in metadata
-        for row_idx in range(2, ws.max_row + 1):
-            if ws.cell(row=row_idx, column=pdf_num_col).value == pdf_num:
-                # Update Breakpoint
-                ws.cell(row=row_idx, column=breakpoint_col).value = "TableExtraction: No Metrics"
+        if pdf_num in papers_by_num:
+            papers_by_num[pdf_num]["breakpoint"] = "No Metrics"
+            print(f"  PDF #{pdf_num}: Marked as 'No Metrics'")
 
-                # Turn row red
-                for col in range(1, len(headers) + 1):
-                    ws.cell(row=row_idx, column=col).fill = red_fill
+    # Create 4b_Metadata.xlsx from updated JSON data
+    print(f"\n[4/5] Creating metadata Excel (4b_Metadata.xlsx)...")
 
-                print(f"  PDF #{pdf_num}: Marked as 'TableExtraction: No Metrics' (red)")
-                break
+    metadata_rows = convert_corpus_json_to_excel_data(all_papers)
+    metadata_excel_path = query_folder / "4b_Metadata.xlsx"
 
-    # Save updated metadata
-    print(f"\n[4/5] Saving metadata copy...")
-    wb.save(metadata_copy_path)
-    print(f"      Saved: {metadata_copy_path.name}")
-    print(f"      Updated {len(no_metrics_pdfs)} rows\n")
+    # Write to Excel with colors
+    from openpyxl import Workbook
+    from openpyxl.styles import Font, PatternFill
+
+    wb = Workbook()
+    wb.remove(wb.active)
+    ws = wb.create_sheet("Corpus")
+
+    # Write header row
+    for col_idx, value in enumerate(metadata_rows[0], 1):
+        ws.cell(row=1, column=col_idx, value=value).font = Font(bold=True)
+
+    # Write data rows with colors
+    green_fill = PatternFill(start_color="90EE90", end_color="90EE90", fill_type="solid")
+    orange_fill = PatternFill(start_color="FFA500", end_color="FFA500", fill_type="solid")
+    red_fill = PatternFill(start_color="FF6B6B", end_color="FF6B6B", fill_type="solid")
+
+    for row_idx, row_data in enumerate(metadata_rows[1:], 2):
+        color_code = row_data[-1]
+        actual_data = row_data[:-1]
+
+        for col_idx, value in enumerate(actual_data, 1):
+            ws.cell(row=row_idx, column=col_idx, value=value)
+
+        if color_code == "green":
+            fill = green_fill
+        elif color_code == "orange":
+            fill = orange_fill
+        elif color_code == "red":
+            fill = red_fill
+        else:
+            fill = None
+
+        if fill:
+            for col_idx in range(1, len(actual_data) + 1):
+                ws.cell(row=row_idx, column=col_idx).fill = fill
+
+    # Column widths
+    ws.column_dimensions['A'].width = 10
+    ws.column_dimensions['B'].width = 16
+    ws.column_dimensions['C'].width = 15
+    ws.column_dimensions['D'].width = 10
+
+    wb.save(metadata_excel_path)
+    print(f"      Saved: {metadata_excel_path.name}")
+    print(f"      Updated {len(no_metrics_pdfs)} papers with 'No Metrics'\n")
 
     # Create final dataset Excel
     print(f"[5/5] Creating final dataset Excel...")
@@ -351,11 +382,11 @@ def run_pipeline_4b(pdf_folder: Path, metadata_excel: Path) -> tuple:
     print(f"PDFs with extracted table data: {len(all_extractions)}")
     print(f"PDFs with no metrics: {len(no_metrics_pdfs)}")
     print(f"\nOutputs:")
-    print(f"  Metadata: {metadata_copy_path.name}")
+    print(f"  Metadata: {metadata_excel_path.name}")
     print(f"  Dataset:  {final_dataset_path.name}")
     print("=" * 80)
 
-    return metadata_copy_path, final_dataset_path
+    return metadata_excel_path, final_dataset_path
 
 
 def find_latest_query_folder():
@@ -373,7 +404,6 @@ def main():
 
     parser = argparse.ArgumentParser(description="Extract tables using PaddleOCR + Surya")
     parser.add_argument("pdf_folder", nargs='?', type=Path, help="Folder containing PDFs")
-    parser.add_argument("metadata_excel", nargs='?', type=Path, help="Metadata Excel file from Pipeline 3")
 
     args = parser.parse_args()
 
@@ -384,18 +414,9 @@ def main():
             print("ERROR: No Query folder found in Output directory")
             sys.exit(1)
 
-        # Try OA Papers first, then Non-OA Papers
-        oa_papers = query_folder / "Downloaded Papers" / "OA Papers"
-        non_oa_papers = query_folder / "Downloaded Papers" / "Non-OA Papers"
-
-        if oa_papers.exists() and list(oa_papers.glob("*.pdf")):
-            args.pdf_folder = oa_papers
-        elif non_oa_papers.exists() and list(non_oa_papers.glob("*.pdf")):
-            args.pdf_folder = non_oa_papers
-        else:
-            args.pdf_folder = oa_papers  # Default
-
-        args.metadata_excel = query_folder / "Corpus Metadata.xlsx"
+        # Use single Corpus PDFs folder (no OA/Non-OA separation)
+        papers_folder = query_folder / "Corpus PDFs"
+        args.pdf_folder = papers_folder
 
         print(f"Auto-detected Query folder: {query_folder.name}")
 
@@ -403,11 +424,7 @@ def main():
         print(f"ERROR: PDF folder not found: {args.pdf_folder}")
         sys.exit(1)
 
-    if not args.metadata_excel.exists():
-        print(f"ERROR: Metadata Excel not found: {args.metadata_excel}")
-        sys.exit(1)
-
-    run_pipeline_4b(args.pdf_folder, args.metadata_excel)
+    run_pipeline_4b(args.pdf_folder)
 
 
 if __name__ == "__main__":

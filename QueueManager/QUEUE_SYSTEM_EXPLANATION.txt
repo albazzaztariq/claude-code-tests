@@ -1,0 +1,342 @@
+================================================================================
+SCHOLARSWEEP DOWNLOAD AND VALIDATION QUEUE SYSTEM
+================================================================================
+
+OVERVIEW:
+PROBLEM: OpenAlex provides mirror URLs claiming to be PDF files, but many are
+actually HTML/XML/JSON paywall pages instead of actual PDFs. We cannot trust
+the mirrors to deliver PDFs - we must validate file types after download.
+
+SOLUTION: This system downloads and validates academic papers using a rolling
+window of workers with parallel processing and thread-safe numbering. Each
+paper's mirrors are tried sequentially until a valid PDF is found. Non-PDF
+files (HTML/XML/JSON) are deleted immediately and the next mirror is tried.
+
+================================================================================
+COMPONENTS
+================================================================================
+
+1. PAPER QUEUE
+   - Contains all papers to download (e.g., 500 papers)
+   - Workers pull papers on-demand (producer-consumer pattern)
+   - As Worker X finishes Paper N, immediately grabs next paper from queue
+   - Maintains constant ~20 active downloads (rolling window)
+
+2. DOWNLOAD WORKERS (20 workers)
+   - Each worker:
+     a. Pulls next paper from Paper Queue
+     b. Tries mirrors sequentially (ranked by speed test)
+     c. Stops immediately when PDF found
+     d. Deletes HTML/XML/JSON and tries next mirror
+     e. When paper complete, grabs next paper from queue
+
+3. VALIDATION QUEUE
+   - Files waiting to be validated
+   - Fed by download workers as files complete
+   - Validators pull files on-demand
+
+4. VALIDATION WORKERS (10 workers)
+   - Each worker:
+     a. Pulls next file from Validation Queue
+     b. Double-check format (already detected during download, but verify)
+     c. Opens with PyMuPDF to validate PDF is usable:
+        - NOT to check if it's a PDF (header bytes already did that)
+        - But to check if PDF is CORRUPT or ENCRYPTED
+        - Can PyMuPDF open it? Does it have pages? Can we extract text?
+     d. If valid: Acquires lock -> assigns study_number -> renames -> moves to Corpus PDFs -> releases lock
+     e. If invalid (corrupt/encrypted/0 pages): Deletes from staging
+
+5. THREAD-SAFE COUNTER
+   - Shared counter for study_numbers (starts at 1)
+   - Protected by Lock to prevent race conditions
+   - Only one validator can access counter at a time
+   - Fast operation (microseconds) so no bottleneck
+
+6. SPEED TEST
+   - CURRENT IMPLEMENTATION: Tests all mirrors upfront (before downloads)
+   - Downloads 200KB test file from each unique domain
+   - Measures bandwidth (Mbps)
+   - Stores results in mirror_speeds dict
+
+================================================================================
+FLOW DIAGRAM
+================================================================================
+
+[Paper Queue: 500 papers]
+         |
+         | (20 workers pull on-demand)
+         v
+[Download Workers 1-20]
+  - Each tries mirrors sequentially:
+    Mirror 1 (fastest) -> if HTML, delete -> try Mirror 2 -> if PDF, STOP
+         |
+         | (add to Validation Queue)
+         v
+[Validation Queue: files waiting]
+         |
+         | (10 workers pull on-demand)
+         v
+[Validation Workers 1-10]
+  - Check format + PyMuPDF
+  - If valid: [LOCK] assign number, rename, move [UNLOCK]
+  - If invalid: delete
+         |
+         v
+[Corpus PDFs/1.pdf, 2.pdf, 3.pdf...]
+
+================================================================================
+ROLLING WINDOW EXAMPLE (20 workers, 500 papers)
+================================================================================
+
+Time 0:
+  Worker 1-20 grab Papers 1-20
+  All 20 downloading simultaneously
+
+Time 10s:
+  Paper 5 completes -> Worker 5 grabs Paper 21 (immediately)
+  19 workers still on Papers 1-20, Worker 5 now on Paper 21
+
+Time 15s:
+  Paper 12 completes -> Worker 12 grabs Paper 22
+  Paper 3 completes -> Worker 3 grabs Paper 23
+  18 workers still on original papers, 3 workers moved ahead
+
+Time 30s:
+  ~20 workers always active until queue empty
+  Maintains constant throughput
+
+================================================================================
+MIRROR SELECTION (PER PAPER)
+================================================================================
+
+Each paper has 1-5 mirrors (OA locations from OpenAlex/Unpaywall)
+
+Example: Paper has 3 mirrors
+  - doaj.org (speed test: 1.3 Mbps) -> fastest
+  - nature.com (speed test: 0.6 Mbps)
+  - ncbi.gov (speed test: 0.2 Mbps) -> slowest
+
+Worker tries in order:
+  1. Try doaj.org -> download completes -> check header -> HTML -> delete
+  2. Try nature.com -> download completes -> check header -> PDF -> STOP, add to Validation Queue
+  3. Never tries ncbi.gov (already found PDF)
+
+================================================================================
+THREAD SAFETY
+================================================================================
+
+PROBLEM: Multiple validators might try to assign same study_number
+
+SOLUTION: Lock around counter access
+
+WITHOUT LOCK (race condition):
+  Validator A: reads counter (37) -> assigns 37 -> increments (38)
+  Validator B: reads counter (37) -> assigns 37 -> increments (38)
+  RESULT: Two files named 37.pdf (COLLISION!)
+
+WITH LOCK (correct):
+  Validator A: [LOCK] reads 37 -> assigns 37 -> increments 38 [UNLOCK]
+  Validator B: [WAIT] [LOCK] reads 38 -> assigns 38 -> increments 39 [UNLOCK]
+  RESULT: Files numbered 37.pdf, 38.pdf (correct)
+
+The Lock ensures only ONE thread accesses counter at a time.
+The slow PyMuPDF validation happens OUTSIDE the lock (parallel).
+Only the fast counter read/increment/rename happens INSIDE lock.
+
+================================================================================
+SPEED TEST DETAILS
+================================================================================
+
+CURRENT: Tests all mirrors upfront
+  1. Collect all unique domains from all papers (e.g., 50 domains)
+  2. Download 200KB test file from each domain
+  3. Measure bandwidth (bytes/sec -> Mbps)
+  4. Store in mirror_speeds dict: {"nature.com": 0.6, "doaj.org": 1.3, ...}
+  5. THEN start downloads
+
+FUTURE (discussed but NOT implemented):
+  - Test mirrors just-in-time as papers enter queue
+  - When Worker X grabs Paper 21:
+    a. Check if Paper 21's mirrors already tested
+    b. If not, test them now
+    c. Cache results for future papers using same mirrors
+  - Avoids testing mirrors for papers we never download
+
+================================================================================
+FILE NAMING
+================================================================================
+
+STAGING (temporary):
+  - temp_{uuid}.pdf (e.g., temp_a3f9c2d1-4b5e-8f7a-9d2c-1e3f4a5b6c7d.pdf)
+  - Unique UUID prevents collisions during parallel downloads
+  - Deleted if invalid (HTML/XML/JSON/corrupt)
+
+FINAL (after validation):
+  - {study_number}.pdf (e.g., 1.pdf, 2.pdf, 3.pdf...)
+  - Sequential numbering (no gaps)
+  - Only valid PDFs get numbered
+
+================================================================================
+PAYWALL DETECTION
+================================================================================
+
+Many mirrors serve HTML landing pages instead of PDFs:
+  - nature.com -> actual PDF
+  - doaj.org -> HTML paywall page
+
+Detection:
+  1. Check first 100 bytes during download:
+     - <!doctype html> or <html> = HTML
+     - <?xml> = XML
+     - %PDF = PDF
+  2. If HTML/XML/JSON:
+     - Delete immediately
+     - Try next mirror
+  3. If PDF header found:
+     - Keep file
+     - Add to Validation Queue
+     - Validator double-checks with PyMuPDF
+
+================================================================================
+WORKER COUNT TUNING
+================================================================================
+
+Download Workers (20):
+  - Conservative for academic publishers
+  - Prevents rate limiting/IP bans
+  - 20 workers x 3 mirrors avg = ~60 concurrent HTTP connections
+  - Can be increased if needed
+
+Validation Workers (10):
+  - PyMuPDF validation is fast (~100ms per file)
+  - 10 workers can easily keep up with 20 downloaders
+  - Could be increased to 20 if bottleneck observed
+
+================================================================================
+ERROR HANDLING
+================================================================================
+
+Download failures:
+  - Timeout (30s)
+  - HTTP error (404, 500, etc.)
+  - Connection refused
+  - All mirrors fail
+  -> Paper marked as "failed", no file saved
+
+Validation failures:
+  - Corrupt PDF (PyMuPDF can't open)
+  - Encrypted PDF (no text extractable)
+  - 0 pages
+  -> File deleted, paper marked as "unreadable"
+
+================================================================================
+STATISTICS TRACKED
+================================================================================
+
+During processing:
+  - downloaded_count: Files successfully downloaded
+  - failed_download_count: Download failures
+  - valid_pdf_count: PDFs that passed validation
+  - paywall_count: HTML/XML/JSON rejected
+  - unreadable_count: Corrupt/encrypted PDFs
+  - total_bytes: Total data downloaded
+
+Final result:
+  - Only valid_pdf_count papers numbered and saved
+  - All others rejected (no study_number assigned)
+
+================================================================================
+KEY DESIGN DECISIONS
+================================================================================
+
+1. WHY rolling window?
+   - Constant throughput (no waiting for batch to finish)
+   - Efficient resource utilization
+   - Adapts to varying mirror speeds
+
+2. WHY sequential mirror attempts?
+   - Stop as soon as PDF found
+   - Don't waste bandwidth downloading same paper 3x
+   - Delete non-PDFs immediately (no staging bloat)
+
+3. WHY parallel validation?
+   - Downloads are slow (network bound, seconds)
+   - Validation is fast (CPU/disk bound, milliseconds)
+   - Multiple validators can process while downloads ongoing
+
+4. WHY thread-safe counter?
+   - Must number files sequentially (1, 2, 3...)
+   - Parallel validators need shared counter
+   - Lock prevents duplicate numbers
+
+5. WHY UUID staging filenames?
+   - Parallel downloads can't collide
+   - Temporary (deleted or renamed)
+   - Don't need meaningful names
+
+================================================================================
+CURRENT LIMITATIONS
+================================================================================
+
+1. Speed test runs upfront for ALL domains
+   - May test mirrors we never use
+   - Adds ~30s startup time for 50 domains
+   - FUTURE: Just-in-time testing
+
+2. No retry logic for transient failures
+   - If mirror times out, never retried
+   - Could add exponential backoff
+
+3. No progress bar during downloads
+   - Workers operating independently
+   - Hard to show accurate progress
+   - Currently just shows count completed
+
+4. No graceful shutdown
+   - If user interrupts, in-progress downloads orphaned
+   - Could add signal handler to clean up
+
+================================================================================
+FILES
+================================================================================
+
+Implementation:
+  - QueueManager/download_validation_queues.py
+    Class: DownloadValidationManager
+    Methods:
+      - __init__(): Initialize queues, counters, locks
+      - download_worker(): Worker function for downloading
+      - validation_worker(): Worker function for validation
+      - process_papers(): Main entry point
+
+Integration:
+  - 1_GenerateCorpus/GenerateCorpus.py
+    - Imports DownloadValidationManager
+    - Calls process_papers() with download function
+    - Receives updated papers with study_numbers assigned
+
+================================================================================
+TESTING APPROACH
+================================================================================
+
+1. Test with 10 papers:
+   - Verify mirror logic (tries all mirrors until PDF)
+   - Verify paywall detection (rejects HTML)
+   - Verify numbering (sequential 1, 2, 3...)
+   - Check Corpus PDFs folder
+
+2. Test with 50 papers:
+   - Verify rolling window (constant ~20 active)
+   - Verify speed test (correct mirror ranking)
+   - Check performance (throughput)
+   - Monitor for race conditions
+
+3. Full production test (500+ papers):
+   - Run overnight
+   - Check for memory leaks
+   - Verify all files numbered correctly
+   - Check for orphaned temp files
+
+================================================================================
+END OF DOCUMENT
+================================================================================
