@@ -2,7 +2,7 @@
 Timing Utilities for ScholarSweep Pipeline
 
 Shared timing mechanism to track performance across all pipelines.
-All timers are stored in timers.json in the Query folder.
+All timers are stored in Runtimes.txt in the Query folder.
 """
 
 import json
@@ -11,12 +11,17 @@ from typing import Optional
 
 
 def get_timers_file(query_folder: Path) -> Path:
-    """Get path to timers.json file in Query folder."""
-    return query_folder / "timers.json"
+    """Get path to .timers_temp.json file in Query folder (internal use only)."""
+    return query_folder / ".timers_temp.json"
+
+
+def get_runtimes_file(query_folder: Path) -> Path:
+    """Get path to Runtimes.txt file in Query folder."""
+    return query_folder / "Runtimes.txt"
 
 
 def load_timers(query_folder: Path) -> dict:
-    """Load timers from timers.json file.
+    """Load timers from temporary JSON file (internal use only).
 
     Returns:
         dict with timer names as keys and values in seconds
@@ -27,24 +32,23 @@ def load_timers(query_folder: Path) -> dict:
         with open(timers_file, 'r') as f:
             return json.load(f)
     else:
-        # Initialize with all 11 timers
+        # Initialize with all 10 timers (pagination timer removed)
         return {
             "1_query_generation": None,
-            "2_openalex_first_call": None,
-            "3_openalex_pagination_avg": None,
-            "4_unpaywall_first_call": None,
-            "5_corpus_download_total": None,
-            "6_text_extraction_first": None,
-            "7_metrics_match_first": None,
-            "8_llm_filter_first": None,
-            "9_llm_extraction_first": None,
-            "10_table_extraction_first": None,
-            "11_final_output": None
+            "2_openalex_total": None,
+            "3_unpaywall_total": None,
+            "4_corpus_download_total": None,
+            "5_text_extraction_total": None,
+            "6_metrics_match_total": None,
+            "7_llm_filter_total": None,
+            "8_llm_extraction_total": None,
+            "9_table_extraction_total": None,
+            "10_final_output": None
         }
 
 
 def save_timer(query_folder: Path, timer_name: str, value: float):
-    """Save a single timer value to timers.json.
+    """Save a single timer value to temporary JSON file.
 
     Args:
         query_folder: Path to Query folder
@@ -60,30 +64,31 @@ def save_timer(query_folder: Path, timer_name: str, value: float):
 
 
 def display_timers(query_folder: Path):
-    """Display all timers in formatted output."""
+    """Display all timers in formatted output and save to Runtimes.txt."""
     timers = load_timers(query_folder)
-
-    print("\n" + "=" * 80)
-    print("PIPELINE PERFORMANCE TIMERS")
-    print("=" * 80)
 
     # Format each timer (add space before single digits for alignment)
     timer_labels = {
         "1_query_generation": " 1.  Query Generation",
-        "2_openalex_first_call": " 2.  OpenAlex API (first call)",
-        "3_openalex_pagination_avg": " 3.  OpenAlex Pagination (average)",
-        "4_unpaywall_first_call": " 4.  UnPaywall API (first call)",
-        "5_corpus_download_total": " 5.  Corpus Download (total)",
-        "6_text_extraction_first": " 6.  Full Text Extraction (first)",
-        "7_metrics_match_first": " 7.  Metrics Match Textfile (first)",
-        "8_llm_filter_first": " 8.  LLM Relevance Filter (first call)",
-        "9_llm_extraction_first": " 9.  LLM Text Extraction (first call)",
-        "10_table_extraction_first": "10.  Table Extraction (first)",
-        "11_final_output": "11.  Create Final Output"
+        "2_openalex_total": " 2.  OpenAlex API",
+        "3_unpaywall_total": " 3.  UnPaywall API",
+        "4_corpus_download_total": " 4.  Corpus Download",
+        "5_text_extraction_total": " 5.  Text Extraction Pipeline",
+        "6_metrics_match_total": " 6.  Metrics Match Pipeline",
+        "7_llm_filter_total": " 7.  LLM Relevance Filter",
+        "8_llm_extraction_total": " 8.  LLM Text Extraction",
+        "9_table_extraction_total": " 9.  Table Extraction",
+        "10_final_output": "10.  Create Final Output"
     }
 
     # Sort by numeric prefix (1_, 2_, ..., 10_, 11_)
     sorted_keys = sorted(timers.keys(), key=lambda x: int(x.split('_')[0]))
+
+    # Build output lines
+    output_lines = []
+    output_lines.append("=" * 80)
+    output_lines.append("PIPELINE PERFORMANCE TIMERS")
+    output_lines.append("=" * 80)
 
     for key in sorted_keys:
         label = timer_labels.get(key, key)
@@ -91,11 +96,35 @@ def display_timers(query_folder: Path):
 
         if value is not None:
             if value < 1:
-                time_str = f"{value*1000:.0f}ms"
+                # Sub-second: show milliseconds with decimal places
+                time_str = f"{value*1000:.2f}ms"
             else:
+                # Seconds with 2 decimal places
                 time_str = f"{value:.2f}s"
-            print(f"  {label:45} {time_str:>10}")
+            output_lines.append(f"  {label:45} {time_str:>10}")
         else:
-            print(f"  {label:45} {'N/A':>10}")
+            output_lines.append(f"  {label:45} {'N/A':>10}")
 
-    print("=" * 80)
+    output_lines.append("=" * 80)
+
+    # Print to terminal
+    print("\n" + "\n".join(output_lines))
+
+    # Save to Runtimes.txt
+    runtimes_file = get_runtimes_file(query_folder)
+    with open(runtimes_file, 'w', encoding='utf-8') as f:
+        f.write("\n".join(output_lines))
+
+    # Delete temporary JSON file (with retry for Windows file locks)
+    timers_file = get_timers_file(query_folder)
+    if timers_file.exists():
+        for attempt in range(3):
+            try:
+                timers_file.unlink()
+                break
+            except (PermissionError, OSError) as e:
+                if attempt < 2:
+                    import time
+                    time.sleep(0.5 * (attempt + 1))  # 0.5s, 1.0s, then give up
+                else:
+                    print(f"WARNING: Could not delete {timers_file.name}: {e}")

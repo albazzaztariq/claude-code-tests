@@ -1,15 +1,15 @@
 """
-LLM Text Extract - Value Extraction with SambaNova
+LLM Text Extract - Value Extraction with Qwen 2.5 7B
 
-Extracts metric values from filtered text using LLM.
+Extracts metric values from filtered text using LLM via Ollama.
 
 PROCESS:
 1. Create copy of metadata Excel from Pipeline 3
 2. Read all _filtered.txt files in Extracted Text folder
 3. For each filtered text file:
    - Parse metric sentences
-   - Send to SambaNova LLM for value extraction
-   - If NO values extracted -> mark metadata as "LLM: No Metrics" (red row)
+   - Send to Qwen 2.5 7B LLM (via Ollama) for value extraction
+   - If NO values extracted -> mark metadata as "No Metrics" (red row)
 4. Create final dataset Excel with extracted values
 5. Save metadata copy and final dataset
 
@@ -20,9 +20,11 @@ INPUTS:
 - MetricsSearchable.txt (schema columns)
 
 OUTPUTS:
-- 4a_Metadata.xlsx (metadata copy with "LLM: No Metrics" breakpoints)
+- 4a_Metadata.xlsx (metadata copy with "No Metrics" breakpoints)
 - 4a_FinalDataset.xlsx (extracted values in schema format)
 """
+
+print("[DEBUG] Script starting...")
 
 import os
 import sys
@@ -31,13 +33,20 @@ from typing import Dict, List, Tuple
 import time
 import shutil
 
-# Import timing utilities
+print("[DEBUG] Standard libraries imported")
+
+# Import timing and corpus utilities
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from Timers.timing_utils import save_timer
+from Utils.corpus_utils import load_corpus_json
+
+print("[DEBUG] Timing and corpus utilities imported")
 
 # Load environment variables
 from dotenv import load_dotenv
 load_dotenv()
+
+print("[DEBUG] Environment variables loaded")
 
 # Check for required libraries
 try:
@@ -56,27 +65,16 @@ except ImportError:
     sys.exit(1)
 
 try:
-    import requests
-except ImportError:
-    print("ERROR: Missing required library 'requests'")
-    print("Install it with: pip install requests")
-    sys.exit(1)
-
-try:
     from rapidfuzz import fuzz, process
 except ImportError:
     print("ERROR: Missing required library 'rapidfuzz'")
     print("Install it with: pip install rapidfuzz")
     sys.exit(1)
 
-# SambaNova API configuration
-SAMBANOVA_API_KEY = os.getenv("SAMBANOVA_API_KEY")
-SAMBANOVA_CHAT_ENDPOINT = os.getenv("SAMBANOVA_CHAT_ENDPOINT")
+import subprocess
+import re
 
-if not SAMBANOVA_API_KEY or not SAMBANOVA_CHAT_ENDPOINT:
-    print("ERROR: SambaNova API credentials not found in .env file")
-    print("Required: SAMBANOVA_API_KEY, SAMBANOVA_CHAT_ENDPOINT")
-    sys.exit(1)
+print("[DEBUG] All required libraries imported")
 
 
 def load_extract_prompt() -> str:
@@ -91,8 +89,10 @@ def load_extract_prompt() -> str:
         return f.read()
 
 
+print("[DEBUG] Loading extraction prompt...")
 # Load extraction prompt from config
 EXTRACT_PROMPT = load_extract_prompt()
+print("[DEBUG] Extraction prompt loaded")
 
 
 def load_schema_columns() -> List[str]:
@@ -151,58 +151,71 @@ def fuzzy_match_metric(metric_name: str, schema_cols: List[str], threshold: int 
 SCHEMA_COLUMNS = load_schema_columns()
 
 
-def call_sambanova(metric_sentence: str, max_retries: int = 3) -> str:
+def call_qwen(metric_sentence: str, max_retries: int = 3) -> str:
     """
-    Call SambaNova API to extract metric value from sentence.
+    Call Qwen 2.5 7B via Ollama for metric value extraction.
 
     Args:
-        metric_sentence: Text containing metric match line and sentence
-        max_retries: Number of retry attempts on failure
+        metric_sentence: Sentence containing metric and value
+        max_retries: Number of retry attempts if call fails
 
     Returns:
         Extracted value or "No value found"
     """
-    # Combine prompt with metric sentence
-    full_prompt = f"{EXTRACT_PROMPT}\n\n{metric_sentence}"
-
-    headers = {
-        "Authorization": f"Bearer {SAMBANOVA_API_KEY}",
-        "Content-Type": "application/json"
-    }
-
-    payload = {
-        "model": "Meta-Llama-3.3-70B-Instruct",
-        "messages": [
-            {"role": "user", "content": full_prompt}
-        ],
-        "max_tokens": 50,  # Short response needed (just the value)
-        "temperature": 0.1  # Low temperature for consistent extraction
-    }
+    # Build prompt with metric sentence
+    prompt = EXTRACT_PROMPT.replace("{metric_sentence}", metric_sentence)
 
     for attempt in range(max_retries):
         try:
-            response = requests.post(
-                SAMBANOVA_CHAT_ENDPOINT,
-                headers=headers,
-                json=payload,
-                timeout=30
+            # Call Ollama
+            cmd = [
+                "ollama", "run", "qwen2.5:7b-instruct-q5_K_M",
+                prompt
+            ]
+
+            result = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                encoding='utf-8',
+                timeout=10  # 10 second timeout
             )
 
-            if response.status_code == 200:
-                result = response.json()
-                extracted = result["choices"][0]["message"]["content"].strip()
-                return extracted
-            else:
-                print(f"  [Attempt {attempt+1}/{max_retries}] API error: {response.status_code}")
+            if result.returncode != 0:
+                error_msg = result.stderr.strip() if result.stderr else "Unknown error"
                 if attempt < max_retries - 1:
-                    time.sleep(2)
+                    print(f"      [RETRY {attempt + 1}/{max_retries}] Ollama error: {error_msg}")
+                    time.sleep(1)
+                    continue
+                return f"Error: Ollama failed - {error_msg}"
+
+            # Clean response (remove ANSI codes and whitespace)
+            response = result.stdout.strip()
+            response = re.sub(r'\x1b\[[0-9;]*[a-zA-Z]', '', response)  # Remove ANSI codes
+            response = re.sub(r'\[?[0-9]+[hlmKG]', '', response)  # Remove spinner codes
+            response = response.strip()
+
+            # Return cleaned response
+            return response if response else "No value found"
+
+        except subprocess.TimeoutExpired:
+            if attempt < max_retries - 1:
+                print(f"      [RETRY {attempt + 1}/{max_retries}] LLM call timed out")
+                time.sleep(1)
+                continue
+            # After all retries exhausted, exit Pipeline 4a gracefully
+            print("\n[PIPELINE 4a] LLM timeouts persist after retries - exiting gracefully")
+            print("[PIPELINE 4a] Pipeline 4b will continue independently")
+            sys.exit(1)  # Exit with code 1 to indicate timeout issue
 
         except Exception as e:
-            print(f"  [Attempt {attempt+1}/{max_retries}] Error: {e}")
             if attempt < max_retries - 1:
-                time.sleep(2)
+                print(f"      [RETRY {attempt + 1}/{max_retries}] Exception: {str(e)}")
+                time.sleep(1)
+                continue
+            return f"Error: {str(e)}"
 
-    return f"Error: Failed after {max_retries} attempts"
+    return "Error: Max retries reached"
 
 
 def parse_filtered_text(text: str) -> List[Tuple[str, str]]:
@@ -250,10 +263,10 @@ def process_filtered_file(filtered_path: Path, track_first_call: bool = False) -
 
     Args:
         filtered_path: Path to _filtered.txt file
-        track_first_call: Whether to track the first LLM call time
+        track_first_call: Unused parameter (kept for compatibility)
 
     Returns:
-        Tuple of (dict with normalized metric names as keys and extracted values, first_call_time or None)
+        Tuple of (dict with normalized metric names as keys and extracted values, total_llm_time for this file)
     """
     print(f"  Processing: {filtered_path.name}")
 
@@ -267,24 +280,22 @@ def process_filtered_file(filtered_path: Path, track_first_call: bool = False) -
 
     if len(pairs) == 0:
         print(f"    No metric sentences found")
-        return {}, None
+        return {}, 0.0
 
     results = {}
-    first_call_time = None
+    total_llm_time = 0.0
 
     for idx, (metric_label, combined_text) in enumerate(pairs, 1):
         print(f"    [{idx}/{len(pairs)}] Extracting: {metric_label[:40]}...")
 
-        # Call LLM to extract value (track first call if requested)
-        if track_first_call and first_call_time is None:
-            call_start = time.time()
-            extracted = call_sambanova(combined_text)
-            first_call_time = time.time() - call_start
-        else:
-            extracted = call_sambanova(combined_text)
+        # Call LLM to extract value (track all calls)
+        call_start = time.time()
+        extracted = call_qwen(combined_text)
+        call_time = time.time() - call_start
+        total_llm_time += call_time
 
-        # Skip if no value found
-        if "no value" in extracted.lower() or "error" in extracted.lower():
+        # If error or no value found, skip this metric
+        if "error" in extracted.lower() or "no value" in extracted.lower():
             print(f"        Result: {extracted}")
             continue
 
@@ -297,47 +308,38 @@ def process_filtered_file(filtered_path: Path, track_first_call: bool = False) -
         # Store normalized metric name and value
         results[normalized_metric] = extracted
 
-        # Rate limiting (avoid overwhelming API)
+        # Small delay between extractions
         time.sleep(0.5)
 
-    return results, first_call_time
+    return results, total_llm_time
 
 
-def extract_all_values(extracted_text_folder: Path, metadata_excel: Path) -> Tuple[Path, Path]:
+def extract_all_values(extracted_text_folder: Path) -> Tuple[Path, Path]:
     """
     Extract values from all filtered text files and create outputs.
 
     Args:
         extracted_text_folder: Folder containing _filtered.txt files
-        metadata_excel: Original metadata Excel from Pipeline 3
 
     Returns:
-        (metadata_copy_path, final_dataset_path)
+        (metadata_excel_path, final_dataset_path)
     """
+    query_folder = extracted_text_folder.parent
+
     print("=" * 80)
     print("PIPELINE 4a: LLM TEXT EXTRACTION")
     print("=" * 80)
     print(f"Extracted Text Folder: {extracted_text_folder}")
-    print(f"Metadata Excel: {metadata_excel}")
     print("=" * 80)
     print()
 
-    # Create metadata copy
-    metadata_copy_path = extracted_text_folder.parent / "4a_Metadata.xlsx"
-    print(f"[1/5] Creating metadata copy: {metadata_copy_path.name}")
-    shutil.copy(metadata_excel, metadata_copy_path)
-    print(f"      Copied from: {metadata_excel.name}\n")
+    # Load corpus metadata from JSON
+    print(f"[1/5] Loading corpus metadata...")
+    all_papers = load_corpus_json(query_folder)
+    print(f"      Loaded {len(all_papers)} papers\n")
 
-    # Load metadata workbook
-    wb = load_workbook(metadata_copy_path)
-    ws = wb.active
-
-    # Get headers
-    headers = [cell.value for cell in ws[1]]
-    pdf_num_col = headers.index("PDF Number") + 1
-    breakpoint_col = headers.index("Breakpoint") + 1
-
-    red_fill = PatternFill(start_color="FF6B6B", end_color="FF6B6B", fill_type="solid")
+    # Create paper lookup dict by study_number for fast access (only papers with study_number)
+    papers_by_num = {p["study_number"]: p for p in all_papers if "study_number" in p}
 
     # Find all filtered text files
     print(f"[2/5] Finding filtered text files...")
@@ -348,7 +350,7 @@ def extract_all_values(extracted_text_folder: Path, metadata_excel: Path) -> Tup
     print(f"[3/5] Extracting values from filtered text...\n")
     all_extractions = {}
     no_metrics_count = 0
-    first_llm_extraction_time = None
+    total_llm_time = 0.0
 
     total_start = time.time()
 
@@ -358,32 +360,20 @@ def extract_all_values(extracted_text_folder: Path, metadata_excel: Path) -> Tup
         print(f"PDF {idx}/{len(filtered_files)} (PDF #{pdf_num})")
         print(f"{'-' * 80}")
 
-        # Track first LLM call time (Timer 9)
-        track_first = first_llm_extraction_time is None
-        results, call_time = process_filtered_file(filtered_path, track_first_call=track_first)
+        # Track LLM time (Timer 8)
+        results, file_llm_time = process_filtered_file(filtered_path)
 
-        # Save first LLM extraction call time
-        if first_llm_extraction_time is None and call_time is not None:
-            first_llm_extraction_time = call_time
-            query_folder = extracted_text_folder.parent
-            save_timer(query_folder, "9_llm_extraction_first", first_llm_extraction_time)
+        # Accumulate LLM time
+        total_llm_time += file_llm_time
 
         if len(results) == 0:
             # No metrics extracted - mark in metadata
-            print(f"    [NO METRICS] Updating metadata with 'LLM: No Metrics'\n")
+            print(f"    [NO METRICS] Updating metadata with 'No Metrics'\n")
 
-            # Find row in metadata
-            for row_idx in range(2, ws.max_row + 1):
-                if ws.cell(row=row_idx, column=pdf_num_col).value == pdf_num:
-                    # Update Breakpoint
-                    ws.cell(row=row_idx, column=breakpoint_col).value = "LLM: No Metrics"
-
-                    # Turn row red
-                    for col in range(1, len(headers) + 1):
-                        ws.cell(row=row_idx, column=col).fill = red_fill
-
-                    no_metrics_count += 1
-                    break
+            # Update paper entry in JSON
+            if pdf_num in papers_by_num:
+                papers_by_num[pdf_num]["breakpoint"] = "No Metrics"
+                no_metrics_count += 1
         else:
             # Metrics extracted - store for final dataset
             all_extractions[pdf_num] = results
@@ -391,11 +381,65 @@ def extract_all_values(extracted_text_folder: Path, metadata_excel: Path) -> Tup
 
     total_time = time.time() - total_start
 
-    # Save updated metadata
-    print(f"[4/5] Saving metadata copy...")
-    wb.save(metadata_copy_path)
-    print(f"      Saved: {metadata_copy_path.name}")
-    print(f"      Updated {no_metrics_count} rows with 'LLM: No Metrics'\n")
+    # Save Timer 8: Total LLM extraction time
+    if total_llm_time > 0:
+        save_timer(query_folder, "8_llm_extraction_total", total_llm_time)
+
+    # Create 4a_Metadata.xlsx from updated JSON data
+    print(f"[4/5] Creating metadata Excel (4a_Metadata.xlsx)...")
+    from Utils.corpus_utils import convert_corpus_json_to_excel_data
+    from openpyxl import Workbook
+    from openpyxl.styles import Font, PatternFill
+
+    metadata_rows = convert_corpus_json_to_excel_data(all_papers)
+    metadata_excel_path = query_folder / "4a_Metadata.xlsx"
+
+    # Write to Excel with colors
+    wb = Workbook()
+    wb.remove(wb.active)  # Remove default sheet
+    ws = wb.create_sheet("Corpus")
+
+    # Write header row
+    for col_idx, value in enumerate(metadata_rows[0], 1):
+        ws.cell(row=1, column=col_idx, value=value).font = Font(bold=True)
+
+    # Write data rows with colors
+
+    green_fill = PatternFill(start_color="90EE90", end_color="90EE90", fill_type="solid")
+    orange_fill = PatternFill(start_color="FFA500", end_color="FFA500", fill_type="solid")
+    red_fill = PatternFill(start_color="FF6B6B", end_color="FF6B6B", fill_type="solid")
+
+    for row_idx, row_data in enumerate(metadata_rows[1:], 2):
+        color_code = row_data[-1]  # Last element is color code
+        actual_data = row_data[:-1]  # All except color code
+
+        # Write data
+        for col_idx, value in enumerate(actual_data, 1):
+            ws.cell(row=row_idx, column=col_idx, value=value)
+
+        # Apply color
+        if color_code == "green":
+            fill = green_fill
+        elif color_code == "orange":
+            fill = orange_fill
+        elif color_code == "red":
+            fill = red_fill
+        else:
+            fill = None
+
+        if fill:
+            for col_idx in range(1, len(actual_data) + 1):
+                ws.cell(row=row_idx, column=col_idx).fill = fill
+
+    # Column widths
+    ws.column_dimensions['A'].width = 10  # PDF Number
+    ws.column_dimensions['B'].width = 16  # FileType
+    ws.column_dimensions['C'].width = 15  # Breakpoint
+    ws.column_dimensions['D'].width = 10  # Access
+
+    wb.save(metadata_excel_path)
+    print(f"      Saved: {metadata_excel_path.name}")
+    print(f"      Updated {no_metrics_count} papers with 'No Metrics'\n")
 
     # Create final dataset Excel
     print(f"[5/5] Creating final dataset Excel...")
@@ -428,12 +472,17 @@ def extract_all_values(extracted_text_folder: Path, metadata_excel: Path) -> Tup
     print(f"PDFs with extracted values: {len(all_extractions)}")
     print(f"PDFs with no metrics: {no_metrics_count}")
     print(f"\nOutputs:")
-    print(f"  Metadata: {metadata_copy_path.name}")
+    print(f"  Metadata: {metadata_excel_path.name}")
     print(f"  Dataset:  {final_dataset_path.name}")
-    print(f"\nRuntime: {total_time:.1f}s ({total_time/len(filtered_files):.1f}s per PDF)")
+
+    # Only show per-PDF time if there were files processed
+    if len(filtered_files) > 0:
+        print(f"\nRuntime: {total_time:.1f}s ({total_time/len(filtered_files):.1f}s per PDF)")
+    else:
+        print(f"\nRuntime: {total_time:.1f}s (no files to process)")
     print("=" * 80)
 
-    return metadata_copy_path, final_dataset_path
+    return metadata_excel_path, final_dataset_path
 
 
 def find_latest_query_folder():
@@ -449,9 +498,8 @@ def main():
     """CLI entry point for LLM value extraction."""
     import argparse
 
-    parser = argparse.ArgumentParser(description="Extract metric values using SambaNova LLM")
+    parser = argparse.ArgumentParser(description="Extract metric values using Qwen 2.5 7B LLM")
     parser.add_argument("extracted_text_folder", nargs='?', type=Path, help="Folder containing _filtered.txt files")
-    parser.add_argument("metadata_excel", nargs='?', type=Path, help="Metadata Excel file from Pipeline 3")
 
     args = parser.parse_args()
 
@@ -463,7 +511,6 @@ def main():
             sys.exit(1)
 
         args.extracted_text_folder = query_folder / "Extracted Text"
-        args.metadata_excel = query_folder / "metadata.xlsx"
 
         print(f"Auto-detected Query folder: {query_folder.name}")
 
@@ -471,11 +518,7 @@ def main():
         print(f"ERROR: Extracted text folder not found: {args.extracted_text_folder}")
         sys.exit(1)
 
-    if not args.metadata_excel.exists():
-        print(f"ERROR: Metadata Excel not found: {args.metadata_excel}")
-        sys.exit(1)
-
-    extract_all_values(args.extracted_text_folder, args.metadata_excel)
+    extract_all_values(args.extracted_text_folder)
 
 
 if __name__ == "__main__":
