@@ -6,34 +6,39 @@ Combines outputs from Pipelines 1-4 into a single final workbook.
 PROCESS:
 1. Add "Extractor" column to 4a_Metadata.xlsx (mark all rows as "LLM")
 2. Add "Extractor" column to 4b_Metadata.xlsx (mark all rows as "TableExtraction")
-3. Combine 4a and 4b metadata into single "Corpus" sheet (each study has 2 rows)
+3. Combine 4a and 4b metadata into single "Extraction Results" sheet (each study has 2 rows)
 4. Add "Extractor" column to 4a_FinalDataset.xlsx (mark as "LLM")
 5. Add "Extractor" column to 4b_FinalDataset.xlsx (mark as "TableExtraction")
 6. Combine both datasets into single "Metrics" sheet
 7. Create final 3-sheet workbook:
-   - Sheet 1: "Extraction Results" (original metadata from Pipelines 1+3)
-   - Sheet 2: "Corpus" (combined metadata from 4a+4b)
+   - Sheet 1: "Search Results" (all papers from search with upfront numbering)
+   - Sheet 2: "Extraction Results" (combined metadata from 4a+4b)
    - Sheet 3: "Metrics" (combined dataset from 4a+4b)
 8. Delete intermediate files
 
+NOTE: Pipeline 1 now only downloads actual PDFs. HTML/XML/JSON files are rejected
+during download, so no file extension renaming is needed.
+
 INPUTS:
-- Original metadata Excel (from Pipeline 1+3)
+- Corpus Metadata.xlsx (from Pipeline 1+3)
 - 4a_Metadata.xlsx
 - 4a_FinalDataset.xlsx
 - 4b_Metadata.xlsx
 - 4b_FinalDataset.xlsx
 
 OUTPUTS:
-- Final_Workbook.xlsx (3 sheets)
+- Query Output [mmddyy-hh]H[mm]M.xlsx (3 sheets)
 """
 
 import sys
 from pathlib import Path
 import time
+import shutil
 
-# Import timing utilities
+# Import timing and corpus utilities
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from Timers.timing_utils import save_timer, display_timers
+from Utils.corpus_utils import load_corpus_json, convert_corpus_json_to_excel_data
 
 # Check for required libraries
 try:
@@ -127,7 +132,6 @@ def combine_datasets(dataset_4a_path: Path, dataset_4b_path: Path) -> pd.DataFra
 
 def create_final_workbook(
     query_folder: Path,
-    original_metadata: Path,
     combined_metadata: pd.DataFrame,
     combined_dataset: pd.DataFrame
 ) -> Path:
@@ -136,7 +140,6 @@ def create_final_workbook(
 
     Args:
         query_folder: Query folder path
-        original_metadata: Original metadata Excel from Pipeline 1+3
         combined_metadata: Combined metadata from 4a+4b
         combined_dataset: Combined metrics dataset from 4a+4b
 
@@ -145,44 +148,125 @@ def create_final_workbook(
     """
     print("[3/4] Creating final 3-sheet workbook...")
 
-    final_workbook_path = query_folder / "Final_Workbook.xlsx"
+    # Extract timestamp from query folder name (format: "mm-dd-yy-hhmm Query")
+    # Convert to output format: "Query Output mm-dd-yy-hhHmmM.xlsx"
+    folder_name = query_folder.name
+    if " Query" in folder_name:
+        timestamp_part = folder_name.replace(" Query", "")
+        parts = timestamp_part.split("-")
+        if len(parts) == 4:
+            mm, dd, yy, hhmm = parts
+            hh = hhmm[:2]
+            min_part = hhmm[2:]
+            output_filename = f"Query Output {mm}-{dd}-{yy}-{hh}H{min_part}M.xlsx"
+        else:
+            output_filename = "Query Output.xlsx"  # Fallback
+    else:
+        output_filename = "Query Output.xlsx"  # Fallback
+
+    final_workbook_path = query_folder / output_filename
 
     # Create new workbook
     wb = Workbook()
     wb.remove(wb.active)  # Remove default sheet
 
-    # Sheet 1: "Extraction Results" (original metadata from Pipeline 1+3)
-    print("  [1/3] Adding 'Extraction Results' sheet...")
-    wb_original = load_workbook(original_metadata)
-    ws_original = wb_original.active
+    # Sheet 1: "Search Results" (from corpus_metadata.json)
+    print("  [1/3] Adding 'Search Results' sheet...")
 
-    ws1 = wb.create_sheet("Extraction Results")
-    for row in ws_original.iter_rows():
-        ws1.append([cell.value for cell in row])
+    # Load corpus metadata from JSON
+    all_papers = load_corpus_json(query_folder)
+    corpus_rows = convert_corpus_json_to_excel_data(all_papers)
 
-    # Copy formatting (colors)
-    from openpyxl.styles import PatternFill
-    for row_idx, row in enumerate(ws_original.iter_rows(), 1):
-        for col_idx, cell in enumerate(row, 1):
-            if cell.fill and cell.fill.start_color:
-                # Create a new PatternFill instead of copying the object
-                new_fill = PatternFill(
-                    start_color=cell.fill.start_color.rgb if hasattr(cell.fill.start_color, 'rgb') else cell.fill.start_color.index,
-                    end_color=cell.fill.end_color.rgb if hasattr(cell.fill.end_color, 'rgb') else cell.fill.end_color.index,
-                    fill_type=cell.fill.fill_type
-                )
-                ws1.cell(row=row_idx, column=col_idx).fill = new_fill
+    ws1 = wb.create_sheet("Search Results")
 
-    print(f"      Copied {ws_original.max_row} rows")
+    # Write header row
+    from openpyxl.styles import Font, PatternFill
+    for col_idx, value in enumerate(corpus_rows[0], 1):
+        ws1.cell(row=1, column=col_idx, value=value).font = Font(bold=True)
 
-    # Sheet 2: "Corpus" (combined metadata from 4a+4b)
-    print("  [2/3] Adding 'Corpus' sheet...")
-    ws2 = wb.create_sheet("Corpus")
+    # Define colors
+    green_fill = PatternFill(start_color="90EE90", end_color="90EE90", fill_type="solid")
+    orange_fill = PatternFill(start_color="FFA500", end_color="FFA500", fill_type="solid")
+    red_fill = PatternFill(start_color="FF6B6B", end_color="FF6B6B", fill_type="solid")
 
-    for row in dataframe_to_rows(combined_metadata, index=False, header=True):
+    # Write data rows with NEW color logic
+    for row_idx, row_data in enumerate(corpus_rows[1:], 2):
+        actual_data = row_data[:-1]  # All except color code
+        breakpoint_value = actual_data[2] if len(actual_data) > 2 else ""  # Breakpoint column
+        filetype_value = actual_data[1] if len(actual_data) > 1 else ""  # FileType column
+
+        # Write data
+        for col_idx, value in enumerate(actual_data, 1):
+            ws1.cell(row=row_idx, column=col_idx, value=value)
+
+        # NEW COLOR LOGIC (per user requirements):
+        # 1. Red: Anything with content in Breakpoint column
+        # 2. Orange: "Unknown" FileType + empty Breakpoint (overrides green)
+        # 3. Green: Everything else (empty Breakpoint)
+        if breakpoint_value and str(breakpoint_value).strip() != "":
+            # Red: Any value in Breakpoint
+            fill = red_fill
+        elif filetype_value == "Unknown":
+            # Orange: Unknown FileType (only when Breakpoint is empty)
+            fill = orange_fill
+        else:
+            # Green: Empty Breakpoint
+            fill = green_fill
+
+        # Apply color to entire row
+        for col_idx in range(1, len(actual_data) + 1):
+            ws1.cell(row=row_idx, column=col_idx).fill = fill
+
+    # Column widths
+    ws1.column_dimensions['A'].width = 10
+    ws1.column_dimensions['B'].width = 16
+    ws1.column_dimensions['C'].width = 15
+    ws1.column_dimensions['D'].width = 10
+
+    print(f"      Added {len(corpus_rows)-1} rows")
+
+    # Sheet 2: "Extraction Results" (combined metadata from 4a+4b)
+    print("  [2/3] Adding 'Extraction Results' sheet...")
+    ws2 = wb.create_sheet("Extraction Results")
+
+    # Filter out rows where PDF was never successfully downloaded
+    # Download failures from Pipeline 1: "Download Failed" only
+    # HTML, XML, JSON are now rejected during download (not in Corpus)
+    download_failures = ["Download Failed"]
+    filtered_metadata = combined_metadata[~combined_metadata["Breakpoint"].isin(download_failures)]
+
+    filtered_count = len(combined_metadata) - len(filtered_metadata)
+    if filtered_count > 0:
+        print(f"      Filtered out {filtered_count} rows (Download Failed papers)")
+
+    # Add rows to sheet
+    for row in dataframe_to_rows(filtered_metadata, index=False, header=True):
         ws2.append(row)
 
-    print(f"      Added {len(combined_metadata)} rows (each study has 2 rows)")
+    # Color rows red where Breakpoint contains "Error:"
+    from openpyxl.styles import PatternFill
+    red_fill = PatternFill(start_color="FF6B6B", end_color="FF6B6B", fill_type="solid")
+
+    # Find Breakpoint column index
+    headers = [cell.value for cell in ws2[1]]
+    if "Breakpoint" in headers:
+        breakpoint_col_idx = headers.index("Breakpoint") + 1
+
+        error_count = 0
+        for row_idx in range(2, ws2.max_row + 1):
+            breakpoint_value = ws2.cell(row=row_idx, column=breakpoint_col_idx).value
+            if breakpoint_value and isinstance(breakpoint_value, str):
+                # Color row red if Breakpoint contains "Error:" or "No Metrics"
+                if "Error:" in breakpoint_value or "No Metrics" in breakpoint_value:
+                    # Color entire row red
+                    for col in range(1, len(headers) + 1):
+                        ws2.cell(row=row_idx, column=col).fill = red_fill
+                    error_count += 1
+
+        if error_count > 0:
+            print(f"      Colored {error_count} error rows red")
+
+    print(f"      Added {len(filtered_metadata)} rows (each study has 2 rows)")
 
     # Sheet 3: "Metrics" (combined dataset from 4a+4b)
     print("  [3/3] Adding 'Metrics' sheet...")
@@ -200,11 +284,12 @@ def create_final_workbook(
     return final_workbook_path
 
 
-def cleanup_intermediate_files(metadata_4a: Path, metadata_4b: Path, dataset_4a: Path, dataset_4b: Path):
+def cleanup_intermediate_files(query_folder: Path, metadata_4a: Path, metadata_4b: Path, dataset_4a: Path, dataset_4b: Path):
     """
-    Delete intermediate files.
+    Delete intermediate files and folders.
 
     Args:
+        query_folder: Path to Query folder
         metadata_4a: Path to 4a_Metadata.xlsx
         metadata_4b: Path to 4b_Metadata.xlsx
         dataset_4a: Path to 4a_FinalDataset.xlsx
@@ -212,10 +297,26 @@ def cleanup_intermediate_files(metadata_4a: Path, metadata_4b: Path, dataset_4a:
     """
     print("[4/4] Cleaning up intermediate files...")
 
-    for file_path in [metadata_4a, metadata_4b, dataset_4a, dataset_4b]:
+    # Add corpus_metadata.json to cleanup list (COMMENTED OUT - keeping for diagnostics)
+    # corpus_json = query_folder / "corpus_metadata.json"
+    files_to_delete = [metadata_4a, metadata_4b, dataset_4a, dataset_4b]  # corpus_json excluded
+
+    for file_path in files_to_delete:
         if file_path.exists():
-            file_path.unlink()
-            print(f"  Deleted: {file_path.name}")
+            # Retry deletion with increasing delays (Windows file lock handling)
+            for attempt in range(3):
+                try:
+                    file_path.unlink()
+                    print(f"  Deleted: {file_path.name}")
+                    break
+                except (PermissionError, OSError) as e:
+                    if attempt < 2:
+                        time.sleep(0.5 * (attempt + 1))  # 0.5s, 1.0s, then give up
+                    else:
+                        print(f"  WARNING: Could not delete {file_path.name}: {e}")
+
+    # NOTE: Staging Downloads folder is cleaned up by Pipeline 1
+    # No need to clean it up here (avoids 27s of retry delays)
 
     print()
 
@@ -238,15 +339,15 @@ def run_combiner(query_folder: Path):
     print()
 
     # Find input files
-    original_metadata = query_folder / "metadata.xlsx"  # From Pipeline 1+3
     metadata_4a = query_folder / "4a_Metadata.xlsx"
     metadata_4b = query_folder / "4b_Metadata.xlsx"
     dataset_4a = query_folder / "4a_FinalDataset.xlsx"
     dataset_4b = query_folder / "4b_FinalDataset.xlsx"
+    corpus_json = query_folder / "corpus_metadata.json"
 
     # Verify all files exist
     missing_files = []
-    for file_path in [original_metadata, metadata_4a, metadata_4b, dataset_4a, dataset_4b]:
+    for file_path in [metadata_4a, metadata_4b, dataset_4a, dataset_4b, corpus_json]:
         if not file_path.exists():
             missing_files.append(file_path.name)
 
@@ -258,7 +359,7 @@ def run_combiner(query_folder: Path):
         sys.exit(1)
 
     print("All input files found:\n")
-    print(f"  Original Metadata: {original_metadata.name}")
+    print(f"  Corpus JSON: {corpus_json.name}")
     print(f"  4a Metadata: {metadata_4a.name}")
     print(f"  4b Metadata: {metadata_4b.name}")
     print(f"  4a Dataset: {dataset_4a.name}")
@@ -273,28 +374,27 @@ def run_combiner(query_folder: Path):
     # Create final workbook (3 sheets)
     final_workbook = create_final_workbook(
         query_folder,
-        original_metadata,
         combined_metadata,
         combined_dataset
     )
 
     # Cleanup
-    cleanup_intermediate_files(metadata_4a, metadata_4b, dataset_4a, dataset_4b)
+    cleanup_intermediate_files(query_folder, metadata_4a, metadata_4b, dataset_4a, dataset_4b)
 
     # Summary
     print("Pipeline combination complete!\n")
 
-    # Timer 11: Save final output creation time
+    # Timer 10: Save final output creation time
     combiner_time = time.time() - combiner_start
-    save_timer(query_folder, "11_final_output", combiner_time)
+    save_timer(query_folder, "10_final_output", combiner_time)
 
     print("=" * 80)
     print("FINAL OUTPUT COMPLETE")
     print("=" * 80)
     print(f"\nFinal Output: {final_workbook.name}")
     print("\nWorkbook Structure:")
-    print("  Sheet 1: Extraction Results (original metadata from Pipelines 1+3)")
-    print("  Sheet 2: Corpus (combined metadata from 4a+4b, 2 rows per study)")
+    print("  Sheet 1: Search Results (all papers from search with upfront numbering)")
+    print("  Sheet 2: Extraction Results (combined metadata from 4a+4b, 2 rows per study)")
     print("  Sheet 3: Metrics (combined dataset from 4a+4b)")
     print("=" * 80)
 

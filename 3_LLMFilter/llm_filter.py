@@ -1,14 +1,14 @@
 """
-LLM Filter - Relevance Checking with SambaNova
+LLM Filter - Relevance Checking with Qwen 2.5 7B
 
 Filters extracted text to determine if papers are relevant to fabric research.
 
 PROCESS:
-1. Read metadata Excel file (contains PDF Number and empty Breakpoint column)
+1. Read metadata JSON file (contains PDF Number and empty Breakpoint field)
 2. For each PDF, read the full text extraction file
-3. Send to SambaNova LLM with filtering prompt
-4. Update Breakpoint column with response
-5. Save updated Excel file
+3. Send to Qwen 2.5 7B LLM (via Ollama) with filtering prompt
+4. Update Breakpoint field with response
+5. Save updated JSON file and delete irrelevant paper files
 
 INPUTS:
 - Metadata Excel file (.xlsx)
@@ -29,10 +29,12 @@ import sys
 from pathlib import Path
 from typing import Dict, List, Tuple
 import time
+import json
 
-# Import timing utilities
+# Import timing and corpus utilities
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from Timers.timing_utils import save_timer
+from Utils.corpus_utils import load_corpus_json, save_corpus_json
 
 # Load environment variables
 from dotenv import load_dotenv
@@ -46,22 +48,8 @@ except ImportError:
     print("Install it with: pip install pandas openpyxl")
     sys.exit(1)
 
-try:
-    import requests
-except ImportError:
-    print("ERROR: Missing required library 'requests'")
-    print("Install it with: pip install requests")
-    sys.exit(1)
-
-# SambaNova API configuration
-SAMBANOVA_API_KEY = os.getenv("SAMBANOVA_API_KEY")
-SAMBANOVA_CHAT_ENDPOINT = os.getenv("SAMBANOVA_CHAT_ENDPOINT")
-
-if not SAMBANOVA_API_KEY or not SAMBANOVA_CHAT_ENDPOINT:
-    print("ERROR: SambaNova API credentials not found in .env file")
-    print("Required: SAMBANOVA_API_KEY, SAMBANOVA_CHAT_ENDPOINT")
-    sys.exit(1)
-
+import subprocess
+import re
 
 def load_filter_prompt() -> str:
     """Load the filtering prompt from Config/LLMRelevancePrompt.txt."""
@@ -79,144 +67,140 @@ def load_filter_prompt() -> str:
 FILTER_PROMPT = load_filter_prompt()
 
 
-def call_sambanova(text: str, max_retries: int = 3) -> str:
+def call_qwen(text: str, max_retries: int = 3) -> str:
     """
-    Call SambaNova API with filtering prompt.
+    Call Qwen 2.5 7B via Ollama for relevance classification.
 
     Args:
-        text: Full text of paper to filter
-        max_retries: Number of retry attempts on failure
+        text: Extracted text from PDF (first 3 pages, ~5000 chars)
+        max_retries: Number of retry attempts if call fails
 
     Returns:
         Filter decision: "Passes", "No experiment", "No knit/woven/yarn", or "Error: <message>"
     """
-    prompt = FILTER_PROMPT.format(text=text)
+    # Limit text to first 5000 characters (first 3 pages usually)
+    text_sample = text[:5000]
 
-    headers = {
-        "Authorization": f"Bearer {SAMBANOVA_API_KEY}",
-        "Content-Type": "application/json"
-    }
-
-    payload = {
-        "model": "Meta-Llama-3.3-70B-Instruct",
-        "messages": [
-            {"role": "user", "content": prompt}
-        ],
-        "temperature": 0.0,  # Deterministic output
-        "max_tokens": 50  # Only need a few words
-    }
+    # Build prompt with text
+    prompt = FILTER_PROMPT.replace("{text}", text_sample)
 
     for attempt in range(max_retries):
         try:
-            response = requests.post(
-                SAMBANOVA_CHAT_ENDPOINT,
-                headers=headers,
-                json=payload,
-                timeout=30
+            # Call Ollama
+            cmd = [
+                "ollama", "run", "qwen2.5:7b-instruct-q5_K_M",
+                prompt
+            ]
+
+            result = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                encoding='utf-8',
+                timeout=30  # 30 second timeout
             )
 
-            if response.status_code == 200:
-                result = response.json()
-                decision = result["choices"][0]["message"]["content"].strip()
+            if result.returncode != 0:
+                error_msg = result.stderr.strip() if result.stderr else "Unknown error"
+                if attempt < max_retries - 1:
+                    print(f"    [RETRY {attempt + 1}/{max_retries}] Ollama error: {error_msg}")
+                    time.sleep(1)
+                    continue
+                return f"Error: Ollama failed - {error_msg}"
 
-                # Validate response
-                valid_responses = ["Passes", "No experiment", "No knit/woven/yarn"]
-                if decision in valid_responses:
-                    return decision
-                else:
-                    # LLM gave unexpected response, try to map it
-                    decision_lower = decision.lower()
-                    if "no experiment" in decision_lower:
-                        return "No experiment"
-                    elif "no knit" in decision_lower or "no woven" in decision_lower or "no yarn" in decision_lower:
-                        return "No knit/woven/yarn"
-                    elif "pass" in decision_lower:
-                        return "Passes"
-                    else:
-                        return f"Error: Unexpected response '{decision}'"
+            # Clean response (remove ANSI codes and whitespace)
+            response = result.stdout.strip()
+            response = re.sub(r'\x1b\[[0-9;]*[a-zA-Z]', '', response)  # Remove ANSI codes
+            response = re.sub(r'\[?[0-9]+[hlmKG]', '', response)  # Remove spinner codes
+            response = response.strip()
 
-            elif response.status_code == 429:
-                # Rate limit - wait and retry
-                wait_time = 2 ** attempt  # Exponential backoff
-                print(f"  [Rate limit] Waiting {wait_time}s before retry {attempt+1}/{max_retries}...")
-                time.sleep(wait_time)
+            # Clean up common formatting issues
+            # Sometimes model adds extra text before/after the decision
+            lines = [line.strip() for line in response.split('\n') if line.strip()]
 
-            else:
-                return f"Error: API returned {response.status_code}"
+            # Look for the decision in the response
+            valid_decisions = ["Passes", "No experiment", "No knit/woven/yarn"]
 
-        except requests.exceptions.Timeout:
+            for line in lines:
+                # Check if line contains any valid decision
+                for decision in valid_decisions:
+                    if decision.lower() in line.lower():
+                        return decision
+
+            # If no valid decision found, try the last non-empty line
+            if lines:
+                last_line = lines[-1]
+                # Check if it's close to a valid decision
+                for decision in valid_decisions:
+                    if decision.lower() in last_line.lower():
+                        return decision
+
+            # If still nothing, return the cleaned response as-is
+            # (might be a valid decision with slight formatting)
+            return response if response else "Error: Empty response from LLM"
+
+        except subprocess.TimeoutExpired:
             if attempt < max_retries - 1:
-                print(f"  [Timeout] Retry {attempt+1}/{max_retries}...")
+                print(f"    [RETRY {attempt + 1}/{max_retries}] LLM call timed out")
                 time.sleep(1)
-            else:
-                return "Error: API timeout"
+                continue
+            return "Error: LLM call timed out"
 
         except Exception as e:
+            if attempt < max_retries - 1:
+                print(f"    [RETRY {attempt + 1}/{max_retries}] Exception: {str(e)}")
+                time.sleep(1)
+                continue
             return f"Error: {str(e)}"
 
-    return "Error: Max retries exceeded"
+    return "Error: Max retries reached"
 
 
-def filter_papers(pdf_folder: Path, excel_path: Path) -> Path:
+def filter_papers(pdf_folder: Path) -> None:
     """
-    Filter papers using SambaNova LLM and update Breakpoint column.
+    Filter papers using Lambda AI LLM and update corpus metadata JSON.
     Deletes irrelevant papers and their files.
 
     Args:
         pdf_folder: Folder containing PDFs and text extraction files
-        excel_path: Path to metadata Excel file
-
-    Returns:
-        Path to updated Excel file
     """
-    from openpyxl import load_workbook
-    from openpyxl.styles import PatternFill
+    query_folder = pdf_folder.parent
 
-    print("[DEBUG] Loading metadata Excel file...")
-    wb = load_workbook(excel_path)
+    print("[DEBUG] Loading corpus metadata...")
+    all_papers = load_corpus_json(query_folder)
 
-    # Find the sheet with data (usually "OA" or first sheet)
-    if "OA" in wb.sheetnames:
-        ws = wb["OA"]
-    else:
-        ws = wb.active
+    # Filter to only processable papers (exclude failed and unreadable)
+    processable_statuses = ["downloaded", "html", "xml", "json", "unknown"]
+    processable_papers = [p for p in all_papers if p.get("status", "") in processable_statuses]
 
-    # Get headers
-    headers = [cell.value for cell in ws[1]]
-
-    if "Breakpoint" not in headers:
-        raise ValueError("ERROR: 'Breakpoint' column not found in Excel file")
-
-    breakpoint_col = headers.index("Breakpoint") + 1
-    pdf_num_col = headers.index("PDF Number") + 1
-
-    total_papers = ws.max_row - 1  # Exclude header
-    print(f"[DEBUG] Found {total_papers} papers to filter")
-    print(f"[DEBUG] Excel columns: {headers}\n")
+    total_papers = len(processable_papers)
+    print(f"[DEBUG] Found {total_papers} papers to filter\n")
 
     # Process each paper
     total_start = time.time()
     deleted_count = 0
-    first_llm_call_time = None
+    total_llm_time = 0.0
+    filtered_out_pdfs = set()  # Track PDFs that were filtered out
 
-    red_fill = PatternFill(start_color="FF6B6B", end_color="FF6B6B", fill_type="solid")
-
-    for row_idx in range(2, ws.max_row + 1):
-        pdf_num = ws.cell(row=row_idx, column=pdf_num_col).value
+    for idx, paper in enumerate(processable_papers, 1):
+        pdf_num = paper.get("study_number")
 
         print("=" * 80)
-        print(f"Processing PDF {row_idx-1}/{total_papers} (PDF #{pdf_num})")
+        print(f"Processing PDF {idx}/{total_papers} (PDF #{pdf_num})")
         print("=" * 80)
 
-        # Find text file (in Extracted Text folder, not Downloaded Papers)
-        text_file = pdf_folder.parent / "Extracted Text" / f"{pdf_num}.txt"
+        # Check if paper already has a breakpoint from Pipeline 1 (shouldn't happen for processable papers)
+        existing_breakpoint = paper.get("breakpoint", "")
+        if existing_breakpoint and existing_breakpoint != "":
+            print(f"  [SKIP] Already has breakpoint: {existing_breakpoint}")
+            continue
+
+        # Find text file (in Extracted Text folder)
+        text_file = query_folder / "Extracted Text" / f"{pdf_num}.txt"
 
         if not text_file.exists():
             print(f"  [WARNING] Text file not found: {text_file}")
-            ws.cell(row=row_idx, column=breakpoint_col).value = "Error: Text file not found"
-            # Turn row red
-            for col in range(1, len(headers) + 1):
-                ws.cell(row=row_idx, column=col).fill = red_fill
+            paper["breakpoint"] = "Error: Text file not found"
             continue
 
         # Read full text
@@ -226,91 +210,121 @@ def filter_papers(pdf_folder: Path, excel_path: Path) -> Path:
 
             if not text.strip():
                 print(f"  [WARNING] Text file is empty")
-                ws.cell(row=row_idx, column=breakpoint_col).value = "Error: Empty text file"
-                # Turn row red
-                for col in range(1, len(headers) + 1):
-                    ws.cell(row=row_idx, column=col).fill = red_fill
+                paper["breakpoint"] = "Error: Empty text file"
                 continue
 
             print(f"  [1/3] Loaded text: {len(text):,} chars, {len(text.split()):,} words")
 
         except Exception as e:
             print(f"  [ERROR] Failed to read text file: {e}")
-            ws.cell(row=row_idx, column=breakpoint_col).value = f"Error: {str(e)}"
-            # Turn row red
-            for col in range(1, len(headers) + 1):
-                ws.cell(row=row_idx, column=col).fill = red_fill
+            paper["breakpoint"] = f"Error: {str(e)}"
             continue
 
-        # Call SambaNova LLM (Timer 8: First call)
-        print(f"  [2/3] Calling SambaNova LLM...")
+        # Call Qwen 2.5 7B LLM (Timer 7: Track LLM time)
+        print(f"  [2/3] Calling Qwen 2.5 7B LLM...")
         start_time = time.time()
 
-        decision = call_sambanova(text)
+        decision = call_qwen(text)
 
         elapsed = time.time() - start_time
 
-        # Save first LLM call time
-        if first_llm_call_time is None:
-            first_llm_call_time = elapsed
-            # Get query folder from pdf_folder path
-            query_folder = pdf_folder.parent
-            save_timer(query_folder, "8_llm_filter_first", first_llm_call_time)
+        # Accumulate LLM time
+        total_llm_time += elapsed
 
         print(f"  [RESULT] {decision} ({elapsed:.1f}s)")
 
-        # Update Excel with decision
-        ws.cell(row=row_idx, column=breakpoint_col).value = decision
+        # Update paper with decision
+        paper["breakpoint"] = decision
 
-        # If irrelevant, turn row red and DELETE files
+        # If irrelevant, MOVE files to Filtered Papers folder
         if decision in ["No experiment", "No knit/woven/yarn"]:
-            print(f"  [3/3] Marking as irrelevant and deleting files...")
+            print(f"  [3/3] Marking as irrelevant and moving files...")
 
-            # Turn row red
-            for col in range(1, len(headers) + 1):
-                ws.cell(row=row_idx, column=col).fill = red_fill
+            # Create Filtered Papers folder
+            filtered_folder = query_folder / "Filtered Papers"
+            filtered_folder.mkdir(exist_ok=True)
 
-            # Delete files
-            extracted_text_folder = pdf_folder.parent / "Extracted Text"
-            files_to_delete = [
-                pdf_folder / "OA Papers" / f"{pdf_num}.pdf",
-                extracted_text_folder / f"{pdf_num}.txt",
-                extracted_text_folder / f"{pdf_num}_filtered.txt",
-                extracted_text_folder / f"{pdf_num}_filtered_NEW.txt",
+            # Move files
+            extracted_text_folder = query_folder / "Extracted Text"
+            files_to_move = [
+                (pdf_folder / f"{pdf_num}.pdf", filtered_folder / f"{pdf_num}.pdf"),
+                (pdf_folder / f"{pdf_num}.html", filtered_folder / f"{pdf_num}.html"),
+                (pdf_folder / f"{pdf_num}.xml", filtered_folder / f"{pdf_num}.xml"),
+                (pdf_folder / f"{pdf_num}.json", filtered_folder / f"{pdf_num}.json"),
+                (extracted_text_folder / f"{pdf_num}.txt", filtered_folder / f"{pdf_num}.txt"),
+                (extracted_text_folder / f"{pdf_num}_filtered.txt", filtered_folder / f"{pdf_num}_filtered.txt"),
+                (extracted_text_folder / f"{pdf_num}_filtered_NEW.txt", filtered_folder / f"{pdf_num}_filtered_NEW.txt"),
             ]
 
-            for file_path in files_to_delete:
-                if file_path.exists():
+            for src_path, dest_path in files_to_move:
+                if src_path.exists():
                     try:
-                        file_path.unlink()
-                        print(f"    [DELETED] {file_path.name}")
+                        src_path.rename(dest_path)
+                        print(f"    [MOVED] {src_path.name}")
                     except Exception as e:
-                        print(f"    [ERROR] Failed to delete {file_path.name}: {e}")
+                        print(f"    [ERROR] Failed to move {src_path.name}: {e}")
 
+            # Track this PDF as filtered out (for table detections cleanup)
+            filtered_out_pdfs.add(pdf_num)
             deleted_count += 1
 
         elif decision.startswith("Error:"):
             print(f"  [3/3] Error occurred, keeping files for retry")
-            # Turn row red but keep files
-            for col in range(1, len(headers) + 1):
-                ws.cell(row=row_idx, column=col).fill = red_fill
 
         else:
-            # Passes - leave green, keep files
+            # Passes - clear breakpoint, keep files
             print(f"  [3/3] Paper passes filter, keeping all files")
+            paper["breakpoint"] = ""  # Clear breakpoint for papers that pass
 
-        # Small delay to avoid rate limits
+        # Small delay between papers
         time.sleep(0.5)
 
-    # Save updated Excel
+    # Save updated JSON
     total_time = time.time() - total_start
 
+    # Save Timer 7: Total LLM filter time
+    if total_llm_time > 0:
+        save_timer(query_folder, "7_llm_filter_total", total_llm_time)
+
+    # Clean up table detections JSON (remove detections for filtered-out PDFs)
+    if filtered_out_pdfs:
+        table_detections_json = query_folder / "yolo_table_detections.json"
+
+        if table_detections_json.exists():
+            print("\n" + "=" * 80)
+            print("CLEANING UP TABLE DETECTIONS")
+            print("=" * 80)
+
+            # Load table detections
+            with open(table_detections_json, 'r', encoding='utf-8') as f:
+                all_detections = json.load(f)
+
+            original_count = len(all_detections)
+            print(f"Original detections: {original_count}")
+            print(f"Filtered out PDFs: {len(filtered_out_pdfs)}")
+
+            # Filter out detections for filtered-out PDFs
+            kept_detections = [
+                det for det in all_detections
+                if det.get("pdf_num") not in filtered_out_pdfs
+            ]
+
+            removed_count = original_count - len(kept_detections)
+            print(f"Removed detections: {removed_count}")
+            print(f"Kept detections: {len(kept_detections)}")
+
+            # Save cleaned detections
+            with open(table_detections_json, 'w', encoding='utf-8') as f:
+                json.dump(kept_detections, f, indent=2)
+
+            print(f"Updated: {table_detections_json.name}")
+
     print("\n" + "=" * 80)
-    print("SAVING UPDATED EXCEL FILE")
+    print("SAVING UPDATED METADATA")
     print("=" * 80)
 
-    wb.save(excel_path)
-    print(f"Updated Excel saved to: {excel_path.name}")
+    save_corpus_json(all_papers, query_folder)
+    print(f"Updated metadata saved")
 
     # Summary
     print("\n" + "=" * 80)
@@ -319,8 +333,8 @@ def filter_papers(pdf_folder: Path, excel_path: Path) -> Path:
 
     # Count decisions
     decisions = {}
-    for row_idx in range(2, ws.max_row + 1):
-        decision = ws.cell(row=row_idx, column=breakpoint_col).value or "Passes"
+    for paper in all_papers:
+        decision = paper.get("breakpoint", "") or "Passes"
         decisions[decision] = decisions.get(decision, 0) + 1
 
     for value, count in sorted(decisions.items()):
@@ -328,10 +342,9 @@ def filter_papers(pdf_folder: Path, excel_path: Path) -> Path:
 
     print(f"\nFiles deleted: {deleted_count} papers")
     print(f"Total time: {total_time:.1f}s")
-    print(f"Avg per paper: {total_time/total_papers:.1f}s")
+    if total_papers > 0:
+        print(f"Avg per paper: {total_time/total_papers:.1f}s")
     print("=" * 80)
-
-    return excel_path
 
 
 def find_latest_query_folder():
@@ -347,9 +360,8 @@ def main():
     """CLI entry point for LLM filtering."""
     import argparse
 
-    parser = argparse.ArgumentParser(description="Filter papers using SambaNova LLM")
+    parser = argparse.ArgumentParser(description="Filter papers using Qwen 2.5 7B LLM")
     parser.add_argument("pdf_folder", nargs='?', type=Path, help="Folder containing PDFs and text files")
-    parser.add_argument("excel_file", nargs='?', type=Path, help="Metadata Excel file path")
 
     args = parser.parse_args()
 
@@ -360,8 +372,7 @@ def main():
             print("ERROR: No Query folder found in Output directory")
             sys.exit(1)
 
-        args.pdf_folder = query_folder / "Downloaded Papers"
-        args.excel_file = query_folder / "metadata.xlsx"
+        args.pdf_folder = query_folder / "Corpus PDFs"
 
         print(f"Auto-detected Query folder: {query_folder.name}")
 
@@ -369,18 +380,13 @@ def main():
         print(f"ERROR: PDF folder not found: {args.pdf_folder}")
         sys.exit(1)
 
-    if not args.excel_file.exists():
-        print(f"ERROR: Excel file not found: {args.excel_file}")
-        sys.exit(1)
-
     print("=" * 80)
-    print("LLM FILTER - SambaNova Paper Relevance Checking")
+    print("LLM FILTER - Qwen 2.5 7B Paper Relevance Checking")
     print("=" * 80)
     print(f"PDF Folder: {args.pdf_folder}")
-    print(f"Excel File: {args.excel_file}")
     print("=" * 80 + "\n")
 
-    filter_papers(args.pdf_folder, args.excel_file)
+    filter_papers(args.pdf_folder)
 
 
 if __name__ == "__main__":

@@ -40,10 +40,13 @@ import os
 import re
 from typing import List, Tuple
 import time
+import json
+from multiprocessing import Pool, cpu_count
 
-# Import timing utilities
+# Import timing and corpus utilities
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from Timers.timing_utils import save_timer
+from Utils.corpus_utils import load_corpus_json
 
 # Check for required third-party libraries
 try:
@@ -102,15 +105,10 @@ def _get_layout_engine():
 
             total_size = int(response.headers.get('content-length', 0))
             with open(model_path, 'wb') as f:
-                downloaded = 0
                 for chunk in response.iter_content(chunk_size=8192):
                     if chunk:
                         f.write(chunk)
-                        downloaded += len(chunk)
-                        if total_size > 0:
-                            progress = (downloaded / total_size) * 100
-                            print(f"\r[DEBUG] Downloading: {progress:.1f}%", end='', flush=True)
-            print(f"\n[DEBUG] Model downloaded to: {model_path}")
+            print(f"[DEBUG] Model downloaded to: {model_path}")
 
         layout_engine = YOLO(str(model_path))
         print(f"[DEBUG] YOLOv12-nano model loaded.\n")
@@ -130,7 +128,7 @@ OUTPUT_DIR = PDF_DIR
 
 # Settings
 DPI = 150  # For layout detection rendering (2x faster than 300 DPI)
-CONF_THRESHOLD = 0.25
+CONF_THRESHOLD = 0.175  # Optimized threshold from benchmarking
 
 # YOLOv12-nano CLASS_NAMES (from hantian/yolo-doclaynet)
 CLASS_NAMES = {
@@ -155,10 +153,12 @@ MASK_LABELS = ['Table', 'Picture', 'Caption']
 # COORDINATE CONVERSION & FILTERING
 # =============================================================================
 
-def detect_banned_regions(img, model):
+def detect_banned_regions(img, model, table_detections_list=None, pdf_num=None, page_num=None):
     """
     Extract banned regions (table/figure/caption) from YOLOv12-nano detection.
     Returns list of (x0, y0, x1, y1) in image coordinates.
+
+    If table_detections_list is provided, also saves Table detections to it.
     """
     banned_rects = []
 
@@ -179,7 +179,16 @@ def detect_banned_regions(img, model):
             # Get label name
             label = CLASS_NAMES.get(cls_id, 'unknown')
 
-            # Only keep banned labels
+            # Save Table detections for Phase 1 (if collecting)
+            if label == 'Table' and table_detections_list is not None:
+                table_detections_list.append({
+                    "pdf_num": pdf_num,
+                    "page_num": page_num,
+                    "bbox": [float(x1), float(y1), float(x2), float(y2)],
+                    "confidence": conf
+                })
+
+            # Only keep banned labels for text filtering
             if label in MASK_LABELS:
                 banned_rects.append((float(x1), float(y1), float(x2), float(y2)))
 
@@ -531,10 +540,28 @@ print(f"Loaded {len(ACRONYM_MAPPING)} acronym mappings.\n")
 # MAIN PIPELINE
 # =============================================================================
 
-def extract_text_from_pdf(pdf_path: Path) -> str:
-    """Extract text using PyMuPDF native + DocLayout-YOLO layout filtering."""
-    doc = fitz.open(pdf_path)
+def extract_text_from_pdf(pdf_path: Path, table_detections_list=None) -> str:
+    """Extract text using PyMuPDF native + DocLayout-YOLO layout filtering.
+
+    Args:
+        pdf_path: Path to PDF file
+        table_detections_list: Optional list to collect table detections for Phase 1
+
+    Returns:
+        str: Extracted text, or empty string if file is unreadable
+    """
+    # Try to open PDF - return empty string if it fails
+    try:
+        doc = fitz.open(pdf_path)
+    except Exception as e:
+        print(f"ERROR: Cannot open {pdf_path.name}")
+        print(f"       Reason: {type(e).__name__}: {str(e)}")
+        print(f"       This file may be corrupted, encrypted, or not a valid PDF.")
+        print(f"       Skipping this file...\n")
+        return ""
+
     num_pages = len(doc)
+    pdf_num = int(pdf_path.stem)
 
     print(f"Processing {pdf_path.name} ({num_pages} pages)...\n")
     total_start = time.time()
@@ -571,10 +598,15 @@ def extract_text_from_pdf(pdf_path: Path) -> str:
         time_rendering += time.time() - render_start
 
         # =====================================================================
-        # STAGE 2: Detect banned regions
+        # STAGE 2: Detect banned regions (and collect table detections)
         # =====================================================================
         layout_start = time.time()
-        banned_img_rects = detect_banned_regions(img, model)
+        banned_img_rects = detect_banned_regions(
+            img, model,
+            table_detections_list=table_detections_list,
+            pdf_num=pdf_num,
+            page_num=page_num
+        )
         time_layout_detection += time.time() - layout_start
 
         # Convert to PDF coordinates
@@ -621,37 +653,150 @@ def extract_text_from_pdf(pdf_path: Path) -> str:
     return "\n\n".join(all_page_texts)
 
 
-def process_corpus(pdf_nums: list, pdf_dirs: list = None, query_folder: Path = None):
-    """Process multiple PDFs.
+
+# Global worker model (loaded once per worker process)
+_worker_model = None
+
+def init_worker(model_path):
+    """Initialize worker process with YOLO model (called once per worker)."""
+    global _worker_model
+    from ultralytics import YOLO
+    _worker_model = YOLO(str(model_path))
+    print(f"[Worker {os.getpid()}] Model loaded")
+
+
+def extract_text_worker(args):
+    """Worker function for parallel text extraction.
+
+    Args:
+        args: Tuple of (pdf_path, output_dir)
+
+    Returns:
+        dict: Results containing pdf_num, extracted_text, table_detections,
+              metric_sentences, extraction_time, metrics_time
+    """
+    pdf_path, output_dir = args
+    pdf_num = int(pdf_path.stem)
+
+    # Use pre-loaded model from worker initialization
+    global _worker_model
+    model = _worker_model
+
+    # Collect table detections for this PDF
+    table_detections_for_pdf = []
+
+    # Extract text
+    extraction_start = time.time()
+
+    try:
+        doc = fitz.open(pdf_path)
+    except Exception as e:
+        print(f"[Worker] ERROR: Cannot open {pdf_path.name}: {type(e).__name__}")
+        return {
+            "pdf_num": pdf_num,
+            "extracted_text": "",
+            "table_detections": [],
+            "metric_sentences": [],
+            "extraction_time": 0.0,
+            "metrics_time": 0.0,
+            "error": True
+        }
+
+    num_pages = len(doc)
+    print(f"[Worker] Processing PDF #{pdf_num} ({num_pages} pages)...")
+
+    all_page_texts = []
+
+    for page_num in range(num_pages):
+        page = doc[page_num]
+
+        # Render page
+        zoom = DPI / 72.0
+        mat = fitz.Matrix(zoom, zoom)
+        pix = page.get_pixmap(matrix=mat, alpha=False)
+        img_width, img_height = pix.width, pix.height
+        img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
+
+        # Detect banned regions and collect table detections
+        banned_img_rects = detect_banned_regions(
+            img, model,
+            table_detections_list=table_detections_for_pdf,
+            pdf_num=pdf_num,
+            page_num=page_num
+        )
+
+        # Convert to PDF coordinates
+        page_rect = page.rect
+        banned_pdf_rects = image_rects_to_pdf(
+            banned_img_rects,
+            page_rect.width, page_rect.height,
+            img_width, img_height
+        )
+
+        # Extract text
+        page_text = extract_text_with_banned_regions(page, banned_pdf_rects)
+        all_page_texts.append(page_text)
+
+    doc.close()
+
+    extracted_text = "\n\n".join(all_page_texts)
+    extraction_time = time.time() - extraction_start
+
+    # Skip if no text extracted
+    if not extracted_text or len(extracted_text.strip()) == 0:
+        print(f"[Worker] WARNING: No text extracted from PDF #{pdf_num}")
+        return {
+            "pdf_num": pdf_num,
+            "extracted_text": "",
+            "table_detections": table_detections_for_pdf,
+            "metric_sentences": [],
+            "extraction_time": extraction_time,
+            "metrics_time": 0.0,
+            "error": True
+        }
+
+    # Extract metric sentences
+    filter_start = time.time()
+    metric_sentences = extract_metric_sentences(extracted_text, SEARCHABLE_TERMS)
+    filter_time = time.time() - filter_start
+
+    print(f"[Worker] PDF #{pdf_num} complete: {len(extracted_text.split())} words, {len(metric_sentences)} metric sentences")
+
+    return {
+        "pdf_num": pdf_num,
+        "extracted_text": extracted_text,
+        "table_detections": table_detections_for_pdf,
+        "metric_sentences": metric_sentences,
+        "extraction_time": extraction_time,
+        "metrics_time": filter_time,
+        "error": False
+    }
+
+
+def process_corpus(pdf_nums: list, pdf_dirs: list = None, query_folder: Path = None, num_workers: int = 4):
+    """Process multiple PDFs in parallel.
 
     Args:
         pdf_nums: List of PDF numbers to process
         pdf_dirs: List of directories to search for PDFs (if None, uses PDF_DIR)
         query_folder: Query folder for timer saving (optional)
+        num_workers: Number of parallel workers (default 4 for 8GB VRAM)
     """
     print("=" * 80)
-    print("YOLOV12-NANO LAYOUT + SMART TEXT RECONSTRUCTION (NO OCR!)")
+    print("YOLOV12-NANO LAYOUT + SMART TEXT RECONSTRUCTION (PARALLEL)")
     print("=" * 80)
     print(f"DPI: {DPI} (for layout detection only)")
     print(f"Masking: {MASK_LABELS}")
     print(f"Smart Reconstruction: Ligatures fixed + gap analysis + paragraph detection")
     print(f"Metric terms: {len(SEARCHABLE_TERMS)}")
+    print(f"Parallel workers: {num_workers} (for 8GB VRAM)")
     print("=" * 80 + "\n")
 
     corpus_start = time.time()
 
-    # Track first extraction and first metrics match
-    first_extraction_time = None
-    first_metrics_time = None
-
-    for idx, pdf_num in enumerate(pdf_nums, 1):
-        print("=" * 80)
-        print(f"PDF {idx}/{len(pdf_nums)} (PDF #{pdf_num})")
-        print("=" * 80 + "\n")
-
-        pdf_start = time.time()
-
-        # Try to find PDF in multiple directories if provided
+    # Find all PDF paths
+    pdf_paths = []
+    for pdf_num in pdf_nums:
         pdf_path = None
         if pdf_dirs:
             for pdf_dir in pdf_dirs:
@@ -662,42 +807,55 @@ def process_corpus(pdf_nums: list, pdf_dirs: list = None, query_folder: Path = N
         else:
             pdf_path = PDF_DIR / f"{pdf_num}.pdf"
 
-        if pdf_path is None or not pdf_path.exists():
-            print(f"ERROR: {pdf_num}.pdf not found\n")
+        if pdf_path and pdf_path.exists():
+            pdf_paths.append(pdf_path)
+        else:
+            print(f"WARNING: {pdf_num}.pdf not found, skipping...")
+
+    if not pdf_paths:
+        print("ERROR: No valid PDF files found")
+        return
+
+    print(f"Processing {len(pdf_paths)} PDFs with {num_workers} parallel workers...\n")
+
+    # Model path for workers
+    model_path = Path(__file__).parent / "yolov12n_Model.pt"
+
+    # Build work items for multiprocessing (no model_path - loaded in initializer)
+    work_items = [(pdf_path, OUTPUT_DIR) for pdf_path in pdf_paths]
+
+    # Process PDFs in parallel (Timer 5: Measure wall-clock time, not sum of workers)
+    # Use initializer to load model once per worker instead of per PDF
+    extraction_start = time.time()
+    with Pool(processes=num_workers, initializer=init_worker, initargs=(model_path,)) as pool:
+        results = pool.map(extract_text_worker, work_items)
+    total_extraction_time = time.time() - extraction_start
+
+    # Process results
+    total_metrics_time = 0.0
+    all_table_detections = []
+    successful_pdfs = 0
+
+    for result in results:
+        if result["error"]:
+            print(f"Skipped PDF #{result['pdf_num']} (error during extraction)")
             continue
 
-        # Extract text (Timer 6: First extraction)
-        extraction_start = time.time()
-        extracted_text = extract_text_from_pdf(pdf_path)
-        extraction_time = time.time() - extraction_start
+        pdf_num = result["pdf_num"]
+        extracted_text = result["extracted_text"]
+        metric_sentences = result["metric_sentences"]
+        table_detections = result["table_detections"]
 
-        # Save first extraction time
-        if first_extraction_time is None:
-            first_extraction_time = extraction_time
-            if query_folder:
-                save_timer(query_folder, "6_text_extraction_first", first_extraction_time)
+        # Accumulate metrics time only (extraction time is wall-clock)
+        total_metrics_time += result["metrics_time"]
+
+        # Merge table detections
+        all_table_detections.extend(table_detections)
 
         # Save full text
         output_txt = OUTPUT_DIR / f"{pdf_num}.txt"
         with open(output_txt, 'w', encoding='utf-8') as f:
             f.write(extracted_text)
-
-        words = len(extracted_text.split())
-        chars = len(extracted_text)
-        print(f"[1/2] Full text saved to: {output_txt.name}")
-        print(f"      Characters: {chars:,}")
-        print(f"      Words: {words:,}\n")
-
-        # Extract metric sentences (Timer 7: First metrics match)
-        filter_start = time.time()
-        metric_sentences = extract_metric_sentences(extracted_text, SEARCHABLE_TERMS)
-        filter_time = time.time() - filter_start
-
-        # Save first metrics match time
-        if first_metrics_time is None:
-            first_metrics_time = filter_time
-            if query_folder:
-                save_timer(query_folder, "7_metrics_match_first", first_metrics_time)
 
         # Save filtered text
         output_filtered = OUTPUT_DIR / f"{pdf_num}_filtered.txt"
@@ -713,34 +871,37 @@ def process_corpus(pdf_nums: list, pdf_dirs: list = None, query_folder: Path = N
                     f.write(f"Metric Match: {metric_term}\n")
                 f.write(sentence + "\n\n")
 
-        print(f"[2/2] Metric sentences extracted: {len(metric_sentences)}")
-        print(f"      Filtered text saved to: {output_filtered.name}\n")
+        words = len(extracted_text.split())
+        chars = len(extracted_text)
 
-        # Summary
-        pdf_total_time = time.time() - pdf_start
-        elapsed_total = time.time() - corpus_start
+        print(f"Saved PDF #{pdf_num}: {output_txt.name} ({chars:,} chars, {len(metric_sentences)} metric sentences)")
+        successful_pdfs += 1
 
-        print("=" * 80)
-        print(f"PDF {pdf_num} COMPLETE")
-        print("=" * 80)
-        print(f"Full text:     {output_txt.name} ({chars:,} chars)")
-        print(f"Filtered text: {output_filtered.name} ({len(metric_sentences)} sentences)")
+    total_time = time.time() - corpus_start
 
-        if chars > 0:
-            # Extract just sentences (second element of tuple) for reduction calculation
-            sentences_only = [sentence for _, sentence in metric_sentences]
-            reduction = (1 - len(' '.join(sentences_only)) / chars) * 100
-            print(f"Text reduction: {reduction:.1f}%")
-
-        print(f"\nPDF Runtime: {pdf_total_time:.2f}s")
-        print(f"Corpus Progress: {idx}/{len(pdf_nums)} PDFs | Avg: {elapsed_total/idx:.1f}s/PDF")
-        if idx < len(pdf_nums):
-            print(f"ETA: {(elapsed_total/idx)*(len(pdf_nums)-idx):.1f}s remaining")
-        print("\n")
-
-    print("=" * 80)
+    print("\n" + "=" * 80)
     print("ALL PDFs PROCESSED")
     print("=" * 80)
+    print(f"Successful: {successful_pdfs}/{len(pdf_paths)} PDFs")
+    print(f"Total time: {total_time:.2f}s")
+    print(f"Avg per PDF: {total_time/successful_pdfs:.2f}s" if successful_pdfs > 0 else "N/A")
+    print(f"Speedup: {num_workers}x parallel processing")
+    print("=" * 80)
+
+    # Save Timer 5: Total text extraction time
+    if query_folder and total_extraction_time > 0:
+        save_timer(query_folder, "5_text_extraction_total", total_extraction_time)
+
+    # Save Timer 6: Total metrics match time
+    if query_folder and total_metrics_time > 0:
+        save_timer(query_folder, "6_metrics_match_total", total_metrics_time)
+
+    # Save table detections to JSON (for table extraction pipeline)
+    if query_folder and all_table_detections:
+        table_detections_json = query_folder / "yolo_table_detections.json"
+        with open(table_detections_json, 'w', encoding='utf-8') as f:
+            json.dump(all_table_detections, f, indent=2)
+        print(f"\nTable detections saved: {table_detections_json.name} ({len(all_table_detections)} detections)")
 
 
 if __name__ == "__main__":
@@ -762,22 +923,25 @@ if __name__ == "__main__":
 
         print(f"Found latest Query folder: {query_folder.name}\n")
 
-        # Look for PDFs in Downloaded Papers/OA Papers and Non-OA Papers
-        oa_papers_dir = query_folder / "Downloaded Papers" / "OA Papers"
-        non_oa_papers_dir = query_folder / "Downloaded Papers" / "Non-OA Papers"
+        # Read corpus metadata from JSON
+        all_papers = load_corpus_json(query_folder)
 
-        pdf_files = []
-        if oa_papers_dir.exists():
-            pdf_files.extend(list(oa_papers_dir.glob("*.pdf")))
-        if non_oa_papers_dir.exists():
-            pdf_files.extend(list(non_oa_papers_dir.glob("*.pdf")))
+        # Filter: Process all files EXCEPT failed downloads and unreadable files
+        # Include: downloaded PDFs, HTML, XML, JSON, and unknown format files
+        processable_statuses = ["downloaded", "html", "xml", "json", "unknown"]
+        pdf_nums = sorted([
+            p["study_number"] for p in all_papers
+            if p.get("status", "") in processable_statuses
+        ])
 
-        if not pdf_files:
-            print("ERROR: No PDF files found in Downloaded Papers folders")
+        if not pdf_nums:
+            print("ERROR: No processable files found in corpus metadata")
             sys.exit(1)
 
-        # Extract PDF numbers from filenames
-        pdf_nums = sorted([int(f.stem) for f in pdf_files])
+        print(f"Found {len(pdf_nums)} processable files in metadata: {pdf_nums}")
+
+        # Set papers directory for file searching
+        papers_dir = query_folder / "Corpus PDFs"
 
         # Set OUTPUT_DIR for extracted text
         OUTPUT_DIR = query_folder / "Extracted Text"
@@ -785,8 +949,8 @@ if __name__ == "__main__":
 
         print(f"Processing {len(pdf_nums)} PDFs: {pdf_nums}\n")
 
-        # Pass both directories to search for PDFs and query folder for timers
-        pdf_search_dirs = [oa_papers_dir, non_oa_papers_dir]
+        # Pass single directory for PDFs and query folder for timers
+        pdf_search_dirs = [papers_dir]
         process_corpus(pdf_nums, pdf_dirs=pdf_search_dirs, query_folder=query_folder)
         sys.exit(0)
 
