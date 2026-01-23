@@ -183,44 +183,123 @@ def clean_html_tags(text: str) -> str:
     return cleaned
 
 
+def is_transposed_table(structured_table: list):
+    """
+    Detect if table is transposed (metrics in leftmost column instead of top row).
+
+    A table is considered transposed if the leftmost column contains mostly text
+    (metric names) while the top row contains mostly numbers/data.
+
+    Returns:
+        bool: True if transposed (row headers), False if normal (column headers)
+    """
+    if not structured_table or len(structured_table) < 2:
+        return False
+
+    # Get leftmost column (first element of each row)
+    leftmost_column = [row[0] if row else "" for row in structured_table]
+
+    # Get top row (first row)
+    top_row = structured_table[0] if structured_table[0] else []
+
+    # Count text cells (NOT purely numeric) in leftmost column
+    leftmost_text_count = 0
+    for cell in leftmost_column:
+        cell_str = str(cell).strip()
+        # Check if cell is NOT a number (contains letters or is empty)
+        if cell_str and not re.match(r'^-?\d+\.?\d*$', cell_str):
+            leftmost_text_count += 1
+
+    # Count text cells in top row
+    top_text_count = 0
+    for cell in top_row:
+        cell_str = str(cell).strip()
+        if cell_str and not re.match(r'^-?\d+\.?\d*$', cell_str):
+            top_text_count += 1
+
+    # Table is transposed if leftmost column has more text than top row
+    # (indicating row headers instead of column headers)
+    return leftmost_text_count > top_text_count
+
+
 def filter_columns_by_headers(structured_table: list, metrics_list: list):
     """
     Filter table columns based on header row keywords.
 
-    Keeps only columns where the header (row 0) contains a keyword from MetricsSearchable.txt.
-    If no columns match, returns empty table.
+    Handles both normal tables (column headers) and transposed tables (row headers):
+    - Normal: Metrics in top row, extract from columns
+    - Transposed: Metrics in leftmost column, extract from rows
+
+    Keeps only columns/rows where headers contain keywords from MetricsSearchable.txt.
+    If no columns/rows match, returns empty table.
     """
     if not structured_table or len(structured_table) == 0:
         return [], [], []
 
-    headers = structured_table[0]  # First row is headers
-    matching_columns = []
-    found_metrics = []
+    # Detect if table is transposed
+    transposed = is_transposed_table(structured_table)
 
-    # Check each header for metric keywords
-    for col_idx, header in enumerate(headers):
-        header_lower = header.lower()
+    if transposed:
+        # TRANSPOSED TABLE: Metrics in leftmost column (row headers)
+        # Search leftmost column for metrics, extract values from rows (left to right)
+        matching_rows = []
+        found_metrics = []
 
-        # Check if this header contains any metric keyword
-        for metric in metrics_list:
-            metric_pattern = r'\b' + re.escape(metric.lower()) + r'\b'
-            if re.search(metric_pattern, header_lower):
-                matching_columns.append(col_idx)
-                if metric not in found_metrics:
-                    found_metrics.append(metric)
-                break  # Found match for this column, move to next column
+        for row_idx, row in enumerate(structured_table):
+            if not row:
+                continue
 
-    # If no columns match, return empty table
-    if not matching_columns:
-        return [], [], []
+            row_header = str(row[0]).lower()  # Leftmost column is the header
 
-    # Build filtered table with only matching columns
-    filtered_table = []
-    for row in structured_table:
-        filtered_row = [row[col_idx] for col_idx in matching_columns if col_idx < len(row)]
-        filtered_table.append(filtered_row)
+            # Check if this row header contains any metric keyword
+            for metric in metrics_list:
+                metric_pattern = r'\b' + re.escape(metric.lower()) + r'\b'
+                if re.search(metric_pattern, row_header):
+                    matching_rows.append(row_idx)
+                    if metric not in found_metrics:
+                        found_metrics.append(metric)
+                    break  # Found match for this row, move to next row
 
-    return filtered_table, matching_columns, found_metrics
+        # If no rows match, return empty table
+        if not matching_rows:
+            return [], [], [], True  # True = transposed (even though no matches)
+
+        # Build filtered table with only matching rows
+        filtered_table = [structured_table[row_idx] for row_idx in matching_rows]
+
+        return filtered_table, matching_rows, found_metrics, True  # True = transposed
+
+    else:
+        # NORMAL TABLE: Metrics in top row (column headers)
+        # Search top row for metrics, extract values from columns (top to bottom)
+        headers = structured_table[0]  # First row is headers
+        matching_columns = []
+        found_metrics = []
+
+        # Check each header for metric keywords
+        for col_idx, header in enumerate(headers):
+            header_lower = str(header).lower()
+
+            # Check if this header contains any metric keyword
+            for metric in metrics_list:
+                metric_pattern = r'\b' + re.escape(metric.lower()) + r'\b'
+                if re.search(metric_pattern, header_lower):
+                    matching_columns.append(col_idx)
+                    if metric not in found_metrics:
+                        found_metrics.append(metric)
+                    break  # Found match for this column, move to next column
+
+        # If no columns match, return empty table
+        if not matching_columns:
+            return [], [], [], False  # False = not transposed
+
+        # Build filtered table with only matching columns
+        filtered_table = []
+        for row in structured_table:
+            filtered_row = [row[col_idx] for col_idx in matching_columns if col_idx < len(row)]
+            filtered_table.append(filtered_row)
+
+        return filtered_table, matching_columns, found_metrics, False  # False = not transposed
 
 
 def check_if_image_table(pdf_path: str, page_num: int, table_bbox: tuple, render_dpi: int = 150) -> bool:
@@ -486,10 +565,10 @@ def extract_table_text(table_crop_metadata: list, metrics_list: list, table_rec,
                     structured_table.append([c["text"] for c in row_cells])
 
                 # Filter columns based on header keywords
-                filtered_table, matching_columns, found_metrics = filter_columns_by_headers(structured_table, metrics_list)
+                filtered_table, matching_indices, found_metrics, is_transposed = filter_columns_by_headers(structured_table, metrics_list)
 
-                # Only save table if it has at least one matching column
-                if not filtered_table or len(matching_columns) == 0:
+                # Only save table if it has at least one matching column/row
+                if not filtered_table or len(matching_indices) == 0:
                     continue
 
                 table_data = {
@@ -497,10 +576,11 @@ def extract_table_text(table_crop_metadata: list, metrics_list: list, table_rec,
                     "crop_filename": meta["crop_filename"],
                     "structured_table": filtered_table,
                     "original_columns": len(structured_table[0]) if structured_table else 0,
-                    "filtered_columns": len(matching_columns),
-                    "matching_column_indices": matching_columns,
+                    "filtered_columns": len(matching_indices),
+                    "matching_indices": matching_indices,  # column indices or row indices
                     "found_metrics": found_metrics,
-                    "has_metrics": True
+                    "has_metrics": True,
+                    "is_transposed": is_transposed
                 }
 
                 page_data["tables"].append(table_data)
@@ -542,72 +622,136 @@ def create_final_dataset_from_tables(results_data, schema_columns: list) -> tupl
     """
     Create final dataset Excel from table extraction results.
 
+    Creates ONE ROW PER EXTRACTED VALUE (not one row per PDF).
+
     Args:
         results_data: Extraction results from Phase 2
         schema_columns: List of metric columns from MetricsSearchable.txt
 
     Returns:
-        (all_extractions dict, no_metrics_pdfs list)
+        (all_rows list, no_metrics_pdfs list)
     """
-    all_extractions = {}
+    all_rows = []
     no_metrics_pdfs = []
 
     for pdf_entry in results_data:
         pdf_num = pdf_entry["pdf_number"]
-        found_metrics = pdf_entry.get("found_metrics", [])
+        pages = pdf_entry.get("pages", [])
 
-        if len(found_metrics) == 0:
-            # No matching metrics in tables
+        has_any_metrics = False
+
+        # Iterate through all tables in this PDF
+        for page in pages:
+            for table in page.get("tables", []):
+                structured_table = table.get("structured_table", [])
+                found_metrics = table.get("found_metrics", [])
+                is_transposed = table.get("is_transposed", False)
+
+                if not structured_table or not found_metrics:
+                    continue
+
+                has_any_metrics = True
+
+                # Extract values based on table orientation
+                if is_transposed:
+                    # TRANSPOSED: Metrics in leftmost column, values in rows
+                    # Each row is: [metric_name, value1, value2, ...]
+                    for row in structured_table:
+                        if not row or len(row) < 2:
+                            continue
+
+                        metric_name = str(row[0]).strip()
+
+                        # Fuzzy match metric to schema
+                        matched_schema_col = fuzzy_match_metric_to_schema(metric_name, schema_columns)
+                        if not matched_schema_col:
+                            continue
+
+                        # Extract all values from this row (skip first cell which is the metric name)
+                        for value in row[1:]:
+                            value_str = str(value).strip()
+                            if not value_str:
+                                continue
+
+                            # Create one row per value
+                            row_dict = {"PDF Number": pdf_num}
+                            row_dict[matched_schema_col] = value_str
+                            all_rows.append(row_dict)
+
+                else:
+                    # NORMAL: Metrics in top row, values in columns
+                    # Row 0 is headers, subsequent rows are data
+                    if len(structured_table) < 2:
+                        continue
+
+                    headers = structured_table[0]
+
+                    # Match each header to schema
+                    header_to_schema = {}
+                    for col_idx, header in enumerate(headers):
+                        header_str = str(header).strip()
+                        matched_schema_col = fuzzy_match_metric_to_schema(header_str, schema_columns)
+                        if matched_schema_col:
+                            header_to_schema[col_idx] = matched_schema_col
+
+                    # Extract values from data rows (skip row 0 which is headers)
+                    for data_row in structured_table[1:]:
+                        for col_idx, value in enumerate(data_row):
+                            if col_idx not in header_to_schema:
+                                continue
+
+                            value_str = str(value).strip()
+                            if not value_str:
+                                continue
+
+                            # Create one row per value
+                            row_dict = {"PDF Number": pdf_num}
+                            row_dict[header_to_schema[col_idx]] = value_str
+                            all_rows.append(row_dict)
+
+        if not has_any_metrics:
             no_metrics_pdfs.append(pdf_num)
-            continue
 
-        # Fuzzy match found metrics to schema
-        matched_data = {}
+    return all_rows, no_metrics_pdfs
 
-        for metric in found_metrics:
-            metric_lower = metric.lower()
 
-            # 1. Exact match
-            matched = None
-            for schema_col in schema_columns:
-                if metric_lower == schema_col.lower():
-                    matched = schema_col
-                    break
+def fuzzy_match_metric_to_schema(metric: str, schema_columns: list) -> str:
+    """
+    Fuzzy match a metric name to schema columns.
 
-            # 2. Substring match
-            if not matched:
-                substring_matches = []
-                for schema_col in schema_columns:
-                    schema_lower = schema_col.lower()
-                    if metric_lower in schema_lower or schema_lower in metric_lower:
-                        substring_matches.append(schema_col)
+    Returns:
+        Matched schema column name, or None if no match
+    """
+    metric_lower = metric.lower()
 
-                if substring_matches:
-                    result = process.extractOne(metric, substring_matches, scorer=fuzz.ratio)
-                    if result:
-                        matched = result[0]
+    # 1. Exact match
+    for schema_col in schema_columns:
+        if metric_lower == schema_col.lower():
+            return schema_col
 
-            # 3. Fuzzy match
-            if not matched:
-                result = process.extractOne(
-                    metric,
-                    schema_columns,
-                    scorer=fuzz.token_set_ratio,
-                    score_cutoff=60
-                )
-                if result:
-                    matched = result[0]
+    # 2. Substring match
+    substring_matches = []
+    for schema_col in schema_columns:
+        schema_lower = schema_col.lower()
+        if metric_lower in schema_lower or schema_lower in metric_lower:
+            substring_matches.append(schema_col)
 
-            # Add matched metric (placeholder value - full parsing would extract actual values)
-            if matched:
-                matched_data[matched] = "Table Data Found"
+    if substring_matches:
+        result = process.extractOne(metric, substring_matches, scorer=fuzz.ratio)
+        if result:
+            return result[0]
 
-        if matched_data:
-            all_extractions[pdf_num] = matched_data
-        else:
-            no_metrics_pdfs.append(pdf_num)
+    # 3. Fuzzy match
+    result = process.extractOne(
+        metric,
+        schema_columns,
+        scorer=fuzz.token_set_ratio,
+        score_cutoff=60
+    )
+    if result:
+        return result[0]
 
-    return all_extractions, no_metrics_pdfs
+    return None
 
 
 # ============================================================================
@@ -671,10 +815,10 @@ def run_pipeline_4b(pdf_folder: Path, table_rec=None, det_predictor=None) -> tup
 
     # Save Timer 9: Total table extraction time
     extraction_time = time.time() - extraction_start
-    save_timer(query_folder, "9_table_extraction_total", extraction_time)
+    save_timer(query_folder, "8_table_extraction_total", extraction_time)
 
     # Process results
-    all_extractions, no_metrics_pdfs = create_final_dataset_from_tables(results_data, schema_columns)
+    all_rows, no_metrics_pdfs = create_final_dataset_from_tables(results_data, schema_columns)
 
     # Update metadata for PDFs with no metrics
     for pdf_num in no_metrics_pdfs:
@@ -735,21 +879,14 @@ def run_pipeline_4b(pdf_folder: Path, table_rec=None, det_predictor=None) -> tup
 
     columns = ["PDF Number"] + schema_columns
 
-    # Build rows
-    rows = []
-    for pdf_num, extractions in sorted(all_extractions.items()):
-        row = {"PDF Number": pdf_num}
-        for metric, value in extractions.items():
-            row[metric] = value
-        rows.append(row)
-
-    df = pd.DataFrame(rows, columns=columns)
+    # all_rows is already a list of row dicts (one row per extracted value)
+    df = pd.DataFrame(all_rows, columns=columns)
 
     # Save to Excel
     df.to_excel(final_dataset_path, index=False, engine='openpyxl')
 
     # Summary
-    print(f"{len(all_extractions)} Metrics extracted from tables")
+    print(f"{len(all_rows)} Metrics extracted from tables")
 
     return metadata_excel_path, final_dataset_path
 

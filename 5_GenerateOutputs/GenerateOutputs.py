@@ -201,36 +201,40 @@ def create_final_workbook(
     ws1.column_dimensions['C'].width = 15
     ws1.column_dimensions['D'].width = 10
 
-    # Sheet 2: "Extraction Results" (combined metadata from 4a+4b)
+    # Sheet 2: "Extraction Results" (summary of successful extractions)
     ws2 = wb.create_sheet("Extraction Results")
 
-    # Filter out rows where PDF was never successfully downloaded
-    # Download failures from Pipeline 1: "Download Failed" only
-    # HTML, XML, JSON are now rejected during download (not in Corpus)
-    download_failures = ["Download Failed"]
-    filtered_metadata = combined_metadata[~combined_metadata["Breakpoint"].isin(download_failures)]
+    # Create summary: only PDFs where metrics were found
+    # Columns: Extractor, PDF Number, Metrics Found, Data
+    ws2.append(["Extractor", "PDF Number", "Metrics Found", "Data"])
 
-    # Add rows to sheet
-    for row in dataframe_to_rows(filtered_metadata, index=False, header=True):
-        ws2.append(row)
+    # Count metrics for each PDF/Extractor combination
+    for _, row in combined_dataset.iterrows():
+        extractor = row.get("Extractor", "")
+        pdf_number = row.get("PDF Number", "")
 
-    # Color rows red where Breakpoint contains "Error:"
-    from openpyxl.styles import PatternFill
-    red_fill = PatternFill(start_color="FF6B6B", end_color="FF6B6B", fill_type="solid")
+        # Count non-null values (excluding Extractor and PDF Number columns)
+        metric_cols = [col for col in combined_dataset.columns if col not in ["Extractor", "PDF Number"]]
+        metrics_found = row[metric_cols].notna().sum()
 
-    # Find Breakpoint column index
-    headers = [cell.value for cell in ws2[1]]
-    if "Breakpoint" in headers:
-        breakpoint_col_idx = headers.index("Breakpoint") + 1
+        # Get list of metric names that have non-null values
+        found_metric_names = [col for col in metric_cols if pd.notna(row[col])]
+        data_list = ", ".join(found_metric_names)
 
-        for row_idx in range(2, ws2.max_row + 1):
-            breakpoint_value = ws2.cell(row=row_idx, column=breakpoint_col_idx).value
-            if breakpoint_value and isinstance(breakpoint_value, str):
-                # Color row red if Breakpoint contains "Error:" or "No Metrics"
-                if "Error:" in breakpoint_value or "No Metrics" in breakpoint_value:
-                    # Color entire row red
-                    for col in range(1, len(headers) + 1):
-                        ws2.cell(row=row_idx, column=col).fill = red_fill
+        # Only add row if at least 1 metric was found
+        if metrics_found > 0:
+            ws2.append([extractor, pdf_number, metrics_found, data_list])
+
+    # Format header row
+    from openpyxl.styles import Font
+    for cell in ws2[1]:
+        cell.font = Font(bold=True)
+
+    # Column widths
+    ws2.column_dimensions['A'].width = 18  # Extractor
+    ws2.column_dimensions['B'].width = 12  # PDF Number
+    ws2.column_dimensions['C'].width = 15  # Metrics Found
+    ws2.column_dimensions['D'].width = 60  # Data
 
     # Sheet 3: "Metrics" (combined dataset from 4a+4b)
     ws3 = wb.create_sheet("Metrics")
@@ -255,9 +259,15 @@ def cleanup_intermediate_files(query_folder: Path, metadata_4a: Path, metadata_4
         dataset_4a: Path to 4a_FinalDataset.xlsx
         dataset_4b: Path to 4b_FinalDataset.xlsx
     """
-    # Add corpus_metadata.json to cleanup list (COMMENTED OUT - keeping for diagnostics)
-    # corpus_json = query_folder / "corpus_metadata.json"
-    files_to_delete = [metadata_4a, metadata_4b, dataset_4a, dataset_4b]  # corpus_json excluded
+    # Delete all intermediate files
+    corpus_json = query_folder / "corpus_metadata.json"
+    yolo_detections = query_folder / "yolo_table_detections.json"
+    timers_temp = query_folder / ".timers_temp.json"
+
+    files_to_delete = [
+        metadata_4a, metadata_4b, dataset_4a, dataset_4b,
+        corpus_json, yolo_detections, timers_temp
+    ]
 
     for file_path in files_to_delete:
         if file_path.exists():
@@ -274,12 +284,13 @@ def cleanup_intermediate_files(query_folder: Path, metadata_4a: Path, metadata_4
     # No need to clean it up here (avoids 27s of retry delays)
 
 
-def run_combiner(query_folder: Path):
+def run_combiner(query_folder: Path, total_runtime: float = None):
     """
     Run final output combiner.
 
     Args:
         query_folder: Path to Query folder containing all outputs
+        total_runtime: Total runtime of entire program in seconds (optional)
     """
     # Timer 11: Start timing final output creation
     combiner_start = time.time()
@@ -315,17 +326,39 @@ def run_combiner(query_folder: Path):
         combined_dataset
     )
 
-    # Cleanup
-    cleanup_intermediate_files(query_folder, metadata_4a, metadata_4b, dataset_4a, dataset_4b)
-
-    # Timer 10: Save final output creation time
+    # Timer 9: Save final output creation time
     combiner_time = time.time() - combiner_start
-    save_timer(query_folder, "10_final_output", combiner_time)
+    save_timer(query_folder, "9_final_output", combiner_time)
 
     print(f"Operations Successful. Files located at {query_folder.name}")
 
-    # Display all 11 timers
-    display_timers(query_folder)
+    # Calculate total runtime from all timer values (if not provided)
+    # Pipelines 4a (7_llm_extraction_total) and 4b (8_table_extraction_total) run in PARALLEL
+    # so we take MAX instead of SUM for those two
+    if total_runtime is None:
+        from Timers.timing_utils import load_timers
+        timers = load_timers(query_folder)
+
+        # Separate parallel timers (4a and 4b)
+        parallel_timers = [
+            timers.get("7_llm_extraction_total"),
+            timers.get("8_table_extraction_total")
+        ]
+        parallel_time = max(t for t in parallel_timers if t is not None) if any(t is not None for t in parallel_timers) else 0
+
+        # Sum sequential timers (1-6 and 9)
+        sequential_keys = ["1_openalex_total", "2_unpaywall_total", "3_corpus_download_total",
+                          "4_text_extraction_total", "5_metrics_match_total", "6_llm_filter_total",
+                          "9_final_output"]
+        sequential_time = sum(timers.get(k, 0) or 0 for k in sequential_keys)
+
+        total_runtime = sequential_time + parallel_time
+
+    # Display all timers (must happen BEFORE cleanup deletes .timers_temp.json)
+    display_timers(query_folder, total_runtime)
+
+    # Cleanup (after display_timers so we can read .timers_temp.json first)
+    cleanup_intermediate_files(query_folder, metadata_4a, metadata_4b, dataset_4a, dataset_4b)
 
 
 def find_latest_query_folder():

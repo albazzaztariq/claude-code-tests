@@ -1,5 +1,25 @@
-This first line of each group of text contains the a metric keyword or phrase that was found in sentences along with numbers.  The sentences are excerpts from research papers on fabrics used in apparel, mainly concerning their performance when moisture is present.  Return the metric value if stated in the sentence.  For example, if the sentence is, "The OMMC value was measured.  Fabric 1's value was 0.6", then the value is 0.6.  If the sentence is "WTT was 2.3s.", then the value is 2.3.  But if the sentence is Wetting Time Top was measured for Fabric 1", or "The absorption rate for 1 of 3 fabrics was large.  Table 2 lists statistics from the experiment", then there is no corresponding value listed for those metrics and you should return "No value found".
-ONLY return one of 2 things: "No Metrics" or a newline-separated list of [metric]: [metric value].  For example, if a WTT of 3 seconds is found in one excerpt, an OMMC of 0.8 in another, and an absorption rate bottom of 3 in another, then you should return EXACTLY and ONLY this:
-WTT: 3
-OMMC: 0.8
-absorption rate bottom: 3
+You are extracting a SINGLE metric value from text. The text below contains a metric keyword/phrase and a sentence from a research paper about fabric performance.
+
+Your task: Extract ONLY the numeric value for this metric.
+
+Examples:
+- Input: "The OMMC value was measured. Fabric 1's value was 0.6"
+  Output: 0.6
+
+- Input: "WTT was 2.3s."
+  Output: 2.3
+
+- Input: "Wetting Time Top was measured for Fabric 1"
+  Output: No value found
+
+- Input: "The absorption rate for 1 of 3 fabrics was large. Table 2 lists statistics"
+  Output: No value found
+
+CRITICAL: Return ONLY one of these two things:
+1. A single numeric value (e.g., "0.6" or "2.3" or "5")
+2. The exact text "No value found" (if no numeric value exists)
+
+Do NOT return "No Metrics". Do NOT return formatted text like "WTT: 3". Return ONLY the raw number or "No value found".
+
+Text to extract from:
+{metric_sentence}
