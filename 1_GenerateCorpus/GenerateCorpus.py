@@ -1192,23 +1192,21 @@ def main(on_pdf_validated=None, on_query_folder_created=None):
     # Build query
     url = build_openalex_query(config)
 
-    # Call API (limit to 250) - pass query_folder for timer saving
-    papers = call_openalex(url, max_results=250, query_folder=query_folder)
+    # Call API - pass query_folder for timer saving
+    max_results = config.get('max_results', None)
+    if max_results:
+        print(f"Max results limit: {max_results}")
+    else:
+        print("Max results limit: Unlimited")
+
+    papers = call_openalex(url, max_results=max_results, query_folder=query_folder)
 
     if not papers:
         return
 
     # Deduplicate
     papers = deduplicate(papers)
-
-    # Limit to max_results from config (for testing)
-    max_pdfs = config.get('max_results', 250)
-    if len(papers) > max_pdfs:
-        papers = papers[:max_pdfs]
-        # Assign study numbers upfront (before download)
-        for i, paper in enumerate(papers, 1):
-            paper["study_number"] = i
-            paper["temp_index"] = i  # Keep for tracking during download
+    print(f"Unique papers for download: {len(papers)}")
 
     # Check OA status (pass query_folder for timer saving)
     oa_papers, non_oa_papers = check_oa_status(papers, query_folder=query_folder)
