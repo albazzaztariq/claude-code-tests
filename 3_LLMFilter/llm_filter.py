@@ -260,9 +260,9 @@ def filter_papers(pdf_folder: Path) -> None:
     # Save updated JSON
     total_time = time.time() - total_start
 
-    # Save Timer 7: Total LLM filter time
+    # Save Timer 6: Total LLM filter time
     if total_llm_time > 0:
-        save_timer(query_folder, "7_llm_filter_total", total_llm_time)
+        save_timer(query_folder, "6_llm_filter_total", total_llm_time)
 
     # Clean up table detections JSON (remove detections for filtered-out PDFs)
     if filtered_out_pdfs:

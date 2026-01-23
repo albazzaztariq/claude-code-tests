@@ -302,7 +302,7 @@ def call_openalex(url: str, max_results: int = None, query_folder: Path = None) 
                 # Save timer before early return
                 if all_call_times and query_folder:
                     total_openalex_time = sum(all_call_times)
-                    save_timer(query_folder, "2_openalex_total", total_openalex_time)
+                    save_timer(query_folder, "1_openalex_total", total_openalex_time)
                 return papers
 
         # Get next cursor
@@ -320,7 +320,7 @@ def call_openalex(url: str, max_results: int = None, query_folder: Path = None) 
     # Save total OpenAlex API time (Timer 2)
     if all_call_times and query_folder:
         total_openalex_time = sum(all_call_times)
-        save_timer(query_folder, "2_openalex_total", total_openalex_time)
+        save_timer(query_folder, "1_openalex_total", total_openalex_time)
 
     return papers
 
@@ -603,7 +603,7 @@ def check_oa_status(papers: list[dict], query_folder: Path = None) -> tuple[list
     # Save Timer 3: Total Unpaywall API time
     if all_call_times and query_folder:
         total_unpaywall_time = sum(all_call_times)
-        save_timer(query_folder, "3_unpaywall_total", total_unpaywall_time)
+        save_timer(query_folder, "2_unpaywall_total", total_unpaywall_time)
 
     return oa_papers, non_oa_papers
 
@@ -1134,7 +1134,7 @@ def download_pdfs(all_papers: list[dict], download_folder: Path,
 
     # Timer 4: Total download time
     if query_folder:
-        save_timer(query_folder, "4_corpus_download_total", elapsed)
+        save_timer(query_folder, "3_corpus_download_total", elapsed)
 
     # NOTE: study_number assignment and file renaming now handled by queue manager
 
@@ -1175,9 +1175,6 @@ def main(on_pdf_validated=None, on_query_folder_created=None):
     else:
         config_path = DEFAULT_CONFIG
 
-    # Timer 1: Query Generation (parse config + build query)
-    query_start = time.time()
-
     # Parse config
     config = parse_config(config_path)
 
@@ -1194,10 +1191,6 @@ def main(on_pdf_validated=None, on_query_folder_created=None):
 
     # Build query
     url = build_openalex_query(config)
-
-    # End Timer 1
-    query_time = time.time() - query_start
-    save_timer(query_folder, "1_query_generation", query_time)
 
     # Call API (limit to 250) - pass query_folder for timer saving
     papers = call_openalex(url, max_results=250, query_folder=query_folder)

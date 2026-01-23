@@ -32,18 +32,17 @@ def load_timers(query_folder: Path) -> dict:
         with open(timers_file, 'r') as f:
             return json.load(f)
     else:
-        # Initialize with all 10 timers (pagination timer removed)
+        # Initialize with 9 timers (Query Generation removed, renumbered)
         return {
-            "1_query_generation": None,
-            "2_openalex_total": None,
-            "3_unpaywall_total": None,
-            "4_corpus_download_total": None,
-            "5_text_extraction_total": None,
-            "6_metrics_match_total": None,
-            "7_llm_filter_total": None,
-            "8_llm_extraction_total": None,
-            "9_table_extraction_total": None,
-            "10_final_output": None
+            "1_openalex_total": None,
+            "2_unpaywall_total": None,
+            "3_corpus_download_total": None,
+            "4_text_extraction_total": None,
+            "5_metrics_match_total": None,
+            "6_llm_filter_total": None,
+            "7_llm_extraction_total": None,
+            "8_table_extraction_total": None,
+            "9_final_output": None
         }
 
 
@@ -63,25 +62,29 @@ def save_timer(query_folder: Path, timer_name: str, value: float):
         json.dump(timers, f, indent=2)
 
 
-def display_timers(query_folder: Path):
-    """Display all timers in formatted output and save to Runtimes.txt."""
+def display_timers(query_folder: Path, total_runtime: Optional[float] = None):
+    """Display all timers in formatted output and save to Runtimes.txt.
+
+    Args:
+        query_folder: Path to Query folder
+        total_runtime: Total runtime of entire program in seconds (optional)
+    """
     timers = load_timers(query_folder)
 
     # Format each timer (add space before single digits for alignment)
     timer_labels = {
-        "1_query_generation": " 1.  Query Generation",
-        "2_openalex_total": " 2.  OpenAlex API",
-        "3_unpaywall_total": " 3.  UnPaywall API",
-        "4_corpus_download_total": " 4.  Corpus Download",
-        "5_text_extraction_total": " 5.  Text Extraction Pipeline",
-        "6_metrics_match_total": " 6.  Metrics Match Pipeline",
-        "7_llm_filter_total": " 7.  LLM Relevance Filter",
-        "8_llm_extraction_total": " 8.  LLM Text Extraction",
-        "9_table_extraction_total": " 9.  Table Extraction",
-        "10_final_output": "10.  Create Final Output"
+        "1_openalex_total": "1.  OpenAlex API",
+        "2_unpaywall_total": "2.  UnPaywall API",
+        "3_corpus_download_total": "3.  Corpus Download",
+        "4_text_extraction_total": "4.  Text Extraction Pipeline",
+        "5_metrics_match_total": "5.  Metrics Match Pipeline",
+        "6_llm_filter_total": "6.  LLM Relevance Filter",
+        "7_llm_extraction_total": "7.  LLM Text Extraction",
+        "8_table_extraction_total": "8.  Table Extraction",
+        "9_final_output": "9.  Create Final Output"
     }
 
-    # Sort by numeric prefix (1_, 2_, ..., 10_, 11_)
+    # Sort by numeric prefix (1_, 2_, ..., 9_)
     sorted_keys = sorted(timers.keys(), key=lambda x: int(x.split('_')[0]))
 
     # Build output lines
@@ -106,6 +109,17 @@ def display_timers(query_folder: Path):
             output_lines.append(f"  {label:45} {'N/A':>10}")
 
     output_lines.append("=" * 80)
+
+    # Add Total Runtime at bottom if provided
+    if total_runtime is not None:
+        output_lines.append("")  # Blank line
+        if total_runtime < 60:
+            time_str = f"{total_runtime:.2f}s"
+        else:
+            minutes = int(total_runtime // 60)
+            seconds = total_runtime % 60
+            time_str = f"{minutes}m {seconds:.2f}s"
+        output_lines.append(f"Total Runtime: {time_str}")
 
     # Print to terminal
     print("\n" + "\n".join(output_lines))

@@ -20,6 +20,7 @@ from NativeTextExtract_pipeline import (
     SEARCHABLE_TERMS,
     MASK_LABELS,
     CLASS_NAMES,
+    ACRONYM_MAPPING,
 )
 
 
@@ -223,10 +224,18 @@ def cpu_worker(worker_id: int,
         with open(text_path, 'w', encoding='utf-8') as f:
             f.write(extracted_text)
 
-        # metric_sentences is List[Tuple[term, sentence]] - extract just sentences
-        sentences_only = [sentence for term, sentence in metric_sentences]
+        # Write filtered text with "Metric Match:" labels
         with open(filtered_path, 'w', encoding='utf-8') as f:
-            f.write("\n\n".join(sentences_only))
+            for metric_term, sentence in metric_sentences:
+                # Format based on whether it's an acronym or phrase
+                if metric_term in ACRONYM_MAPPING:
+                    # It's an acronym - show "Acronym, which means Phrase"
+                    phrase = ACRONYM_MAPPING[metric_term]
+                    f.write(f"Metric Match: {metric_term}, which means {phrase}\n")
+                else:
+                    # It's a phrase - show just the phrase
+                    f.write(f"Metric Match: {metric_term}\n")
+                f.write(sentence + "\n\n")
 
         # Send results back
         result_queue.put({
