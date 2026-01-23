@@ -153,12 +153,84 @@ MASK_LABELS = ['Table', 'Picture', 'Caption']
 # COORDINATE CONVERSION & FILTERING
 # =============================================================================
 
+def detect_banned_regions_batch(images, model, table_detections_list=None, pdf_num=None, start_page_num=0):
+    """
+    BATCHED version: Extract banned regions from multiple images at once.
+
+    Args:
+        images: List of PIL Images
+        model: YOLO model
+        table_detections_list: Optional list to collect table detections
+        pdf_num: PDF number for table detection tracking
+        start_page_num: Starting page number for this batch
+
+    Returns:
+        List of banned_rects, one per image. Each is a list of (x0, y0, x1, y1) in image coords.
+    """
+    import torch
+
+    # CRITICAL: Disable autograd to prevent memory leak
+    with torch.no_grad():
+        # Run BATCHED detection (YOLOv12-nano uses 640px input size, device=0 for GPU)
+        results = model.predict(images, imgsz=640, conf=CONF_THRESHOLD, device=0, verbose=False)
+
+    # Process results for each image
+    all_banned_rects = []
+
+    for img_idx, result in enumerate(results):
+        banned_rects = []
+        boxes = result.boxes
+
+        for box in boxes:
+            # Get bbox coordinates (x1, y1, x2, y2)
+            x1, y1, x2, y2 = box.xyxy[0].cpu().numpy()
+
+            # Get class ID and confidence
+            cls_id = int(box.cls[0])
+            conf = float(box.conf[0])
+
+            # Get label name
+            label = CLASS_NAMES.get(cls_id, 'unknown')
+
+            # Save Table detections for Phase 1 (if collecting)
+            if label == 'Table' and table_detections_list is not None:
+                table_detections_list.append({
+                    "pdf_num": pdf_num,
+                    "page_num": start_page_num + img_idx,
+                    "bbox": [float(x1), float(y1), float(x2), float(y2)],
+                    "confidence": conf
+                })
+
+            # Only keep banned labels for text filtering
+            if label in MASK_LABELS:
+                banned_rects.append((x1, y1, x2, y2))
+
+        all_banned_rects.append(banned_rects)
+
+    # CRITICAL: Release GPU tensors immediately
+    del results
+
+    return all_banned_rects
+
+
 def detect_banned_regions(img, model, table_detections_list=None, pdf_num=None, page_num=None):
     """
+    SINGLE-IMAGE version (kept for compatibility).
     Extract banned regions (table/figure/caption) from YOLOv12-nano detection.
     Returns list of (x0, y0, x1, y1) in image coordinates.
 
     If table_detections_list is provided, also saves Table detections to it.
+    """
+    # Use batched version with single image
+    results = detect_banned_regions_batch(
+        [img], model, table_detections_list, pdf_num, page_num if page_num is not None else 0
+    )
+    return results[0]
+
+
+def detect_banned_regions_OLD(img, model, table_detections_list=None, pdf_num=None, page_num=None):
+    """
+    OLD SEQUENTIAL VERSION - REPLACED BY BATCHED VERSION ABOVE
     """
     banned_rects = []
 
@@ -527,13 +599,8 @@ def extract_metric_sentences(text: str, searchable_terms: List[str]) -> List[Tup
     return deduplicated
 
 
-print("Loading searchable metric terms...")
 SEARCHABLE_TERMS = load_searchable_terms()
-print(f"Loaded {len(SEARCHABLE_TERMS)} terms.")
-
-print("Loading acronym-to-phrase mapping...")
 ACRONYM_MAPPING = load_acronym_mapping()
-print(f"Loaded {len(ACRONYM_MAPPING)} acronym mappings.\n")
 
 
 # =============================================================================
@@ -654,22 +721,12 @@ def extract_text_from_pdf(pdf_path: Path, table_detections_list=None) -> str:
 
 
 
-# Global worker model (loaded once per worker process)
-_worker_model = None
-
-def init_worker(model_path):
-    """Initialize worker process with YOLO model (called once per worker)."""
-    global _worker_model
-    from ultralytics import YOLO
-    _worker_model = YOLO(str(model_path))
-    print(f"[Worker {os.getpid()}] Model loaded")
-
-
-def extract_text_worker(args):
-    """Worker function for parallel text extraction.
+def extract_text_worker(args, model):
+    """Worker function for parallel text extraction (thread-safe).
 
     Args:
         args: Tuple of (pdf_path, output_dir)
+        model: Pre-loaded YOLO model (shared across threads, single CUDA context)
 
     Returns:
         dict: Results containing pdf_num, extracted_text, table_detections,
@@ -677,10 +734,6 @@ def extract_text_worker(args):
     """
     pdf_path, output_dir = args
     pdf_num = int(pdf_path.stem)
-
-    # Use pre-loaded model from worker initialization
-    global _worker_model
-    model = _worker_model
 
     # Collect table detections for this PDF
     table_detections_for_pdf = []
@@ -707,35 +760,60 @@ def extract_text_worker(args):
 
     all_page_texts = []
 
-    for page_num in range(num_pages):
-        page = doc[page_num]
+    # BATCHED PROCESSING: Process pages in batches of 20
+    BATCH_SIZE = 20
+    zoom = DPI / 72.0
+    mat = fitz.Matrix(zoom, zoom)
 
-        # Render page
-        zoom = DPI / 72.0
-        mat = fitz.Matrix(zoom, zoom)
-        pix = page.get_pixmap(matrix=mat, alpha=False)
-        img_width, img_height = pix.width, pix.height
-        img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
+    for batch_start in range(0, num_pages, BATCH_SIZE):
+        batch_end = min(batch_start + BATCH_SIZE, num_pages)
+        batch_size = batch_end - batch_start
 
-        # Detect banned regions and collect table detections
-        banned_img_rects = detect_banned_regions(
-            img, model,
+        # Step 1: Render all pages in batch
+        batch_images = []
+        batch_page_data = []  # Store page object, dimensions for later text extraction
+
+        for page_num in range(batch_start, batch_end):
+            page = doc[page_num]
+
+            # Render page to image
+            pix = page.get_pixmap(matrix=mat, alpha=False)
+            img_width, img_height = pix.width, pix.height
+            img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
+
+            batch_images.append(img)
+            batch_page_data.append({
+                'page': page,
+                'img_width': img_width,
+                'img_height': img_height
+            })
+
+        # Step 2: Run BATCHED YOLO inference on all images at once
+        all_banned_img_rects = detect_banned_regions_batch(
+            batch_images, model,
             table_detections_list=table_detections_for_pdf,
             pdf_num=pdf_num,
-            page_num=page_num
+            start_page_num=batch_start
         )
 
-        # Convert to PDF coordinates
-        page_rect = page.rect
-        banned_pdf_rects = image_rects_to_pdf(
-            banned_img_rects,
-            page_rect.width, page_rect.height,
-            img_width, img_height
-        )
+        # Step 3: Extract text for each page using detected banned regions
+        for i, page_data in enumerate(batch_page_data):
+            page = page_data['page']
+            img_width = page_data['img_width']
+            img_height = page_data['img_height']
+            banned_img_rects = all_banned_img_rects[i]
 
-        # Extract text
-        page_text = extract_text_with_banned_regions(page, banned_pdf_rects)
-        all_page_texts.append(page_text)
+            # Convert to PDF coordinates
+            page_rect = page.rect
+            banned_pdf_rects = image_rects_to_pdf(
+                banned_img_rects,
+                page_rect.width, page_rect.height,
+                img_width, img_height
+            )
+
+            # Extract text
+            page_text = extract_text_with_banned_regions(page, banned_pdf_rects)
+            all_page_texts.append(page_text)
 
     doc.close()
 
@@ -761,6 +839,147 @@ def extract_text_worker(args):
     filter_time = time.time() - filter_start
 
     print(f"[Worker] PDF #{pdf_num} complete: {len(extracted_text.split())} words, {len(metric_sentences)} metric sentences")
+
+    return {
+        "pdf_num": pdf_num,
+        "extracted_text": extracted_text,
+        "table_detections": table_detections_for_pdf,
+        "metric_sentences": metric_sentences,
+        "extraction_time": extraction_time,
+        "metrics_time": filter_time,
+        "error": False
+    }
+
+
+def extract_text_sequential(pdf_path: Path, output_dir: Path, model):
+    """Sequential worker function - model passed as parameter to avoid GPU memory leaks.
+
+    Args:
+        pdf_path: Path to PDF file
+        output_dir: Output directory for extracted text
+        model: Pre-loaded YOLO model (shared across all PDFs in main process)
+
+    Returns:
+        dict: Results containing pdf_num, extracted_text, table_detections,
+              metric_sentences, extraction_time, metrics_time
+    """
+    pdf_num = int(pdf_path.stem)
+
+    # Collect table detections for this PDF
+    table_detections_for_pdf = []
+
+    # Extract text
+    extraction_start = time.time()
+
+    try:
+        doc = fitz.open(pdf_path)
+    except Exception as e:
+        print(f"[PIPELINE 2] ERROR: Cannot open {pdf_path.name}: {type(e).__name__}")
+        return {
+            "pdf_num": pdf_num,
+            "extracted_text": "",
+            "table_detections": [],
+            "metric_sentences": [],
+            "extraction_time": 0.0,
+            "metrics_time": 0.0,
+            "error": True
+        }
+
+    num_pages = len(doc)
+    print(f"[PIPELINE 2] Processing PDF #{pdf_num} ({num_pages} pages)...")
+
+    all_page_texts = []
+
+    # BATCHED PROCESSING: Process pages in batches of 20
+    BATCH_SIZE = 20
+    zoom = DPI / 72.0
+    mat = fitz.Matrix(zoom, zoom)
+
+    for batch_start in range(0, num_pages, BATCH_SIZE):
+        batch_end = min(batch_start + BATCH_SIZE, num_pages)
+        batch_size = batch_end - batch_start
+
+        # Step 1: Render all pages in batch
+        batch_images = []
+        batch_page_data = []  # Store page object, dimensions for later text extraction
+
+        for page_num in range(batch_start, batch_end):
+            page = doc[page_num]
+
+            # Render page to image
+            pix = page.get_pixmap(matrix=mat, alpha=False)
+            img_width, img_height = pix.width, pix.height
+            img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
+
+            batch_images.append(img)
+            batch_page_data.append({
+                'page': page,
+                'img_width': img_width,
+                'img_height': img_height
+            })
+
+        # Step 2: Run BATCHED YOLO inference on all images at once
+        all_banned_img_rects = detect_banned_regions_batch(
+            batch_images, model,
+            table_detections_list=table_detections_for_pdf,
+            pdf_num=pdf_num,
+            start_page_num=batch_start
+        )
+
+        # Step 3: Extract text for each page using detected banned regions
+        for i, page_data in enumerate(batch_page_data):
+            page = page_data['page']
+            img_width = page_data['img_width']
+            img_height = page_data['img_height']
+            banned_img_rects = all_banned_img_rects[i]
+
+            # Convert to PDF coordinates
+            page_rect = page.rect
+            banned_pdf_rects = image_rects_to_pdf(
+                banned_img_rects,
+                page_rect.width, page_rect.height,
+                img_width, img_height
+            )
+
+            # Extract text
+            page_text = extract_text_with_banned_regions(page, banned_pdf_rects)
+            all_page_texts.append(page_text)
+
+    doc.close()
+
+    extracted_text = "\n\n".join(all_page_texts)
+    extraction_time = time.time() - extraction_start
+
+    # Skip if no text extracted
+    if not extracted_text or len(extracted_text.strip()) == 0:
+        print(f"[PIPELINE 2] WARNING: No text extracted from PDF #{pdf_num}")
+        return {
+            "pdf_num": pdf_num,
+            "extracted_text": "",
+            "table_detections": table_detections_for_pdf,
+            "metric_sentences": [],
+            "extraction_time": extraction_time,
+            "metrics_time": 0.0,
+            "error": True
+        }
+
+    # Extract metric sentences
+    filter_start = time.time()
+    metric_sentences = extract_metric_sentences(extracted_text, SEARCHABLE_TERMS)
+    filter_time = time.time() - filter_start
+
+    # Save extracted text
+    text_file = output_dir / f"{pdf_num}.txt"
+    with open(text_file, 'w', encoding='utf-8') as f:
+        f.write(extracted_text)
+
+    # Save filtered sentences (metric_sentences is list of tuples: (term, sentence))
+    filtered_file = output_dir / f"{pdf_num}_filtered.txt"
+    with open(filtered_file, 'w', encoding='utf-8') as f:
+        for term, sentence in metric_sentences:
+            f.write(f"{term}: {sentence}\n")
+
+    print(f"[PIPELINE 2] PDF #{pdf_num} complete: {len(extracted_text.split())} words, {len(metric_sentences)} metric sentences")
 
     return {
         "pdf_num": pdf_num,
@@ -902,6 +1121,132 @@ def process_corpus(pdf_nums: list, pdf_dirs: list = None, query_folder: Path = N
         with open(table_detections_json, 'w', encoding='utf-8') as f:
             json.dump(all_table_detections, f, indent=2)
         print(f"\nTable detections saved: {table_detections_json.name} ({len(all_table_detections)} detections)")
+
+
+# =============================================================================
+# QUEUE-BASED SINGLE PDF PROCESSING (For Pipeline Parallelization)
+# =============================================================================
+
+def process_single_pdf_for_queue(pdf_num: int, pdf_path: Path, query_folder: Path, model) -> dict:
+    """
+    Process a single PDF for queue-based parallelization.
+
+    Args:
+        pdf_num: PDF number (study number)
+        pdf_path: Path to PDF file
+        query_folder: Query folder for saving outputs
+        model: Pre-loaded YOLO model
+
+    Returns:
+        dict: {
+            "pdf_num": int,
+            "text_path": Path,
+            "filtered_path": Path,
+            "table_detections": list,
+            "success": bool
+        }
+    """
+    # Set output directory
+    output_dir = query_folder / "Extracted Text"
+    output_dir.mkdir(exist_ok=True)
+
+    # Collect table detections for this PDF
+    table_detections_for_pdf = []
+
+    # Extract text
+    try:
+        doc = fitz.open(pdf_path)
+    except Exception as e:
+        print(f"[Pipeline 2] ERROR: Cannot open PDF #{pdf_num}: {type(e).__name__}")
+        return {
+            "pdf_num": pdf_num,
+            "text_path": None,
+            "filtered_path": None,
+            "table_detections": [],
+            "success": False
+        }
+
+    num_pages = len(doc)
+    print(f"[Pipeline 2] Processing PDF #{pdf_num} ({num_pages} pages)...")
+
+    all_page_texts = []
+
+    for page_num in range(num_pages):
+        page = doc[page_num]
+
+        # Render page
+        zoom = DPI / 72.0
+        mat = fitz.Matrix(zoom, zoom)
+        pix = page.get_pixmap(matrix=mat, alpha=False)
+        img_width, img_height = pix.width, pix.height
+        img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
+
+        # Detect banned regions and collect table detections
+        banned_img_rects = detect_banned_regions(
+            img, model,
+            table_detections_list=table_detections_for_pdf,
+            pdf_num=pdf_num,
+            page_num=page_num
+        )
+
+        # Convert to PDF coordinates
+        page_rect = page.rect
+        banned_pdf_rects = image_rects_to_pdf(
+            banned_img_rects,
+            page_rect.width, page_rect.height,
+            img_width, img_height
+        )
+
+        # Extract text
+        page_text = extract_text_with_banned_regions(page, banned_pdf_rects)
+        all_page_texts.append(page_text)
+
+    doc.close()
+
+    extracted_text = "\n\n".join(all_page_texts)
+
+    # Skip if no text extracted
+    if not extracted_text or len(extracted_text.strip()) == 0:
+        print(f"[Pipeline 2] WARNING: No text extracted from PDF #{pdf_num}")
+        return {
+            "pdf_num": pdf_num,
+            "text_path": None,
+            "filtered_path": None,
+            "table_detections": table_detections_for_pdf,
+            "success": False
+        }
+
+    # Extract metric sentences
+    metric_sentences = extract_metric_sentences(extracted_text, SEARCHABLE_TERMS)
+
+    # Save full text
+    text_path = output_dir / f"{pdf_num}.txt"
+    with open(text_path, 'w', encoding='utf-8') as f:
+        f.write(extracted_text)
+
+    # Save filtered text
+    filtered_path = output_dir / f"{pdf_num}_filtered.txt"
+    with open(filtered_path, 'w', encoding='utf-8') as f:
+        for metric_term, sentence in metric_sentences:
+            # Format based on whether it's an acronym or phrase
+            if metric_term in ACRONYM_MAPPING:
+                # It's an acronym - show "Acronym, which means Phrase"
+                phrase = ACRONYM_MAPPING[metric_term]
+                f.write(f"Metric Match: {metric_term}, which means {phrase}\n")
+            else:
+                # It's a phrase - show just the phrase
+                f.write(f"Metric Match: {metric_term}\n")
+            f.write(sentence + "\n\n")
+
+    print(f"[Pipeline 2] PDF #{pdf_num} complete: {len(extracted_text.split())} words, {len(metric_sentences)} metric sentences")
+
+    return {
+        "pdf_num": pdf_num,
+        "text_path": text_path,
+        "filtered_path": filtered_path,
+        "table_detections": table_detections_for_pdf,
+        "success": True
+    }
 
 
 if __name__ == "__main__":

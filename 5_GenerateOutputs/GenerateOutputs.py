@@ -69,20 +69,13 @@ def combine_metadata(metadata_4a_path: Path, metadata_4b_path: Path) -> pd.DataF
     Returns:
         Combined DataFrame with "Extractor" column at beginning
     """
-    print("\n[1/4] Combining 4a and 4b metadata...")
-
     # Load metadata files
     df_4a = pd.read_excel(metadata_4a_path, engine='openpyxl')
     df_4b = pd.read_excel(metadata_4b_path, engine='openpyxl')
 
-    print(f"  4a metadata: {len(df_4a)} rows")
-    print(f"  4b metadata: {len(df_4b)} rows")
-
     # Add "Extractor" column at the beginning
     df_4a.insert(0, "Extractor", "LLM")
     df_4b.insert(0, "Extractor", "TableExtraction")
-
-    print(f"  Added 'Extractor' column to both metadata files")
 
     # Combine (each study now has 2 rows)
     combined = pd.concat([df_4a, df_4b], ignore_index=True)
@@ -90,8 +83,6 @@ def combine_metadata(metadata_4a_path: Path, metadata_4b_path: Path) -> pd.DataF
     # Sort by PDF Number so both rows for each study are together
     if "PDF Number" in combined.columns:
         combined = combined.sort_values("PDF Number")
-
-    print(f"  Combined metadata: {len(combined)} rows (each study has 2 rows)\n")
 
     return combined
 
@@ -107,25 +98,16 @@ def combine_datasets(dataset_4a_path: Path, dataset_4b_path: Path) -> pd.DataFra
     Returns:
         Combined DataFrame with "Extractor" column at beginning
     """
-    print("[2/4] Combining 4a and 4b datasets...")
-
     # Load datasets
     df_4a = pd.read_excel(dataset_4a_path, engine='openpyxl')
     df_4b = pd.read_excel(dataset_4b_path, engine='openpyxl')
-
-    print(f"  4a dataset: {len(df_4a)} rows")
-    print(f"  4b dataset: {len(df_4b)} rows")
 
     # Add "Extractor" column
     df_4a.insert(0, "Extractor", "LLM")
     df_4b.insert(0, "Extractor", "TableExtraction")
 
-    print(f"  Added 'Extractor' column to both datasets")
-
     # Combine
     combined = pd.concat([df_4a, df_4b], ignore_index=True)
-
-    print(f"  Combined dataset: {len(combined)} rows\n")
 
     return combined
 
@@ -146,8 +128,6 @@ def create_final_workbook(
     Returns:
         Path to final workbook
     """
-    print("[3/4] Creating final 3-sheet workbook...")
-
     # Extract timestamp from query folder name (format: "mm-dd-yy-hhmm Query")
     # Convert to output format: "Query Output mm-dd-yy-hhHmmM.xlsx"
     folder_name = query_folder.name
@@ -171,8 +151,6 @@ def create_final_workbook(
     wb.remove(wb.active)  # Remove default sheet
 
     # Sheet 1: "Search Results" (from corpus_metadata.json)
-    print("  [1/3] Adding 'Search Results' sheet...")
-
     # Load corpus metadata from JSON
     all_papers = load_corpus_json(query_folder)
     corpus_rows = convert_corpus_json_to_excel_data(all_papers)
@@ -223,10 +201,7 @@ def create_final_workbook(
     ws1.column_dimensions['C'].width = 15
     ws1.column_dimensions['D'].width = 10
 
-    print(f"      Added {len(corpus_rows)-1} rows")
-
     # Sheet 2: "Extraction Results" (combined metadata from 4a+4b)
-    print("  [2/3] Adding 'Extraction Results' sheet...")
     ws2 = wb.create_sheet("Extraction Results")
 
     # Filter out rows where PDF was never successfully downloaded
@@ -234,10 +209,6 @@ def create_final_workbook(
     # HTML, XML, JSON are now rejected during download (not in Corpus)
     download_failures = ["Download Failed"]
     filtered_metadata = combined_metadata[~combined_metadata["Breakpoint"].isin(download_failures)]
-
-    filtered_count = len(combined_metadata) - len(filtered_metadata)
-    if filtered_count > 0:
-        print(f"      Filtered out {filtered_count} rows (Download Failed papers)")
 
     # Add rows to sheet
     for row in dataframe_to_rows(filtered_metadata, index=False, header=True):
@@ -252,7 +223,6 @@ def create_final_workbook(
     if "Breakpoint" in headers:
         breakpoint_col_idx = headers.index("Breakpoint") + 1
 
-        error_count = 0
         for row_idx in range(2, ws2.max_row + 1):
             breakpoint_value = ws2.cell(row=row_idx, column=breakpoint_col_idx).value
             if breakpoint_value and isinstance(breakpoint_value, str):
@@ -261,25 +231,15 @@ def create_final_workbook(
                     # Color entire row red
                     for col in range(1, len(headers) + 1):
                         ws2.cell(row=row_idx, column=col).fill = red_fill
-                    error_count += 1
-
-        if error_count > 0:
-            print(f"      Colored {error_count} error rows red")
-
-    print(f"      Added {len(filtered_metadata)} rows (each study has 2 rows)")
 
     # Sheet 3: "Metrics" (combined dataset from 4a+4b)
-    print("  [3/3] Adding 'Metrics' sheet...")
     ws3 = wb.create_sheet("Metrics")
 
     for row in dataframe_to_rows(combined_dataset, index=False, header=True):
         ws3.append(row)
 
-    print(f"      Added {len(combined_dataset)} data rows")
-
     # Save workbook
     wb.save(final_workbook_path)
-    print(f"\n  Saved: {final_workbook_path.name}\n")
 
     return final_workbook_path
 
@@ -295,8 +255,6 @@ def cleanup_intermediate_files(query_folder: Path, metadata_4a: Path, metadata_4
         dataset_4a: Path to 4a_FinalDataset.xlsx
         dataset_4b: Path to 4b_FinalDataset.xlsx
     """
-    print("[4/4] Cleaning up intermediate files...")
-
     # Add corpus_metadata.json to cleanup list (COMMENTED OUT - keeping for diagnostics)
     # corpus_json = query_folder / "corpus_metadata.json"
     files_to_delete = [metadata_4a, metadata_4b, dataset_4a, dataset_4b]  # corpus_json excluded
@@ -307,18 +265,13 @@ def cleanup_intermediate_files(query_folder: Path, metadata_4a: Path, metadata_4
             for attempt in range(3):
                 try:
                     file_path.unlink()
-                    print(f"  Deleted: {file_path.name}")
                     break
-                except (PermissionError, OSError) as e:
+                except (PermissionError, OSError):
                     if attempt < 2:
                         time.sleep(0.5 * (attempt + 1))  # 0.5s, 1.0s, then give up
-                    else:
-                        print(f"  WARNING: Could not delete {file_path.name}: {e}")
 
     # NOTE: Staging Downloads folder is cleaned up by Pipeline 1
     # No need to clean it up here (avoids 27s of retry delays)
-
-    print()
 
 
 def run_combiner(query_folder: Path):
@@ -331,12 +284,7 @@ def run_combiner(query_folder: Path):
     # Timer 11: Start timing final output creation
     combiner_start = time.time()
 
-    print("=" * 80)
-    print("SCHOLARSWEEP FINAL OUTPUT COMBINER")
-    print("=" * 80)
-    print(f"Query Folder: {query_folder}")
-    print("=" * 80)
-    print()
+    print("Creating final dataset...")
 
     # Find input files
     metadata_4a = query_folder / "4a_Metadata.xlsx"
@@ -352,18 +300,7 @@ def run_combiner(query_folder: Path):
             missing_files.append(file_path.name)
 
     if missing_files:
-        print("ERROR: Missing required files:")
-        for filename in missing_files:
-            print(f"  - {filename}")
-        print("\nEnsure Pipelines 1-4 have completed successfully.")
         sys.exit(1)
-
-    print("All input files found:\n")
-    print(f"  Corpus JSON: {corpus_json.name}")
-    print(f"  4a Metadata: {metadata_4a.name}")
-    print(f"  4b Metadata: {metadata_4b.name}")
-    print(f"  4a Dataset: {dataset_4a.name}")
-    print(f"  4b Dataset: {dataset_4b.name}")
 
     # Combine metadata (4a + 4b -> single Corpus with 2 rows per study)
     combined_metadata = combine_metadata(metadata_4a, metadata_4b)
@@ -381,22 +318,11 @@ def run_combiner(query_folder: Path):
     # Cleanup
     cleanup_intermediate_files(query_folder, metadata_4a, metadata_4b, dataset_4a, dataset_4b)
 
-    # Summary
-    print("Pipeline combination complete!\n")
-
     # Timer 10: Save final output creation time
     combiner_time = time.time() - combiner_start
     save_timer(query_folder, "10_final_output", combiner_time)
 
-    print("=" * 80)
-    print("FINAL OUTPUT COMPLETE")
-    print("=" * 80)
-    print(f"\nFinal Output: {final_workbook.name}")
-    print("\nWorkbook Structure:")
-    print("  Sheet 1: Search Results (all papers from search with upfront numbering)")
-    print("  Sheet 2: Extraction Results (combined metadata from 4a+4b, 2 rows per study)")
-    print("  Sheet 3: Metrics (combined dataset from 4a+4b)")
-    print("=" * 80)
+    print(f"Operations Successful. Files located at {query_folder.name}")
 
     # Display all 11 timers
     display_timers(query_folder)
@@ -430,7 +356,7 @@ def main():
         print(f"Auto-detected Query folder: {args.query_folder.name}")
 
     if not args.query_folder.exists():
-        print(f"ERROR: Query folder not found: {args.query_folder}")
+        print(f"ERROR: Query folder not found: {args.query_folder.name}")
         sys.exit(1)
 
     run_combiner(args.query_folder)
