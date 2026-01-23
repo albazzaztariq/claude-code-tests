@@ -56,7 +56,7 @@ def load_filter_prompt() -> str:
     prompt_file = Path(__file__).parent.parent / "Config" / "LLMRelevancePrompt.txt"
 
     if not prompt_file.exists():
-        print(f"ERROR: Filter prompt file not found: {prompt_file}")
+        print(f"ERROR: Filter prompt file not found: {prompt_file.name}")
         sys.exit(1)
 
     with open(prompt_file, 'r', encoding='utf-8') as f:
@@ -166,7 +166,6 @@ def filter_papers(pdf_folder: Path) -> None:
     """
     query_folder = pdf_folder.parent
 
-    print("[DEBUG] Loading corpus metadata...")
     all_papers = load_corpus_json(query_folder)
 
     # Filter to only processable papers (exclude failed and unreadable)
@@ -174,7 +173,6 @@ def filter_papers(pdf_folder: Path) -> None:
     processable_papers = [p for p in all_papers if p.get("status", "") in processable_statuses]
 
     total_papers = len(processable_papers)
-    print(f"[DEBUG] Found {total_papers} papers to filter\n")
 
     # Process each paper
     total_start = time.time()
@@ -185,21 +183,15 @@ def filter_papers(pdf_folder: Path) -> None:
     for idx, paper in enumerate(processable_papers, 1):
         pdf_num = paper.get("study_number")
 
-        print("=" * 80)
-        print(f"Processing PDF {idx}/{total_papers} (PDF #{pdf_num})")
-        print("=" * 80)
-
         # Check if paper already has a breakpoint from Pipeline 1 (shouldn't happen for processable papers)
         existing_breakpoint = paper.get("breakpoint", "")
         if existing_breakpoint and existing_breakpoint != "":
-            print(f"  [SKIP] Already has breakpoint: {existing_breakpoint}")
             continue
 
         # Find text file (in Extracted Text folder)
         text_file = query_folder / "Extracted Text" / f"{pdf_num}.txt"
 
         if not text_file.exists():
-            print(f"  [WARNING] Text file not found: {text_file}")
             paper["breakpoint"] = "Error: Text file not found"
             continue
 
@@ -209,19 +201,14 @@ def filter_papers(pdf_folder: Path) -> None:
                 text = f.read()
 
             if not text.strip():
-                print(f"  [WARNING] Text file is empty")
                 paper["breakpoint"] = "Error: Empty text file"
                 continue
 
-            print(f"  [1/3] Loaded text: {len(text):,} chars, {len(text.split()):,} words")
-
         except Exception as e:
-            print(f"  [ERROR] Failed to read text file: {e}")
             paper["breakpoint"] = f"Error: {str(e)}"
             continue
 
         # Call Qwen 2.5 7B LLM (Timer 7: Track LLM time)
-        print(f"  [2/3] Calling Qwen 2.5 7B LLM...")
         start_time = time.time()
 
         decision = call_qwen(text)
@@ -231,15 +218,11 @@ def filter_papers(pdf_folder: Path) -> None:
         # Accumulate LLM time
         total_llm_time += elapsed
 
-        print(f"  [RESULT] {decision} ({elapsed:.1f}s)")
-
         # Update paper with decision
         paper["breakpoint"] = decision
 
         # If irrelevant, MOVE files to Filtered Papers folder
         if decision in ["No experiment", "No knit/woven/yarn"]:
-            print(f"  [3/3] Marking as irrelevant and moving files...")
-
             # Create Filtered Papers folder
             filtered_folder = query_folder / "Filtered Papers"
             filtered_folder.mkdir(exist_ok=True)
@@ -260,20 +243,15 @@ def filter_papers(pdf_folder: Path) -> None:
                 if src_path.exists():
                     try:
                         src_path.rename(dest_path)
-                        print(f"    [MOVED] {src_path.name}")
-                    except Exception as e:
-                        print(f"    [ERROR] Failed to move {src_path.name}: {e}")
+                    except Exception:
+                        pass
 
             # Track this PDF as filtered out (for table detections cleanup)
             filtered_out_pdfs.add(pdf_num)
             deleted_count += 1
 
-        elif decision.startswith("Error:"):
-            print(f"  [3/3] Error occurred, keeping files for retry")
-
-        else:
+        elif not decision.startswith("Error:"):
             # Passes - clear breakpoint, keep files
-            print(f"  [3/3] Paper passes filter, keeping all files")
             paper["breakpoint"] = ""  # Clear breakpoint for papers that pass
 
         # Small delay between papers
@@ -282,26 +260,18 @@ def filter_papers(pdf_folder: Path) -> None:
     # Save updated JSON
     total_time = time.time() - total_start
 
-    # Save Timer 7: Total LLM filter time
+    # Save Timer 6: Total LLM filter time
     if total_llm_time > 0:
-        save_timer(query_folder, "7_llm_filter_total", total_llm_time)
+        save_timer(query_folder, "6_llm_filter_total", total_llm_time)
 
     # Clean up table detections JSON (remove detections for filtered-out PDFs)
     if filtered_out_pdfs:
         table_detections_json = query_folder / "yolo_table_detections.json"
 
         if table_detections_json.exists():
-            print("\n" + "=" * 80)
-            print("CLEANING UP TABLE DETECTIONS")
-            print("=" * 80)
-
             # Load table detections
             with open(table_detections_json, 'r', encoding='utf-8') as f:
                 all_detections = json.load(f)
-
-            original_count = len(all_detections)
-            print(f"Original detections: {original_count}")
-            print(f"Filtered out PDFs: {len(filtered_out_pdfs)}")
 
             # Filter out detections for filtered-out PDFs
             kept_detections = [
@@ -309,42 +279,151 @@ def filter_papers(pdf_folder: Path) -> None:
                 if det.get("pdf_num") not in filtered_out_pdfs
             ]
 
-            removed_count = original_count - len(kept_detections)
-            print(f"Removed detections: {removed_count}")
-            print(f"Kept detections: {len(kept_detections)}")
-
             # Save cleaned detections
             with open(table_detections_json, 'w', encoding='utf-8') as f:
                 json.dump(kept_detections, f, indent=2)
 
-            print(f"Updated: {table_detections_json.name}")
-
-    print("\n" + "=" * 80)
-    print("SAVING UPDATED METADATA")
-    print("=" * 80)
-
     save_corpus_json(all_papers, query_folder)
-    print(f"Updated metadata saved")
 
-    # Summary
-    print("\n" + "=" * 80)
-    print("FILTERING SUMMARY")
-    print("=" * 80)
+    # Count papers that passed filter (no breakpoint or empty breakpoint)
+    passed_papers = [p for p in all_papers if not p.get("breakpoint", "").strip()]
+    print(f"Papers filtered for relevance: {deleted_count}")
+    print(f"Final Corpus Size: {len(passed_papers)}")
 
-    # Count decisions
-    decisions = {}
-    for paper in all_papers:
-        decision = paper.get("breakpoint", "") or "Passes"
-        decisions[decision] = decisions.get(decision, 0) + 1
 
-    for value, count in sorted(decisions.items()):
-        print(f"  {value}: {count}")
+# =============================================================================
+# QUEUE-BASED SINGLE PAPER PROCESSING (For Pipeline Parallelization)
+# =============================================================================
 
-    print(f"\nFiles deleted: {deleted_count} papers")
-    print(f"Total time: {total_time:.1f}s")
-    if total_papers > 0:
-        print(f"Avg per paper: {total_time/total_papers:.1f}s")
-    print("=" * 80)
+def filter_single_paper_for_queue(pdf_num: int, text_path: Path, query_folder: Path, all_papers: list) -> dict:
+    """
+    Filter a single paper for queue-based parallelization.
+
+    Args:
+        pdf_num: PDF number (study number)
+        text_path: Path to extracted text file
+        query_folder: Query folder
+        all_papers: List of all papers (metadata) - will be updated in place
+
+    Returns:
+        dict: {
+            "pdf_num": int,
+            "decision": str,
+            "llm_time": float,
+            "filtered_out": bool,
+            "success": bool
+        }
+    """
+    # Find paper in metadata
+    paper = None
+    for p in all_papers:
+        if p.get("study_number") == pdf_num:
+            paper = p
+            break
+
+    if not paper:
+        return {
+            "pdf_num": pdf_num,
+            "decision": "Error: Not in metadata",
+            "llm_time": 0.0,
+            "filtered_out": False,
+            "success": False
+        }
+
+    # Check if paper already has breakpoint
+    existing_breakpoint = paper.get("breakpoint", "")
+    if existing_breakpoint and existing_breakpoint != "":
+        return {
+            "pdf_num": pdf_num,
+            "decision": existing_breakpoint,
+            "llm_time": 0.0,
+            "filtered_out": False,
+            "success": True
+        }
+
+    # Read full text
+    if not text_path.exists():
+        paper["breakpoint"] = "Error: Text file not found"
+        return {
+            "pdf_num": pdf_num,
+            "decision": "Error: Text file not found",
+            "llm_time": 0.0,
+            "filtered_out": False,
+            "success": False
+        }
+
+    try:
+        with open(text_path, 'r', encoding='utf-8') as f:
+            text = f.read()
+
+        if not text.strip():
+            paper["breakpoint"] = "Error: Empty text file"
+            return {
+                "pdf_num": pdf_num,
+                "decision": "Error: Empty text file",
+                "llm_time": 0.0,
+                "filtered_out": False,
+                "success": False
+            }
+
+    except Exception as e:
+        paper["breakpoint"] = f"Error: {str(e)}"
+        return {
+            "pdf_num": pdf_num,
+            "decision": f"Error: {str(e)}",
+            "llm_time": 0.0,
+            "filtered_out": False,
+            "success": False
+        }
+
+    # Call LLM
+    start_time = time.time()
+    decision = call_qwen(text)
+    llm_time = time.time() - start_time
+
+    # Update paper metadata
+    paper["breakpoint"] = decision
+
+    # Move files if irrelevant
+    filtered_out = False
+    if decision in ["No experiment", "No knit/woven/yarn"]:
+        # Create Filtered Papers folder
+        filtered_folder = query_folder / "Filtered Papers"
+        filtered_folder.mkdir(exist_ok=True)
+
+        # Move files
+        pdf_folder = query_folder / "Corpus PDFs"
+        extracted_text_folder = query_folder / "Extracted Text"
+        files_to_move = [
+            (pdf_folder / f"{pdf_num}.pdf", filtered_folder / f"{pdf_num}.pdf"),
+            (pdf_folder / f"{pdf_num}.html", filtered_folder / f"{pdf_num}.html"),
+            (pdf_folder / f"{pdf_num}.xml", filtered_folder / f"{pdf_num}.xml"),
+            (pdf_folder / f"{pdf_num}.json", filtered_folder / f"{pdf_num}.json"),
+            (extracted_text_folder / f"{pdf_num}.txt", filtered_folder / f"{pdf_num}.txt"),
+            (extracted_text_folder / f"{pdf_num}_filtered.txt", filtered_folder / f"{pdf_num}_filtered.txt"),
+            (extracted_text_folder / f"{pdf_num}_filtered_NEW.txt", filtered_folder / f"{pdf_num}_filtered_NEW.txt"),
+        ]
+
+        for src_path, dest_path in files_to_move:
+            if src_path.exists():
+                try:
+                    src_path.rename(dest_path)
+                except Exception:
+                    pass
+
+        filtered_out = True
+
+    elif decision == "Passes" or decision.startswith("Passes"):
+        # Clear breakpoint for papers that pass
+        paper["breakpoint"] = ""
+
+    return {
+        "pdf_num": pdf_num,
+        "decision": decision,
+        "llm_time": llm_time,
+        "filtered_out": filtered_out,
+        "success": True
+    }
 
 
 def find_latest_query_folder():
@@ -377,13 +456,13 @@ def main():
         print(f"Auto-detected Query folder: {query_folder.name}")
 
     if not args.pdf_folder.exists():
-        print(f"ERROR: PDF folder not found: {args.pdf_folder}")
+        print(f"ERROR: PDF folder not found: {args.pdf_folder.name}")
         sys.exit(1)
 
     print("=" * 80)
     print("LLM FILTER - Qwen 2.5 7B Paper Relevance Checking")
     print("=" * 80)
-    print(f"PDF Folder: {args.pdf_folder}")
+    print(f"PDF Folder: {args.pdf_folder.name}")
     print("=" * 80 + "\n")
 
     filter_papers(args.pdf_folder)

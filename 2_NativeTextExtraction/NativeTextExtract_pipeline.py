@@ -888,13 +888,13 @@ def process_corpus(pdf_nums: list, pdf_dirs: list = None, query_folder: Path = N
     print(f"Speedup: {num_workers}x parallel processing")
     print("=" * 80)
 
-    # Save Timer 5: Total text extraction time
+    # Save Timer 4: Total text extraction time
     if query_folder and total_extraction_time > 0:
-        save_timer(query_folder, "5_text_extraction_total", total_extraction_time)
+        save_timer(query_folder, "4_text_extraction_total", total_extraction_time)
 
-    # Save Timer 6: Total metrics match time
+    # Save Timer 5: Total metrics match time
     if query_folder and total_metrics_time > 0:
-        save_timer(query_folder, "6_metrics_match_total", total_metrics_time)
+        save_timer(query_folder, "5_metrics_match_total", total_metrics_time)
 
     # Save table detections to JSON (for table extraction pipeline)
     if query_folder and all_table_detections:

@@ -18,7 +18,7 @@ PIPELINE_1 = Path(__file__).parent / "1_GenerateCorpus" / "GenerateCorpus.py"
 PIPELINE_2 = Path(__file__).parent / "2_NativeTextExtraction" / "NativeTextExtract_pipeline.py"
 PIPELINE_3 = Path(__file__).parent / "3_LLMFilter" / "llm_filter.py"
 PIPELINE_4A = Path(__file__).parent / "4a_LLMTextExtract" / "llm_extract_values.py"
-PIPELINE_4B = Path(__file__).parent / "4b_TableOCR" / "pipeline_4b.py"
+PIPELINE_4B = Path(__file__).parent / "4b_TableOCR" / "table_extraction.py"
 PIPELINE_5 = Path(__file__).parent / "5_GenerateOutputs" / "GenerateOutputs.py"
 
 def main():

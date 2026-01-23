@@ -28,9 +28,6 @@ def save_corpus_json(all_papers: list[dict], query_folder: Path):
     with open(json_path, 'w', encoding='utf-8') as f:
         json.dump(all_papers, f, indent=2, ensure_ascii=False)
 
-    print(f"  Saved: {json_path.name}")
-    print(f"    Total papers: {len(all_papers):,}")
-
 
 def load_corpus_json(query_folder: Path) -> list[dict]:
     """Load corpus metadata from JSON file.

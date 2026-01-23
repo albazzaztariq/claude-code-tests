@@ -24,8 +24,6 @@ OUTPUTS:
 - 4a_FinalDataset.xlsx (extracted values in schema format)
 """
 
-print("[DEBUG] Script starting...")
-
 import os
 import sys
 from pathlib import Path
@@ -33,20 +31,14 @@ from typing import Dict, List, Tuple
 import time
 import shutil
 
-print("[DEBUG] Standard libraries imported")
-
 # Import timing and corpus utilities
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from Timers.timing_utils import save_timer
 from Utils.corpus_utils import load_corpus_json
 
-print("[DEBUG] Timing and corpus utilities imported")
-
 # Load environment variables
 from dotenv import load_dotenv
 load_dotenv()
-
-print("[DEBUG] Environment variables loaded")
 
 # Check for required libraries
 try:
@@ -74,25 +66,21 @@ except ImportError:
 import subprocess
 import re
 
-print("[DEBUG] All required libraries imported")
-
 
 def load_extract_prompt() -> str:
     """Load the extraction prompt from Config/LLMTextExtractPrompt.txt."""
     prompt_file = Path(__file__).parent.parent / "Config" / "LLMTextExtractPrompt.txt"
 
     if not prompt_file.exists():
-        print(f"ERROR: Extract prompt file not found: {prompt_file}")
+        print(f"ERROR: Extract prompt file not found: {prompt_file.name}")
         sys.exit(1)
 
     with open(prompt_file, 'r', encoding='utf-8') as f:
         return f.read()
 
 
-print("[DEBUG] Loading extraction prompt...")
 # Load extraction prompt from config
 EXTRACT_PROMPT = load_extract_prompt()
-print("[DEBUG] Extraction prompt loaded")
 
 
 def load_schema_columns() -> List[str]:
@@ -178,7 +166,7 @@ def call_qwen(metric_sentence: str, max_retries: int = 3) -> str:
                 capture_output=True,
                 text=True,
                 encoding='utf-8',
-                timeout=10  # 10 second timeout
+                timeout=20  # 20 second timeout per call
             )
 
             if result.returncode != 0:
@@ -203,10 +191,9 @@ def call_qwen(metric_sentence: str, max_retries: int = 3) -> str:
                 print(f"      [RETRY {attempt + 1}/{max_retries}] LLM call timed out")
                 time.sleep(1)
                 continue
-            # After all retries exhausted, exit Pipeline 4a gracefully
-            print("\n[PIPELINE 4a] LLM timeouts persist after retries - exiting gracefully")
-            print("[PIPELINE 4a] Pipeline 4b will continue independently")
-            sys.exit(1)  # Exit with code 1 to indicate timeout issue
+            # After all retries exhausted, return error instead of exiting
+            print(f"      [SKIP] LLM call timed out after {max_retries} retries")
+            return "Error: LLM timeout"
 
         except Exception as e:
             if attempt < max_retries - 1:
@@ -257,7 +244,7 @@ def parse_filtered_text(text: str) -> List[Tuple[str, str]]:
     return pairs
 
 
-def process_filtered_file(filtered_path: Path, track_first_call: bool = False) -> tuple[Dict[str, any], float]:
+def process_filtered_file(filtered_path: Path, track_first_call: bool = False) -> tuple[List[Tuple[str, str]], float]:
     """
     Process a single filtered text file.
 
@@ -266,28 +253,22 @@ def process_filtered_file(filtered_path: Path, track_first_call: bool = False) -
         track_first_call: Unused parameter (kept for compatibility)
 
     Returns:
-        Tuple of (dict with normalized metric names as keys and extracted values, total_llm_time for this file)
+        Tuple of (list of (metric_name, value) tuples, total_llm_time for this file)
     """
-    print(f"  Processing: {filtered_path.name}")
-
     # Read filtered text
     with open(filtered_path, 'r', encoding='utf-8') as f:
         text = f.read()
 
     # Parse into metric-sentence pairs
     pairs = parse_filtered_text(text)
-    print(f"    Found {len(pairs)} metric sentences")
 
     if len(pairs) == 0:
-        print(f"    No metric sentences found")
-        return {}, 0.0
+        return [], 0.0
 
-    results = {}
+    results = []  # Changed from dict to list to allow duplicate metrics
     total_llm_time = 0.0
 
     for idx, (metric_label, combined_text) in enumerate(pairs, 1):
-        print(f"    [{idx}/{len(pairs)}] Extracting: {metric_label[:40]}...")
-
         # Call LLM to extract value (track all calls)
         call_start = time.time()
         extracted = call_qwen(combined_text)
@@ -295,18 +276,18 @@ def process_filtered_file(filtered_path: Path, track_first_call: bool = False) -
         total_llm_time += call_time
 
         # If error or no value found, skip this metric
-        if "error" in extracted.lower() or "no value" in extracted.lower():
-            print(f"        Result: {extracted}")
+        extracted_lower = extracted.lower()
+        if ("error" in extracted_lower or
+            "no value" in extracted_lower or
+            "no metrics" in extracted_lower or
+            extracted.strip() == ""):
             continue
 
         # Fuzzy match metric name to schema
         normalized_metric, confidence = fuzzy_match_metric(metric_label, SCHEMA_COLUMNS)
 
-        print(f"        Value: {extracted}")
-        print(f"        Matched to: '{normalized_metric}' (confidence: {confidence:.2f})")
-
         # Store normalized metric name and value
-        results[normalized_metric] = extracted
+        results.append((normalized_metric, extracted))
 
         # Small delay between extractions
         time.sleep(0.5)
@@ -326,28 +307,16 @@ def extract_all_values(extracted_text_folder: Path) -> Tuple[Path, Path]:
     """
     query_folder = extracted_text_folder.parent
 
-    print("=" * 80)
-    print("PIPELINE 4a: LLM TEXT EXTRACTION")
-    print("=" * 80)
-    print(f"Extracted Text Folder: {extracted_text_folder}")
-    print("=" * 80)
-    print()
-
     # Load corpus metadata from JSON
-    print(f"[1/5] Loading corpus metadata...")
     all_papers = load_corpus_json(query_folder)
-    print(f"      Loaded {len(all_papers)} papers\n")
 
     # Create paper lookup dict by study_number for fast access (only papers with study_number)
     papers_by_num = {p["study_number"]: p for p in all_papers if "study_number" in p}
 
     # Find all filtered text files
-    print(f"[2/5] Finding filtered text files...")
     filtered_files = sorted(extracted_text_folder.glob("*_filtered.txt"))
-    print(f"      Found {len(filtered_files)} files\n")
 
     # Process each file
-    print(f"[3/5] Extracting values from filtered text...\n")
     all_extractions = {}
     no_metrics_count = 0
     total_llm_time = 0.0
@@ -357,9 +326,6 @@ def extract_all_values(extracted_text_folder: Path) -> Tuple[Path, Path]:
     for idx, filtered_path in enumerate(filtered_files, 1):
         pdf_num = int(filtered_path.stem.replace("_filtered", ""))
 
-        print(f"PDF {idx}/{len(filtered_files)} (PDF #{pdf_num})")
-        print(f"{'-' * 80}")
-
         # Track LLM time (Timer 8)
         results, file_llm_time = process_filtered_file(filtered_path)
 
@@ -368,25 +334,23 @@ def extract_all_values(extracted_text_folder: Path) -> Tuple[Path, Path]:
 
         if len(results) == 0:
             # No metrics extracted - mark in metadata
-            print(f"    [NO METRICS] Updating metadata with 'No Metrics'\n")
-
             # Update paper entry in JSON
             if pdf_num in papers_by_num:
                 papers_by_num[pdf_num]["breakpoint"] = "No Metrics"
                 no_metrics_count += 1
         else:
-            # Metrics extracted - store for final dataset
-            all_extractions[pdf_num] = results
-            print(f"    [SUCCESS] Extracted {len(results)} values\n")
+            # Metrics extracted - store for final dataset (list of tuples)
+            if pdf_num not in all_extractions:
+                all_extractions[pdf_num] = []
+            all_extractions[pdf_num].extend(results)
 
     total_time = time.time() - total_start
 
     # Save Timer 8: Total LLM extraction time
     if total_llm_time > 0:
-        save_timer(query_folder, "8_llm_extraction_total", total_llm_time)
+        save_timer(query_folder, "7_llm_extraction_total", total_llm_time)
 
     # Create 4a_Metadata.xlsx from updated JSON data
-    print(f"[4/5] Creating metadata Excel (4a_Metadata.xlsx)...")
     from Utils.corpus_utils import convert_corpus_json_to_excel_data
     from openpyxl import Workbook
     from openpyxl.styles import Font, PatternFill
@@ -438,49 +402,30 @@ def extract_all_values(extracted_text_folder: Path) -> Tuple[Path, Path]:
     ws.column_dimensions['D'].width = 10  # Access
 
     wb.save(metadata_excel_path)
-    print(f"      Saved: {metadata_excel_path.name}")
-    print(f"      Updated {no_metrics_count} papers with 'No Metrics'\n")
 
     # Create final dataset Excel
-    print(f"[5/5] Creating final dataset Excel...")
     final_dataset_path = extracted_text_folder.parent / "4a_FinalDataset.xlsx"
 
     # Create DataFrame with schema columns
     columns = ["PDF Number"] + SCHEMA_COLUMNS
 
-    # Build rows
+    # Build rows - ONE ROW PER EXTRACTED VALUE (not one row per PDF)
     rows = []
     for pdf_num, extractions in sorted(all_extractions.items()):
-        row = {"PDF Number": pdf_num}
-        for metric, value in extractions.items():
-            row[metric] = value
-        rows.append(row)
+        # extractions is now a list of (metric, value) tuples
+        for metric, value in extractions:
+            # Create one row per value
+            row = {"PDF Number": pdf_num, metric: value}
+            rows.append(row)
 
     df = pd.DataFrame(rows, columns=columns)
 
     # Save to Excel
     df.to_excel(final_dataset_path, index=False, engine='openpyxl')
-    print(f"      Saved: {final_dataset_path.name}")
-    print(f"      Rows: {len(rows)}")
-    print(f"      Columns: {len(columns)}\n")
 
-    # Summary
-    print("=" * 80)
-    print("PIPELINE 4a COMPLETE")
-    print("=" * 80)
-    print(f"Total PDFs processed: {len(filtered_files)}")
-    print(f"PDFs with extracted values: {len(all_extractions)}")
-    print(f"PDFs with no metrics: {no_metrics_count}")
-    print(f"\nOutputs:")
-    print(f"  Metadata: {metadata_excel_path.name}")
-    print(f"  Dataset:  {final_dataset_path.name}")
-
-    # Only show per-PDF time if there were files processed
-    if len(filtered_files) > 0:
-        print(f"\nRuntime: {total_time:.1f}s ({total_time/len(filtered_files):.1f}s per PDF)")
-    else:
-        print(f"\nRuntime: {total_time:.1f}s (no files to process)")
-    print("=" * 80)
+    # Summary - count total values extracted (not just PDFs)
+    total_values = sum(len(extractions) for extractions in all_extractions.values())
+    print(f"{total_values} Metrics extracted from text")
 
     return metadata_excel_path, final_dataset_path
 
@@ -515,7 +460,7 @@ def main():
         print(f"Auto-detected Query folder: {query_folder.name}")
 
     if not args.extracted_text_folder.exists():
-        print(f"ERROR: Extracted text folder not found: {args.extracted_text_folder}")
+        print(f"ERROR: Extracted text folder not found: {args.extracted_text_folder.name}")
         sys.exit(1)
 
     extract_all_values(args.extracted_text_folder)
