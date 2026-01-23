@@ -252,9 +252,7 @@ def call_openalex(url: str, max_results: int = None, query_folder: Path = None) 
     # Timing variables for all calls
     all_call_times = []
 
-    print(f"{'='*60}")
-    print("CALLING OPENALEX API")
-    print(f"{'='*60}")
+    print("Calling OpenAlex API...")
 
     while current_url:
         batch_num = len(papers)//200 + 1
@@ -267,14 +265,12 @@ def call_openalex(url: str, max_results: int = None, query_folder: Path = None) 
             response.raise_for_status()
             data = response.json()
         except Exception as e:
-            print(f"  ERROR: {e}")
             break
 
         call_time = time.time() - call_start
         all_call_times.append(call_time)
 
         results = data.get("results", [])
-        print(f"  Fetching batch {batch_num}... {len(results)} papers")
 
         # Parse results
         for item in results:
@@ -319,7 +315,7 @@ def call_openalex(url: str, max_results: int = None, query_folder: Path = None) 
         else:
             current_url = None
 
-    print(f"  Total papers fetched: {len(papers):,}", end='')
+    print(f"Results: {len(papers):,}")
 
     # Save total OpenAlex API time (Timer 2)
     if all_call_times and query_folder:
@@ -341,11 +337,7 @@ def deduplicate(papers: list[dict]) -> list[dict]:
     Returns:
         Deduplicated list
     """
-    print()
-    print(f"{'='*60}")
-    print("DEDUPLICATING")
-    print(f"{'='*60}")
-    print(f"  Before: {len(papers):,}")
+    before_count = len(papers)
 
     seen_dois = set()
     seen_titles = set()
@@ -375,7 +367,7 @@ def deduplicate(papers: list[dict]) -> list[dict]:
         if title:
             seen_titles.add(title)
 
-    print(f"  After: {len(unique):,}", end='')
+    print(f"Duplicates Removed: {before_count - len(unique):,}")
 
     # DON'T assign study numbers yet - only after filtering out paywalls
     # Use temporary index for download tracking
@@ -479,11 +471,6 @@ def rank_mirrors_by_speed(oa_papers: list[dict]) -> dict:
     Returns:
         Dict mapping domain -> speed (bytes/sec)
     """
-    print()
-    print(f"{'='*60}")
-    print("TESTING MIRROR SPEEDS")
-    print(f"{'='*60}")
-
     # Extract all unique mirror URLs
     unique_mirrors = set()
     for paper in oa_papers:
@@ -493,28 +480,10 @@ def rank_mirrors_by_speed(oa_papers: list[dict]) -> dict:
                 unique_mirrors.add(url)
 
     if not unique_mirrors:
-        print("  No mirrors to test")
         return {}
-
-    print(f"  Found {len(unique_mirrors)} unique mirrors across {len(oa_papers)} papers")
-    print(f"  Testing in batches of 50 (max 32 concurrent)...")
-
-    start = time.time()
 
     # Test mirrors asynchronously
     speeds = asyncio.run(test_mirrors_batched(list(unique_mirrors)))
-
-    elapsed = time.time() - start
-
-    print(f"  Tested {len(speeds)} mirrors in {elapsed:.1f}s")
-
-    # Show top 5 fastest
-    if speeds:
-        top_5 = sorted(speeds.items(), key=lambda x: x[1], reverse=True)[:5]
-        print(f"  Top 5 fastest mirrors:")
-        for domain, speed in top_5:
-            mbps = (speed * 8) / (1024 * 1024)  # Convert to Mbps
-            print(f"    {domain}: {mbps:.1f} Mbps", end='' if domain == top_5[-1][0] else '\n')
 
     return speeds
 
@@ -624,21 +593,12 @@ def check_oa_status(papers: list[dict], query_folder: Path = None) -> tuple[list
     Returns:
         Tuple of (oa_papers, non_oa_papers)
     """
-    print()
-    print(f"{'='*60}")
-    print("CHECKING OA STATUS (Unpaywall)")
-    print(f"{'='*60}")
-
     # Run parallel checks
     papers, all_call_times = asyncio.run(check_unpaywall_parallel(papers, concurrency=15))
 
     # Split into OA and Non-OA
     oa_papers = [p for p in papers if p.get("access") == "OA"]
     non_oa_papers = [p for p in papers if p.get("access") == "Non-OA"]
-
-    print(f"  Checked {len(papers)}/{len(papers)}...")
-    print(f"  OA papers: {len(oa_papers):,}")
-    print(f"  Non-OA papers: {len(non_oa_papers):,}", end='')
 
     # Save Timer 3: Total Unpaywall API time
     if all_call_times and query_folder:
@@ -658,11 +618,6 @@ def save_to_excel(all_papers: list[dict], filepath: Path):
         all_papers: List of all paper metadata (OA + Non-OA combined)
         filepath: Path to save Excel file
     """
-    print()
-    print(f"{'='*60}")
-    print("SAVING TO EXCEL")
-    print(f"{'='*60}")
-
     try:
         from openpyxl import Workbook
         from openpyxl.styles import Font, PatternFill
@@ -755,9 +710,6 @@ def save_to_excel(all_papers: list[dict], filepath: Path):
 
         # Save
         wb.save(filepath)
-
-        print(f"  Saved: {filepath}")
-        print(f"    Total papers: {len(all_papers):,}", end='')
 
     except ImportError:
         print("  ERROR: openpyxl not installed")
@@ -932,7 +884,8 @@ def download_with_multiple_sources(locations, filepath, study_num, paper_type, m
     return False, 0, None, None, False
 
 def download_pdfs(all_papers: list[dict], download_folder: Path,
-                  api_start_time: float, mirror_speeds: dict, query_folder: Path = None):
+                  api_start_time: float, mirror_speeds: dict, query_folder: Path = None,
+                  on_pdf_validated=None):
     """Download PDFs to staging folder, validate, then move to Corpus PDFs.
 
     Args:
@@ -941,15 +894,11 @@ def download_pdfs(all_papers: list[dict], download_folder: Path,
         api_start_time: Time when API calls started (for runtime tracking)
         mirror_speeds: Dict mapping domain -> speed (bytes/sec) from testing
         query_folder: Query folder for timer saving (optional)
+        on_pdf_validated: Optional callback(pdf_num, pdf_path) called when each PDF is validated
     """
     # Create staging folder for temporary downloads
     staging_folder = download_folder.parent / "Staging Downloads"
     staging_folder.mkdir(exist_ok=True)
-
-    print()
-    print(f"{'='*60}")
-    print("DOWNLOADING PDFs")
-    print(f"{'='*60}")
 
     # Count total downloads needed (OA and Non-OA)
     downloadable = [p for p in all_papers if p.get("status") == "pending" and (p.get("pdf_url") or p.get("doi"))]
@@ -957,16 +906,9 @@ def download_pdfs(all_papers: list[dict], download_folder: Path,
     total_downloads = len(downloadable)
 
     if total_downloads == 0:
-        print("  No papers to download.")
         return
 
-    oa_count = len([p for p in downloadable if p.get("access") == "OA"])
-    non_oa_count = len([p for p in downloadable if p.get("access") == "Non-OA"])
-
-    print(f"Total to download: {total_downloads}")
-    print(f"  OA: {oa_count}")
-    print(f"  Non-OA: {non_oa_count}")
-    print()
+    print(f"Unique papers for download: {total_downloads}")
 
     # Download tracking
     downloaded_count = 0
@@ -1020,7 +962,8 @@ def download_pdfs(all_papers: list[dict], download_folder: Path,
         corpus_folder=download_folder,
         mirror_speeds=mirror_speeds,
         max_download_workers=30,  # Increased from 20 to reduce timeout overhead
-        max_validation_workers=10
+        max_validation_workers=10,
+        on_validated_callback=on_pdf_validated  # Pass callback for inter-pipeline streaming
     )
 
     # Create download wrapper function
@@ -1188,25 +1131,10 @@ def download_pdfs(all_papers: list[dict], download_folder: Path,
 
     # Summary
     elapsed = time.time() - download_start_time
-    api_elapsed = time.time() - api_start_time
 
     # Timer 4: Total download time
     if query_folder:
         save_timer(query_folder, "4_corpus_download_total", elapsed)
-
-    print()
-    print(f"{'='*60}")
-    print("DOWNLOAD SUMMARY")
-    print(f"{'='*60}")
-    print(f"  Downloaded: {downloaded_count}/{total_downloads}")
-    print(f"  Failed: {failed_count}")
-    print(f"  Total size: {format_size(total_bytes)}")
-    print(f"  Download time: {format_time(elapsed)}")
-    print(f"  Total runtime: {format_time(api_elapsed)}")
-    if elapsed > 0:
-        avg_mbps = (total_bytes * 8 / 1024 / 1024) / elapsed
-        print(f"  Average speed: {avg_mbps:.2f} Mbps")
-    print(f"{'='*60}", end='')
 
     # NOTE: study_number assignment and file renaming now handled by queue manager
 
@@ -1219,7 +1147,6 @@ def download_pdfs(all_papers: list[dict], download_folder: Path,
     import gc
     if staging_folder.exists():
         # Use PowerShell Remove-Item -Force for reliable Windows deletion
-        print(f"\nCleaning up staging folder: {staging_folder.name}")
         import subprocess
         result = subprocess.run(
             ['powershell', '-Command', f'Remove-Item -Path "{staging_folder}" -Force -Recurse -ErrorAction SilentlyContinue'],
@@ -1228,22 +1155,17 @@ def download_pdfs(all_papers: list[dict], download_folder: Path,
             timeout=5
         )
 
-        if not staging_folder.exists():
-            print(f"  Staging folder deleted successfully")
-        else:
-            print(f"  WARNING: Could not delete staging folder: {staging_folder}")
-            print(f"  You may need to manually delete it")
-
 # =============================================================================
 # MAIN ORCHESTRATOR
 # =============================================================================
 
-def main():
-    """Main orchestrator."""
-    print("="*60)
-    print("SCHOLARSWEEP v01-1")
-    print("="*60)
+def main(on_pdf_validated=None, on_query_folder_created=None):
+    """Main orchestrator.
 
+    Args:
+        on_pdf_validated: Optional callback(pdf_num, pdf_path) called when each PDF is validated
+        on_query_folder_created: Optional callback(query_folder) called immediately after query folder is created
+    """
     # Track API start time
     api_start_time = time.time()
 
@@ -1257,16 +1179,7 @@ def main():
     query_start = time.time()
 
     # Parse config
-    print(f"\nConfig file: {config_path}")
     config = parse_config(config_path)
-
-    print(f"  Terms: {config['terms'][:80]}...")
-    print(f"  Fields: {', '.join(config['fields'])}")
-    print(f"  Journals: {len(config['journals'])} specified")
-    print(f"  Max results: {config['max_results'] or 'Unlimited'}")
-
-    # TEMPORARY: Limit to 250 for testing
-    print(f"\n  *** TEST MODE: Limiting to first 250 PDFs ***")
 
     # Create output folders
     timestamp = datetime.now().strftime("%m-%d-%y-%H%M")
@@ -1275,10 +1188,9 @@ def main():
 
     download_folder.mkdir(parents=True, exist_ok=True)
 
-    print()
-    print(f"{'='*60}")
-    print("API CALLS BEING BUILT...")
-    print(f"{'='*60}")
+    # Notify other pipelines that query folder is ready (allows Pipeline 2 to start immediately)
+    if on_query_folder_created:
+        on_query_folder_created(query_folder)
 
     # Build query
     url = build_openalex_query(config)
@@ -1286,25 +1198,12 @@ def main():
     # End Timer 1
     query_time = time.time() - query_start
     save_timer(query_folder, "1_query_generation", query_time)
-    print(f"  Query built successfully ({query_time*1000:.2f}ms = {query_time:.6f}s).", end='')
-
-    print()
-    print(f"{'='*60}")
-    print("API CALLS BEING MADE...")
-    print(f"{'='*60}")
 
     # Call API (limit to 250) - pass query_folder for timer saving
     papers = call_openalex(url, max_results=250, query_folder=query_folder)
 
     if not papers:
-        print()
-        print("Results: 0")
-        print()
-        print("No papers found.")
         return
-
-    print()
-    print(f"Results: {len(papers):,} papers retrieved", end='')
 
     # Deduplicate
     papers = deduplicate(papers)
@@ -1312,8 +1211,6 @@ def main():
     # Limit to max_results from config (for testing)
     max_pdfs = config.get('max_results', 250)
     if len(papers) > max_pdfs:
-        print()
-        print(f"  Trimming from {len(papers)} to {max_pdfs} papers (from config)...", end='')
         papers = papers[:max_pdfs]
         # Assign study numbers upfront (before download)
         for i, paper in enumerate(papers, 1):
@@ -1326,11 +1223,6 @@ def main():
     # Combine all papers into single list (sorted by temp_index for now)
     all_papers = sorted(oa_papers + non_oa_papers, key=lambda p: p.get("temp_index", 0))
 
-    print()
-    print(f"{'='*60}")
-    print("SAVING CORPUS METADATA")
-    print(f"{'='*60}")
-
     # Save to JSON (will be converted to Excel in Pipeline 5)
     save_corpus_json(all_papers, query_folder)
 
@@ -1338,14 +1230,10 @@ def main():
     mirror_speeds = rank_mirrors_by_speed(oa_papers)
 
     # Download PDFs (with progress tracking, using measured mirror speeds)
-    download_pdfs(all_papers, download_folder, api_start_time, mirror_speeds, query_folder=query_folder)
+    download_pdfs(all_papers, download_folder, api_start_time, mirror_speeds, query_folder=query_folder, on_pdf_validated=on_pdf_validated)
 
-    print()
-    print(f"{'='*60}")
-    print("COMPLETE")
-    print(f"{'='*60}")
-    print(f"  Corpus Metadata: {query_folder / 'corpus_metadata.json'}")
-    print(f"  PDFs: {query_folder / 'Corpus PDFs'}", end='')
+    # Return query folder path for Pipeline orchestrator
+    return query_folder
 
 if __name__ == "__main__":
     main()

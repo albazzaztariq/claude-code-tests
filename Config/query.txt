@@ -1,4 +1,4 @@
-# ScholarSweep Config File - Test 50 PDFs
+# ScholarSweep Config File - Test Configuration
 # Moisture management in textiles (woven/knit)
 
 [APIs]
