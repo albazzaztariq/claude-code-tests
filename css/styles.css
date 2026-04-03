@@ -32,7 +32,7 @@
 
 /* ── Reset ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: hidden; }
 body {
   background: var(--bg);
   color: var(--off-white);
@@ -1400,11 +1400,19 @@ p  { color: var(--light-gray); line-height: 1.75; }
   .team-grid { grid-template-columns: 1fr; }
   .contact-grid { grid-template-columns: 1fr; }
   .care-grid { grid-template-columns: repeat(2, 1fr); }
-  .compare-grid { grid-template-columns: 1fr; }
+  .compare-grid { grid-template-columns: 1fr !important; }
   .compare-vs { display: none; }
 }
 
 @media (max-width: 768px) {
+  /* Kill any horizontal overflow at root */
+  *, *::before, *::after { max-width: 100%; }
+
+  /* Reveal animations — vertical only on mobile to prevent side-scroll */
+  .reveal-left  { transform: translateY(30px); }
+  .reveal-right { transform: translateY(30px); }
+  .reveal-left.visible, .reveal-right.visible { transform: translateY(0); }
+
   /* Nav */
   .nav-hamburger { display: flex; }
   .nav-links {
@@ -1488,7 +1496,7 @@ p  { color: var(--light-gray); line-height: 1.75; }
   .care-grid { grid-template-columns: 1fr 1fr; }
   .custom-option-grid { grid-template-columns: 1fr; }
   .examples-strip { grid-template-columns: 1fr; }
-  .compare-grid { grid-template-columns: 1fr; }
+  .compare-grid { grid-template-columns: 1fr !important; }
 
   /* Worlds section on mo.html */
   .worlds-grid { grid-template-columns: 1fr; }
