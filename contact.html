@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact — Titan X Wrestling Robe</title>
+  <meta name="description" content="Get in touch with the Titan X Wrestling Robe team — inquiries, orders, wholesale, and media.">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    /* Extra styles specific to contact page */
+    .contact-section {
+      padding: 6rem 0;
+      min-height: calc(100vh - 80px);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════════ NAV ══════════════ -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo"><img src="images/titanx-logo.jpg" alt="Titan X" class="nav-logo-img"></a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="technology.html">Technology</a></li>
+        <li><a href="wear.html">How to Wear</a></li>
+        <li><a href="story.html">Our Story</a></li>
+        <li><a href="mo.html">Meet Mo</a></li>
+        <li><a href="contact.html" class="active">Contact</a></li>
+      </ul>
+      <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ══════════════ PAGE HERO ══════════════ -->
+  <section class="page-hero" style="padding-bottom:3rem;">
+    <div class="container">
+      <div class="page-hero-content">
+        <span class="section-label">Get in Touch</span>
+        <h1>Contact Us</h1>
+        <p>
+          Questions about the robe, ordering, wholesale, or the technology?
+          We'd like to hear from you.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ CONTACT ══════════════ -->
+  <section class="contact-section">
+    <div class="container">
+      <div class="contact-grid">
+
+        <!-- Left: Info -->
+        <div class="reveal-left">
+          <span class="section-label">Reach Out</span>
+          <h2>Let's Talk Wrestling.</h2>
+          <div class="divider"></div>
+          <p>
+            Whether you're an athlete, a coach, a team buyer, or a journalist —
+            we're here to answer your questions about the Titan X robe and the
+            technology behind it.
+          </p>
+
+          <div style="margin-top:2.5rem;">
+            <div class="contact-method">
+              <div class="contact-method-icon"><i class="fas fa-envelope"></i></div>
+              <div>
+                <h4>Email</h4>
+                <p style="color:var(--gray);">Use the form to get in touch.</p>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:3rem;">
+            <div class="section-label" style="margin-bottom:1.25rem;">What can we help with?</div>
+            <div style="display:flex;flex-direction:column;gap:0.75rem;">
+              <div class="wear-benefit" style="font-size:0.9rem;">
+                <i class="fas fa-shopping-bag" style="color:var(--gold);margin-right:0.5rem;width:18px;"></i>
+                Order inquiries &amp; availability
+              </div>
+              <div class="wear-benefit" style="font-size:0.9rem;">
+                <i class="fas fa-users" style="color:var(--gold);margin-right:0.5rem;width:18px;"></i>
+                Wholesale &amp; team pricing
+              </div>
+              <div class="wear-benefit" style="font-size:0.9rem;">
+                <i class="fas fa-atom" style="color:var(--gold);margin-right:0.5rem;width:18px;"></i>
+                Technology questions
+              </div>
+              <div class="wear-benefit" style="font-size:0.9rem;">
+                <i class="fas fa-camera" style="color:var(--gold);margin-right:0.5rem;width:18px;"></i>
+                Media &amp; press inquiries
+              </div>
+              <div class="wear-benefit" style="font-size:0.9rem;">
+                <i class="fas fa-handshake" style="color:var(--gold);margin-right:0.5rem;width:18px;"></i>
+                Partnership &amp; sponsorship discussions
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:3rem;">
+            <div class="info-box">
+              <h4><i class="fas fa-shield-alt" style="margin-right:0.5rem;"></i> Our Promise</h4>
+              <p>
+                This is a product built on research and conviction, not marketing hype.
+                If you have a technical question about the fabric, we will give you a real answer.
+                If we don't know something, we'll say so.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Form -->
+        <div class="reveal-right">
+          <div class="form-card">
+            <div class="section-label" style="margin-bottom:1.5rem;">Send a Message</div>
+
+            <!--
+              FORMSPREE SETUP:
+              1. Go to https://formspree.io and create a free account
+              2. Create a new form, set the email to albazzaztariq@gmail.com
+              3. Replace "YOUR_FORM_ID" in the action URL below with your form ID
+              Currently: falls back to mailto if Formspree not set up
+            -->
+            <form id="contactForm" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+
+              <!-- Honeypot spam filter -->
+              <input type="text" name="_gotcha" style="display:none;">
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="firstName">First Name *</label>
+                  <input type="text" id="firstName" name="firstName" placeholder="Your first name" required>
+                </div>
+                <div class="form-group">
+                  <label for="lastName">Last Name *</label>
+                  <input type="text" id="lastName" name="lastName" placeholder="Your last name" required>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="email">Email Address *</label>
+                <input type="email" id="email" name="email" placeholder="you@example.com" required>
+              </div>
+
+              <div class="form-group">
+                <label for="subject">Subject *</label>
+                <select id="subject" name="subject" required>
+                  <option value="" disabled selected>Select a topic...</option>
+                  <option value="General Inquiry">General Inquiry</option>
+                  <option value="Order Inquiry">Order Inquiry</option>
+                  <option value="Wholesale / Team Pricing">Wholesale / Team Pricing</option>
+                  <option value="Technology Question">Technology Question</option>
+                  <option value="Media & Press">Media &amp; Press</option>
+                  <option value="Partnership">Partnership / Sponsorship</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="message">Message *</label>
+                <textarea id="message" name="message" placeholder="Tell us what's on your mind..." required></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-gold btn-submit" style="width:100%;justify-content:center;">
+                <i class="fas fa-paper-plane"></i> Send Message
+              </button>
+
+
+            </form>
+
+            <!-- Success state -->
+            <div class="form-success">
+              <i class="fas fa-check-circle"></i>
+              <h4>Message Sent</h4>
+              <p>We'll get back to you as soon as possible.</p>
+              <div style="margin-top:1.5rem;">
+                <a href="index.html" class="btn btn-outline"><i class="fas fa-home"></i> Back to Home</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ FOOTER ══════════════ -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <h3><img src="images/titanx-logo.jpg" alt="Titan X" style="height:32px;filter:invert(1);opacity:0.85;"></h3>
+          <p>The wrestling robe, reimagined. Electrospun nanofiber technology, built exclusively for wrestlers.</p>
+        </div>
+        <div class="footer-col">
+          <h5>Pages</h5>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="technology.html">Technology</a></li>
+            <li><a href="wear.html">How to Wear</a></li>
+            <li><a href="story.html">Our Story</a></li>
+        <li><a href="mo.html">Meet Mo</a></li>
+            <li><a href="custom.html">Custom</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Technology</h5>
+          <ul>
+            <li><a href="technology.html#nanofiber">Electrospun Nanofiber</a></li>
+            <li><a href="technology.html#pfas">No PFAS</a></li>
+            <li><a href="technology.html#layers">3-Layer System</a></li>
+            <li><a href="technology.html#tio2">TiO₂ (Coming Soon)</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Contact</h5>
+          <ul>
+            <li><a href="contact.html">Inquiries</a></li>
+            <li><a href="contact.html">Wholesale</a></li>
+            <li><a href="contact.html">Media &amp; Press</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 Titan X Wrestling Robe. All rights reserved.</p>
+        <div class="footer-pfas-note">
+          <i class="fas fa-shield-alt"></i>
+          PFAS-Free &amp; Fluoride-Free Certified Construction
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

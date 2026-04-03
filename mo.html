@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mohamed Abdelfatah — Titan X Wrestling Robe</title>
+  <meta name="description" content="The story of Mohamed Abdelfatah — 2006 World Champion, 3-time Olympian, and head coach of the US Olympic Training Center Greco-Roman program.">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+
+    /* ── Bio Hero — full bleed competition photo ── */
+    .bio-hero {
+      position: relative;
+      height: 100vh;
+      min-height: 600px;
+      display: flex;
+      align-items: flex-end;
+      overflow: hidden;
+    }
+    .bio-hero-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 20%;
+      filter: grayscale(15%);
+    }
+    .bio-hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(8,8,8,0.15) 0%,
+        rgba(8,8,8,0.25) 40%,
+        rgba(8,8,8,0.80) 75%,
+        rgba(8,8,8,0.97) 100%
+      );
+    }
+    .bio-hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 0 0 4rem;
+      width: 100%;
+    }
+    .bio-hero-content h1 {
+      font-size: clamp(3rem, 7vw, 6.5rem);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+    .bio-hero-content h1 span { color: var(--gold); }
+    .bio-hero-subtitle {
+      font-family: var(--heading);
+      font-size: clamp(0.8rem, 1.5vw, 1rem);
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.75rem;
+    }
+    .bio-hero-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    .bio-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: rgba(201,162,39,0.1);
+      border: 1px solid rgba(201,162,39,0.3);
+      color: var(--off-white);
+      font-family: var(--heading);
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 0.4rem 1rem;
+      border-radius: 3px;
+    }
+    .bio-pill i { color: var(--gold); font-size: 0.7rem; }
+
+    /* ── Photo + text split ── */
+    .bio-photo {
+      width: 100%;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      position: relative;
+    }
+    .bio-photo img {
+      width: 100%;
+      display: block;
+      transition: transform 0.6s var(--ease);
+    }
+    .bio-photo:hover img { transform: scale(1.02); }
+    .bio-photo-caption {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+      padding: 1.5rem 1.25rem 1rem;
+      font-family: var(--heading);
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    /* ── Achievement badges row ── */
+    .achievement-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    .ach-cell {
+      padding: 2rem 1.5rem;
+      text-align: center;
+      border-right: 1px solid var(--border);
+      position: relative;
+      transition: background 0.3s;
+    }
+    .ach-cell:last-child { border-right: none; }
+    .ach-cell:hover { background: var(--card-hover); }
+    .ach-cell::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .ach-cell:hover::before { opacity: 1; }
+    .ach-value {
+      font-family: var(--heading);
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 0.4rem;
+    }
+    .ach-label {
+      font-family: var(--heading);
+      font-size: 0.68rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--gray);
+    }
+
+    /* ── The 2006 section — full-bleed dark with image ── */
+    .worlds-section {
+      background: var(--bg-2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .worlds-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      min-height: 520px;
+    }
+    .worlds-image-panel {
+      position: relative;
+      overflow: hidden;
+      min-height: 400px;
+    }
+    .worlds-image-panel img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+      transition: transform 0.6s var(--ease);
+    }
+    .worlds-image-panel:hover img { transform: scale(1.03); }
+    .worlds-image-panel::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to right, transparent 60%, var(--bg-2));
+      pointer-events: none;
+    }
+    .worlds-text-panel {
+      padding: 5rem 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* ── Coaching section ── */
+    .coached-names {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 1.5rem;
+    }
+    .coached-tag {
+      font-family: var(--heading);
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: var(--gold-dim);
+      border: 1px solid var(--border-gold);
+      color: var(--gold);
+      padding: 0.35rem 0.85rem;
+      border-radius: 3px;
+    }
+    .coached-tag.highlight {
+      background: var(--gold);
+      color: var(--bg);
+    }
+
+    /* ── Pull quote ── */
+    .pull-quote {
+      border-left: 3px solid var(--gold);
+      padding: 1.5rem 2rem;
+      background: var(--card);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      margin: 2rem 0;
+    }
+    .pull-quote p {
+      font-size: 1.1rem;
+      font-style: italic;
+      color: var(--off-white);
+      line-height: 1.7;
+    }
+    .pull-quote cite {
+      display: block;
+      margin-top: 0.75rem;
+      font-family: var(--heading);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-style: normal;
+    }
+
+    /* ── Two-photo side-by-side ── */
+    .photo-pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 1024px) {
+      .worlds-grid { grid-template-columns: 1fr; }
+      .worlds-image-panel::after { display: none; }
+      .worlds-text-panel { padding: 3rem 2rem; }
+      .achievement-row { grid-template-columns: 1fr 1fr; }
+      .ach-cell:nth-child(2) { border-right: none; }
+      .ach-cell:nth-child(3) { border-top: 1px solid var(--border); }
+      .photo-pair { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .achievement-row { grid-template-columns: 1fr 1fr; }
+      .bio-hero-content h1 { font-size: 2.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════════ NAV ══════════════ -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo"><img src="images/titanx-logo.jpg" alt="Titan X" class="nav-logo-img"></a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="technology.html">Technology</a></li>
+        <li><a href="wear.html">How to Wear</a></li>
+        <li><a href="story.html" class="active">Our Story</a></li>
+        <li><a href="custom.html">Custom</a></li>
+        <li><a href="contact.html" class="nav-cta">Contact</a></li>
+      </ul>
+      <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ══════════════ HERO — mo-classic ══════════════ -->
+  <section class="bio-hero">
+    <img src="images/mo-classic.png" alt="Mohamed Abdelfatah competing" class="bio-hero-img">
+    <div class="bio-hero-overlay"></div>
+    <div class="bio-hero-content">
+      <div class="container">
+        <div class="bio-hero-subtitle">World Champion · 3× Olympian · Coach</div>
+        <h1>Mohamed<br><span>"Bogy"</span><br>Abdelfatah</h1>
+        <div class="bio-hero-pills">
+          <span class="bio-pill"><i class="fas fa-trophy"></i> 2006 World Champion</span>
+          <span class="bio-pill"><i class="fas fa-flag"></i> 3× Olympic Games</span>
+          <span class="bio-pill"><i class="fas fa-star"></i> 2× World Cup Champion</span>
+          <span class="bio-pill"><i class="fas fa-users"></i> Head Coach — US Olympic Training Center</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ ACHIEVEMENT ROW ══════════════ -->
+  <section style="background:var(--bg-2);border-bottom:1px solid var(--border);">
+    <div class="container">
+      <div class="achievement-row">
+        <div class="ach-cell reveal reveal-delay-1">
+          <div class="ach-value">2006</div>
+          <div class="ach-label">World Champion</div>
+        </div>
+        <div class="ach-cell reveal reveal-delay-2">
+          <div class="ach-value">3×</div>
+          <div class="ach-label">Olympian</div>
+        </div>
+        <div class="ach-cell reveal reveal-delay-3">
+          <div class="ach-value">20+</div>
+          <div class="ach-label">International Titles</div>
+        </div>
+        <div class="ach-cell reveal reveal-delay-4">
+          <div class="ach-value">~20</div>
+          <div class="ach-label">Years on the Mat</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ THE COMPETITOR ══════════════ -->
+  <section class="section">
+    <div class="container">
+      <div class="grid-2">
+
+        <div class="reveal-left">
+          <span class="section-label">The Competitor</span>
+          <h2>Egypt's Greatest on the Mat</h2>
+          <div class="divider"></div>
+          <p>
+            Mohamed Abdelfatah — known throughout the wrestling world as "Bogy" — spent nearly two
+            decades as one of the most feared Greco-Roman wrestlers on the planet. Competing primarily
+            at 84 kilograms for Egypt, he combined raw physical dominance with technical precision,
+            locking and lifting opponents in a style that was equal parts brutal and beautiful.
+          </p>
+          <div class="spacer-sm"></div>
+          <p>
+            His resume speaks for itself: a Junior World silver, two World Cup titles, participation
+            in three Olympic Games, and close to two dozen international tournament victories across
+            a career that spanned the late 1990s through 2012. He is one of only two Egyptians in
+            history to win a Wrestling World Championship.
+          </p>
+          <div class="spacer-sm"></div>
+          <p>
+            After the 2004 Athens Olympics, US Greco-Roman legend Steve Fraser invited Abdelfatah
+            into the Special Foreign Athletes Program at the Olympic Training Center in Colorado Springs.
+            He arrived at 26, and never really left. "Since the first time I came here, I never felt
+            like I was foreign," he says. "We were like a family. I never felt like an outsider."
+          </p>
+        </div>
+
+        <div class="reveal-right">
+          <div class="bio-photo">
+            <img src="images/mo-2006-words2.png" alt="Mohamed Abdelfatah raising trophy at 2006 World Championships">
+            <div class="bio-photo-caption">2006 World Championships — Guangzhou, China</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ 2006 WORLDS ══════════════ -->
+  <section class="worlds-section">
+    <div class="worlds-grid">
+
+      <!-- Image panel -->
+      <div class="worlds-image-panel reveal-left">
+        <img src="images/mo-2006-worlds.png" alt="Mohamed Abdelfatah on the podium at the 2006 World Championships with gold medal">
+      </div>
+
+      <!-- Text panel -->
+      <div class="worlds-text-panel reveal-right">
+        <span class="section-label">Guangzhou, China — 2006</span>
+        <h2>The Moment That Defined a Career</h2>
+        <div class="divider"></div>
+        <p>
+          At the 2006 World Championships, Abdelfatah stood across the mat from Nazmi Avluca —
+          the reigning World Champion from Turkey, one of the most celebrated Greco-Roman wrestlers
+          of his era. Turkey had a massive crowd behind their man. Egypt had almost none. But the
+          entire US contingent — his adopted wrestling family — roared for him.
+        </p>
+        <div class="spacer-sm"></div>
+        <p>
+          He won. The gold medal made him only the second Egyptian in history to claim a
+          Wrestling World Championship. Back home, it meant celebrity. Here at the OTC, it meant
+          something different. "My American friends and training partners, we are like a family.
+          This place is just always in my heart."
+        </p>
+
+        <div class="pull-quote" style="margin-top:2rem;">
+          <p>"The US fans were all united and cheering, yelling 'Go Mohamed, go!' That's my family."</p>
+          <cite>— Mohamed Abdelfatah, on the 2006 World Championship final</cite>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════════ THE COACH ══════════════ -->
+  <section class="section">
+    <div class="container">
+      <div class="grid-2">
+
+        <div class="reveal-left">
+          <div class="bio-photo">
+            <img src="images/mo-coach.png" alt="Mohamed Abdelfatah coaching at the NCAA Championships in a UNC jacket">
+            <div class="bio-photo-caption">Coaching at the NCAA Championships</div>
+          </div>
+        </div>
+
+        <div class="reveal-right">
+          <span class="section-label">The Coach</span>
+          <h2>Building the Next Generation</h2>
+          <div class="divider"></div>
+          <p>
+            When his competitive days wound down after London 2012, Abdelfatah channeled everything
+            he had learned on the mat into coaching. By 2017 he was the head coach of the US
+            Greco-Roman program at the Olympic Training Center — the most prominent coaching
+            post in American wrestling.
+          </p>
+          <div class="spacer-sm"></div>
+          <p>
+            His approach is intensely personal. He builds individual training plans, tailors
+            technique work to each athlete's body and strengths, and earns trust the way
+            he always earned respect — by being in the room, working hard, and knowing the sport
+            better than almost anyone alive.
+          </p>
+          <div class="spacer-sm"></div>
+          <p>
+            Among the athletes he has coached and worked with at the highest level:
+          </p>
+          <div class="coached-names">
+            <span class="coached-tag">Kyle Snyder</span>
+            <span class="coached-tag">Trent Hidlay</span>
+            <span class="coached-tag">G'Angelo Hancock</span>
+            <span class="coached-tag">Kamal Bey</span>
+            <span class="coached-tag">Robby Smith</span>
+            <span class="coached-tag">Patrick Martinez</span>
+            <span class="coached-tag">RaVaughn Perkins</span>
+            <span class="coached-tag">Andy Bisek</span>
+            <span class="coached-tag">& many others</span>
+          </div>
+          <div class="spacer-sm"></div>
+          <div class="pull-quote">
+            <p>"He is a real coach. He's got a heart for helping these guys. Mo has no ego in the game — he's very humble."</p>
+            <cite>— Matt Lindland, US Greco-Roman National Team Head Coach</cite>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ THE ROBE CONNECTION ══════════════ -->
+  <section class="section section-dark">
+    <div class="container">
+      <div class="mission-box reveal" style="max-width:820px;margin:0 auto;">
+        <span class="section-label">Why He's Behind This Robe</span>
+        <div class="spacer-sm"></div>
+        <h2 style="margin-bottom:1.5rem;">Three Decades of Knowing What Wrestlers Need</h2>
+        <p>
+          Mohamed Abdelfatah has spent thirty years on wrestling mats — as a competitor warming up
+          before Olympic finals, as a coach watching his athletes cycle through tournament matches
+          all day. He knows, better than anyone, what happens in those minutes between the warmup
+          and the mat. He knows what equipment has failed wrestlers for generations.
+        </p>
+        <div style="height:1.25rem;"></div>
+        <p>
+          The Titan X robe exists because he was willing to put his name — and his standard —
+          behind a product built on real materials science, not marketing.
+          <strong style="color:var(--gold);">For wrestlers. Only wrestlers.</strong>
+        </p>
+        <div class="spacer"></div>
+        <div class="btn-group" style="justify-content:center;">
+          <a href="technology.html" class="btn btn-gold"><i class="fas fa-atom"></i> See the Technology</a>
+          <a href="story.html" class="btn btn-outline"><i class="fas fa-users"></i> Full Story</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ FOOTER ══════════════ -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <h3><img src="images/titanx-logo.jpg" alt="Titan X" style="height:32px;filter:invert(1);opacity:0.85;"></h3>
+          <p>The wrestling robe, reimagined. Electrospun nanofiber technology, built exclusively for wrestlers.</p>
+        </div>
+        <div class="footer-col">
+          <h5>Pages</h5>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="technology.html">Technology</a></li>
+            <li><a href="wear.html">How to Wear</a></li>
+            <li><a href="story.html">Our Story</a></li>
+            <li><a href="custom.html">Custom</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Technology</h5>
+          <ul>
+            <li><a href="technology.html#nanofiber">Electrospun Nanofiber</a></li>
+            <li><a href="technology.html#pfas">No PFAS</a></li>
+            <li><a href="technology.html#layers">3-Layer System</a></li>
+            <li><a href="technology.html#tio2">TiO₂ (Coming Soon)</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Contact</h5>
+          <ul>
+            <li><a href="contact.html">Inquiries</a></li>
+            <li><a href="contact.html">Wholesale</a></li>
+            <li><a href="contact.html">Media &amp; Press</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 Titan X Wrestling Robe. All rights reserved.</p>
+        <div class="footer-pfas-note">
+          <i class="fas fa-shield-alt"></i>
+          PFAS-Free &amp; Fluoride-Free Certified Construction
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

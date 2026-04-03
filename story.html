@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Our Story — Titan X Wrestling Robe</title>
+  <meta name="description" content="How the Titan X Wrestling Robe came to be — from a problem noticed on the mat to months of research, prototypes, and revisions.">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    .story-img {
+      width: 100%;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      position: relative;
+    }
+    .story-img img {
+      width: 100%;
+      display: block;
+      transition: transform 0.5s var(--ease);
+    }
+    .story-img:hover img { transform: scale(1.02); }
+    .story-img-caption {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.82), transparent);
+      padding: 2rem 1.5rem 1.1rem;
+      font-family: var(--heading);
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    .story-number {
+      font-family: var(--heading);
+      font-size: 5rem;
+      font-weight: 700;
+      color: var(--gold);
+      opacity: 0.07;
+      line-height: 1;
+      margin-bottom: -1rem;
+    }
+    .microscope-label {
+      background: var(--card);
+      border: 1px solid var(--border-gold);
+      border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .microscope-label i { color: var(--gold); font-size: 0.9rem; flex-shrink:0; }
+    .microscope-label p {
+      font-family: var(--heading);
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--light-gray);
+      margin: 0;
+      line-height: 1.5;
+    }
+    .microscope-label span { color: var(--gold); }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════════ NAV ══════════════ -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo"><img src="images/titanx-logo.jpg" alt="Titan X" class="nav-logo-img"></a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="technology.html">Technology</a></li>
+        <li><a href="wear.html">How to Wear</a></li>
+        <li><a href="story.html" class="active">Our Story</a></li>
+        <li><a href="mo.html">Meet Mo</a></li>
+        <li><a href="custom.html">Custom</a></li>
+        <li><a href="contact.html" class="nav-cta">Contact</a></li>
+      </ul>
+      <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ══════════════ PAGE HERO ══════════════ -->
+  <section class="page-hero">
+    <div class="container">
+      <div class="page-hero-content" style="max-width:720px;">
+        <span class="section-label">How It Started</span>
+        <h1>Our Story</h1>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ SECTION 1: THE PROBLEM ══════════════ -->
+  <section class="section">
+    <div class="container">
+      <div class="grid-2">
+
+        <div class="reveal-left">
+          <div class="story-number">01</div>
+          <span class="section-label">The Problem</span>
+          <h2>He Noticed It Every Single Day</h2>
+          <div class="divider"></div>
+          <p>
+            Mohamed Abdelfatah spent years on and around wrestling mats at the highest level —
+            first as a competitor, then as a coach at the US Olympic Training Center.
+            And every tournament, every practice, the same thing played out:
+            wrestlers finished their warmup, waited for their bout, and wrapped themselves in cotton.
+          </p>
+          <div class="spacer-sm"></div>
+          <p>
+            By the time they competed, stepped off the mat, and put the robe back on,
+            that cotton was already absorbing sweat and holding it. Clammy. Heavy. Cold.
+            Between bouts it made keeping warm harder, not easier.
+            It was a problem nobody had bothered to solve — because nobody had thought hard enough about it.
+          </p>
+          <div class="spacer-sm"></div>
+          <p>
+            Mo had coached enough athletes through enough tournaments to know this wasn't
+            a minor inconvenience. Staying warm and keeping dry between matches is part of performance.
+            The equipment wasn't doing its job.
+          </p>
+        </div>
+
+        <div class="reveal-right">
+          <div class="story-img">
+            <img src="images/mo-2006-worlds3.png" alt="Mohamed Abdelfatah competing">
+            <div class="story-img-caption">On the mat — where the problem was first noticed</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ SECTION 2: THE RESEARCH ══════════════ -->
+  <section class="section section-dark">
+    <div class="container">
+      <div class="grid-2">
+
+        <div class="reveal-left" style="order:2;">
+          <div class="story-number">02</div>
+          <span class="section-label">The Research</span>
+          <h2>All-Nighters and Academic Papers</h2>
+          <div class="divider"></div>
+          <p>
+            When the idea of building a better wrestling robe took shape, a researcher
+            got to work. Eventually leaving his job to pursue it full-time, he spent
+            countless hours — nights, weekends, early mornings — pulling data from
+            academic papers on textile science, moisture management, and fabric engineering.
+          </p>
+          <div class="spacer-sm"></div>
+          <p>
+            One material kept appearing in the literature: electrospun nanofiber.
+            A fabric structure so different from anything knitted or woven that it
+            operates on different physics entirely — moving moisture through capillary
+            force rather than absorbing it. The more papers he read, the clearer it became.
+            This was the answer.
+          </p>
+          <div class="spacer-sm"></div>
+          <p>
+            The image to the left is what that material looks like under a scanning
+            electron microscope. Not a weave. Not a knit. A continuous web of
+            sub-micron fibers — each one hundreds of times thinner than a human hair.
+          </p>
+        </div>
+
+        <div class="reveal-right" style="order:1;">
+          <div>
+            <div class="story-img" style="border-radius:var(--radius-lg) var(--radius-lg) 0 0;border-bottom:none;">
+              <img src="images/electrospun-microscope.jpg" alt="Electrospun nanofiber under scanning electron microscope">
+            </div>
+            <div class="microscope-label">
+              <i class="fas fa-microscope"></i>
+              <p>
+                <span>Electrospun Nanofiber — SEM Image</span><br>
+                Fundamentally different from knits and wovens. This is what's in your robe.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ SECTION 3: THE BUILD ══════════════ -->
+  <section class="section">
+    <div class="container">
+      <div class="grid-2">
+
+        <div class="reveal-left">
+          <div class="story-number">03</div>
+          <span class="section-label">The Build</span>
+          <h2>Revision After Revision Until It Was Right</h2>
+          <div class="divider"></div>
+          <p>
+            Research is one thing. A product you can hand a wrestler before a match
+            is another. Mo and his partner spent a significant amount of time on
+            the first prototype — not just making it functional, but making it right.
+          </p>
+          <div class="spacer-sm"></div>
+          <p>
+            Every revision was informed by what they knew about how wrestlers actually
+            move, warm up, and compete. The layer structure — polyester inner,
+            electrospun nanofiber membrane, nylon outer — wasn't arrived at overnight.
+            It was the result of going back to the drawing board repeatedly until the
+            robe performed the way the research said it could.
+          </p>
+          <div class="spacer-sm"></div>
+          <p>
+            No PFAS. No fluorinated chemistry. Performance built entirely into the
+            physical structure of the fabric — because that's what the science supported,
+            and because anything else wasn't good enough.
+          </p>
+        </div>
+
+        <div class="reveal-right">
+          <div style="display:flex;flex-direction:column;gap:1.5rem;">
+            <div class="info-box">
+              <h4><i class="fas fa-layer-group" style="margin-right:0.5rem;"></i> The Layer Decision</h4>
+              <p>
+                The three-layer system was finalized after extensive prototype testing —
+                polyester inner for skin contact and initial wicking, nanofiber membrane
+                for directional transport, nylon outer for protection and rapid evaporation.
+              </p>
+            </div>
+            <div class="info-box">
+              <h4><i class="fas fa-ban" style="margin-right:0.5rem;"></i> No PFAS — By Design</h4>
+              <p>
+                Achieving water-resistance without fluorinated chemicals required
+                choosing the right structure over the easy chemical shortcut.
+                Every layer earns its performance through engineering, not coatings.
+              </p>
+            </div>
+            <div class="info-box">
+              <h4><i class="fas fa-redo" style="margin-right:0.5rem;"></i> Revision After Revision</h4>
+              <p>
+                The first version wasn't the last. Each iteration was tested,
+                critiqued, and rebuilt — until Mo was satisfied it met the standard
+                he expected from equipment used at the highest levels of the sport.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ SECTION 4: STILL AT IT ══════════════ -->
+  <section class="section section-dark">
+    <div class="container">
+      <div class="mission-box reveal" style="max-width:860px;margin:0 auto;">
+        <span class="section-label">Still Going</span>
+        <div class="spacer-sm"></div>
+        <h2 style="margin-bottom:1.5rem;">The Research Doesn't Stop</h2>
+        <p>
+          Having a finished product on the market doesn't mean the work is done — both Mo and his partner
+          continue to read current research in textiles and performance apparel —
+          tracking new developments in fiber science, coating technologies, and
+          moisture management. TiO₂ photocatalytic coatings, next-generation
+          wettability gradients, improved membrane architectures — these are already
+          on the radar.
+        </p>
+        <div style="height:1.2rem;"></div>
+        <p>
+          This is not a product that was built once and left to sit.
+          It was founded on research, and research is how it stays cutting-edge.
+          <strong style="color:var(--gold);">That commitment doesn't change.</strong>
+        </p>
+        <div class="spacer"></div>
+        <div class="btn-group" style="justify-content:center;">
+          <a href="technology.html" class="btn btn-gold"><i class="fas fa-atom"></i> See the Technology</a>
+          <a href="mo.html" class="btn btn-outline"><i class="fas fa-user"></i> Meet Mo</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ FOOTER ══════════════ -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <h3><img src="images/titanx-logo.jpg" alt="Titan X" style="height:32px;filter:invert(1);opacity:0.85;"></h3>
+          <p>The wrestling robe, reimagined. Electrospun nanofiber technology, built exclusively for wrestlers.</p>
+        </div>
+        <div class="footer-col">
+          <h5>Pages</h5>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="technology.html">Technology</a></li>
+            <li><a href="wear.html">How to Wear</a></li>
+            <li><a href="story.html">Our Story</a></li>
+            <li><a href="custom.html">Custom</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Technology</h5>
+          <ul>
+            <li><a href="technology.html#nanofiber">Electrospun Nanofiber</a></li>
+            <li><a href="technology.html#pfas">No PFAS</a></li>
+            <li><a href="technology.html#layers">3-Layer System</a></li>
+            <li><a href="technology.html#tio2">TiO₂ (Coming Soon)</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Contact</h5>
+          <ul>
+            <li><a href="contact.html">Inquiries</a></li>
+            <li><a href="contact.html">Wholesale</a></li>
+            <li><a href="contact.html">Media &amp; Press</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 Titan X Wrestling Robe. All rights reserved.</p>
+        <div class="footer-pfas-note">
+          <i class="fas fa-shield-alt"></i>
+          PFAS-Free &amp; Fluoride-Free Certified Construction
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

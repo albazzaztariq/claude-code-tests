@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custom to Order — Titan X Wrestling Robe</title>
+  <meta name="description" content="Order a fully custom Titan X Wrestling Robe — your colors, your name, your flag, your design on the back. Made for you.">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    /* ── Color Swatch Picker ── */
+    .color-swatches {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 1.5rem;
+    }
+    .swatch {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+      cursor: pointer;
+    }
+    .swatch-circle {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      position: relative;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .swatch:hover .swatch-circle {
+      transform: scale(1.1);
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.15);
+    }
+    .swatch.active .swatch-circle {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px var(--gold-dim);
+    }
+    .swatch-label {
+      font-family: var(--heading);
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gray);
+    }
+    .swatch.active .swatch-label { color: var(--gold); }
+    .swatch-circle.red    { background: #CC2233; }
+    .swatch-circle.blue   { background: #1A3A8F; }
+    .swatch-circle.navy   { background: #0D1B3E; }
+    .swatch-circle.black  { background: #111111; border: 2px solid #333; }
+    .swatch-circle.green  { background: #1A5C30; }
+    .swatch-circle.white  { background: #EEEEEE; }
+    .swatch-circle.gold   { background: linear-gradient(135deg, #C9A227, #E8C547); }
+    .swatch-circle.custom {
+      background: conic-gradient(#CC2233, #1A3A8F, #1A5C30, #C9A227, #111111, #CC2233);
+    }
+
+    /* ── Preview Frame ── */
+    .robe-preview {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      position: relative;
+    }
+    .robe-preview img {
+      width: 100%;
+      display: block;
+      border-radius: var(--radius-lg);
+    }
+    .robe-preview-caption {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+      padding: 2rem 1.5rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    .robe-caption-text {
+      font-family: var(--heading);
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    .robe-caption-sub {
+      font-size: 0.75rem;
+      color: var(--gray);
+      margin-top: 0.2rem;
+    }
+    .robe-preview-tag {
+      background: rgba(201,162,39,0.15);
+      border: 1px solid var(--border-gold);
+      color: var(--gold);
+      font-family: var(--heading);
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.75rem;
+      border-radius: 3px;
+    }
+
+    /* ── What you can customise ── */
+    .custom-option-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+    .custom-option {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s var(--ease);
+    }
+    .custom-option::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .custom-option:nth-child(1)::before { background: linear-gradient(90deg, #CC2233, #1A3A8F); }
+    .custom-option:nth-child(2)::before { background: linear-gradient(90deg, var(--gold), var(--gold-light)); }
+    .custom-option:nth-child(3)::before { background: linear-gradient(90deg, #1A5C30, #C9A227); }
+    .custom-option:hover {
+      border-color: var(--border-gold);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-gold);
+    }
+    .custom-option:hover::before { opacity: 1; }
+    .custom-option-icon {
+      width: 48px; height: 48px;
+      background: var(--gold-dim);
+      border: 1px solid var(--border-gold);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold);
+      font-size: 1.2rem;
+      margin-bottom: 1.25rem;
+    }
+    .custom-option h3 { font-size: 1.05rem; margin-bottom: 0.6rem; }
+    .custom-option p  { font-size: 0.86rem; color: var(--gray); line-height: 1.7; }
+    .custom-option ul { margin-top: 1rem; display: flex; flex-direction: column; gap: 0.4rem; }
+    .custom-option ul li {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.82rem;
+      color: var(--light-gray);
+    }
+    .custom-option ul li i { color: var(--gold); font-size: 0.7rem; }
+
+    /* ── How it works steps ── */
+    .steps-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      position: relative;
+    }
+    .steps-row::before {
+      content: '';
+      position: absolute;
+      top: 32px;
+      left: calc(12.5% + 1rem);
+      right: calc(12.5% + 1rem);
+      height: 1px;
+      background: linear-gradient(90deg, var(--gold-dark), var(--gold), var(--gold-dark));
+      opacity: 0.35;
+    }
+    .step-item {
+      text-align: center;
+      padding: 0 1rem;
+      position: relative;
+    }
+    .step-number {
+      width: 64px; height: 64px;
+      background: var(--card);
+      border: 1px solid var(--border-gold);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      font-family: var(--heading);
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--gold);
+      position: relative;
+      z-index: 1;
+      background: var(--bg-2);
+      transition: all 0.3s var(--ease);
+    }
+    .step-item:hover .step-number {
+      background: var(--gold);
+      color: var(--bg);
+      border-color: var(--gold);
+    }
+    .step-item h4 { font-size: 0.9rem; margin-bottom: 0.5rem; }
+    .step-item p  { font-size: 0.82rem; color: var(--gray); line-height: 1.65; }
+
+    /* ── Examples strip ── */
+    .examples-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+    .example-card {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      transition: all 0.3s var(--ease);
+      cursor: default;
+    }
+    .example-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--border-gold);
+      box-shadow: var(--shadow-gold);
+    }
+    .example-top {
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--heading);
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: rgba(255,255,255,0.9);
+      text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .example-top.red   { background: linear-gradient(135deg, #CC2233, #991122); }
+    .example-top.blue  { background: linear-gradient(135deg, #1A3A8F, #0D1B3E); }
+    .example-top.navy  { background: linear-gradient(135deg, #0D1B3E, #080f24); }
+    .example-bottom {
+      background: var(--card);
+      padding: 1.25rem;
+    }
+    .example-bottom h4 { font-size: 0.82rem; margin-bottom: 0.25rem; }
+    .example-bottom p  { font-size: 0.78rem; color: var(--gray); }
+
+    @media (max-width: 1024px) {
+      .custom-option-grid { grid-template-columns: 1fr 1fr; }
+      .steps-row { grid-template-columns: 1fr 1fr; gap: 2rem; }
+      .steps-row::before { display: none; }
+      .examples-strip { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 768px) {
+      .custom-option-grid { grid-template-columns: 1fr; }
+      .examples-strip { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════════ NAV ══════════════ -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo"><img src="images/titanx-logo.jpg" alt="Titan X" class="nav-logo-img"></a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="technology.html">Technology</a></li>
+        <li><a href="wear.html">How to Wear</a></li>
+        <li><a href="story.html">Our Story</a></li>
+        <li><a href="mo.html">Meet Mo</a></li>
+        <li><a href="custom.html" class="active">Custom</a></li>
+        <li><a href="contact.html" class="nav-cta">Contact</a></li>
+      </ul>
+      <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ══════════════ PAGE HERO ══════════════ -->
+  <section class="page-hero" style="padding-bottom:2rem;">
+    <div class="container">
+      <div class="page-hero-content" style="max-width:780px;">
+        <span class="section-label">Custom to Order</span>
+        <h1>Your Robe.<br><span class="gold-text">Your Identity.</span></h1>
+        <p>
+          Every Titan X robe can be ordered in the color and configuration you want.
+          Your name, your country, your team — printed on the back, exactly as you specify.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ MAIN SHOWCASE ══════════════ -->
+  <section class="section section-dark">
+    <div class="container">
+      <div class="grid-2" style="gap:5rem;align-items:start;">
+
+        <!-- LEFT: The lettering image -->
+        <div class="reveal-left">
+          <div class="robe-preview">
+            <img
+              src="images/lettering.png"
+              alt="Titan X Wrestling Robe — custom back printing. Blue robe showing USA with American flag, red robe showing ABDELFATAH name."
+            >
+            <div class="robe-preview-caption">
+              <div>
+                <div class="robe-caption-text">Back Printing — Custom Examples</div>
+                <div class="robe-caption-sub">Country · Flag · Name · Any combination</div>
+              </div>
+              <div class="robe-preview-tag">Fully Customizable</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Copy + color swatches -->
+        <div class="reveal-right">
+          <span class="section-label">What You See</span>
+          <h2>Name on the Back. Color of Your Choice.</h2>
+          <div class="divider"></div>
+
+          <p>
+            The back of your Titan X robe is a blank canvas. The robes shown here — one in
+            <strong style="color:#4477dd;">USA blue</strong> with the American flag,
+            one in <strong style="color:#dd3344;">championship red</strong> with
+            "Abdelfatah" in bold — are real examples of what the custom printing looks like
+            in practice. Clean, bold, and built to wear with pride walking into any arena.
+          </p>
+
+          <div class="spacer-sm"></div>
+          <p>
+            You choose the robe color, the text, and the graphic — a flag, a team logo,
+            a national crest, or anything else. We handle the rest.
+          </p>
+
+          <!-- Color Swatches -->
+          <div style="margin-top:2.5rem;">
+            <div class="section-label" style="margin-bottom:0.75rem;">Available Colors</div>
+            <div class="color-swatches">
+              <div class="swatch active">
+                <div class="swatch-circle red"></div>
+                <span class="swatch-label">Red</span>
+              </div>
+              <div class="swatch">
+                <div class="swatch-circle blue"></div>
+                <span class="swatch-label">Royal Blue</span>
+              </div>
+              <div class="swatch">
+                <div class="swatch-circle navy"></div>
+                <span class="swatch-label">Navy</span>
+              </div>
+              <div class="swatch">
+                <div class="swatch-circle black"></div>
+                <span class="swatch-label">Black</span>
+              </div>
+              <div class="swatch">
+                <div class="swatch-circle green"></div>
+                <span class="swatch-label">Forest</span>
+              </div>
+              <div class="swatch">
+                <div class="swatch-circle white"></div>
+                <span class="swatch-label">White</span>
+              </div>
+              <div class="swatch">
+                <div class="swatch-circle gold"></div>
+                <span class="swatch-label">Gold</span>
+              </div>
+              <div class="swatch">
+                <div class="swatch-circle custom"></div>
+                <span class="swatch-label">Other</span>
+              </div>
+            </div>
+            <p style="font-size:0.8rem;color:var(--gray);margin-top:1rem;">
+              <i class="fas fa-info-circle" style="color:var(--gold);margin-right:0.4rem;"></i>
+              Additional colors available on request. Contact us with your Pantone or hex reference.
+            </p>
+          </div>
+
+          <div style="margin-top:2.5rem;">
+            <a href="contact.html" class="btn btn-gold">
+              <i class="fas fa-pencil-alt"></i> Start Your Custom Order
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ WHAT YOU CAN CUSTOMISE ══════════════ -->
+  <section class="section">
+    <div class="container">
+      <div class="section-heading text-center reveal">
+        <span class="section-label">What's Customizable</span>
+        <h2>Every Detail, Your Way</h2>
+        <div class="divider divider-center"></div>
+        <p>The Titan X robe is made to order. Here is what you can specify.</p>
+      </div>
+
+      <div class="custom-option-grid" style="margin-top:3rem;">
+
+        <div class="custom-option reveal reveal-delay-1">
+          <div class="custom-option-icon"><i class="fas fa-palette"></i></div>
+          <h3>Robe Color</h3>
+          <p>
+            Choose the base color for your robe. Red and blue are shown in the examples,
+            but we can produce in any color you need — for your national team,
+            your club colors, or your own style.
+          </p>
+          <ul>
+            <li><i class="fas fa-check"></i> Red, Blue, Navy, Black standard</li>
+            <li><i class="fas fa-check"></i> White, Green, Gold available</li>
+            <li><i class="fas fa-check"></i> Custom Pantone / hex on request</li>
+            <li><i class="fas fa-check"></i> Solid or two-tone options</li>
+          </ul>
+        </div>
+
+        <div class="custom-option reveal reveal-delay-2">
+          <div class="custom-option-icon"><i class="fas fa-font"></i></div>
+          <h3>Back Text</h3>
+          <p>
+            Your name. Your country. Your team. Your club. Any text you choose is printed
+            across the back in bold block lettering — the same clean style seen on the
+            "ABDELFATAH" and "USA" examples.
+          </p>
+          <ul>
+            <li><i class="fas fa-check"></i> Athlete name or surname</li>
+            <li><i class="fas fa-check"></i> Country or nationality</li>
+            <li><i class="fas fa-check"></i> Team or club name</li>
+            <li><i class="fas fa-check"></i> Any custom text</li>
+          </ul>
+        </div>
+
+        <div class="custom-option reveal reveal-delay-3">
+          <div class="custom-option-icon"><i class="fas fa-flag"></i></div>
+          <h3>Back Graphic</h3>
+          <p>
+            Below the text, you can add a flag, a national crest, a team logo, or any
+            other graphic. The USA flag example shows how crisp and large these prints
+            can be — this is not embroidery, it's full-color precision printing.
+          </p>
+          <ul>
+            <li><i class="fas fa-check"></i> National flag</li>
+            <li><i class="fas fa-check"></i> Team or club logo</li>
+            <li><i class="fas fa-check"></i> National crest or emblem</li>
+            <li><i class="fas fa-check"></i> Custom graphic (provide file)</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Examples strip -->
+      <div class="examples-strip reveal" style="margin-top:3.5rem;">
+        <div class="example-card">
+          <div class="example-top red">TEAM USA</div>
+          <div class="example-bottom">
+            <h4>National Team</h4>
+            <p>Country name + national flag. Classic tournament setup.</p>
+          </div>
+        </div>
+        <div class="example-card">
+          <div class="example-top blue">SMITH</div>
+          <div class="example-bottom">
+            <h4>Athlete Name</h4>
+            <p>Your surname bold on the back. Simple, powerful, personal.</p>
+          </div>
+        </div>
+        <div class="example-card">
+          <div class="example-top navy">HAWKEYES</div>
+          <div class="example-bottom">
+            <h4>Team / Club</h4>
+            <p>Club or university name with team logo below.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ HOW TO ORDER ══════════════ -->
+  <section class="section section-dark">
+    <div class="container">
+      <div class="section-heading text-center reveal">
+        <span class="section-label">The Process</span>
+        <h2>How to Place a Custom Order</h2>
+        <div class="divider divider-center"></div>
+        <p>Four steps from inquiry to robe.</p>
+      </div>
+
+      <div class="steps-row reveal" style="margin-top:4rem;">
+
+        <div class="step-item reveal-delay-1">
+          <div class="step-number">01</div>
+          <h4>Contact Us</h4>
+          <p>
+            Use the contact form or email us directly. Tell us the quantity,
+            color, and what you want on the back.
+          </p>
+        </div>
+
+        <div class="step-item reveal-delay-2">
+          <div class="step-number">02</div>
+          <h4>Submit Your Design</h4>
+          <p>
+            Send us your text, flag, logo, or any graphic file.
+            We'll prepare a mock-up for your approval.
+          </p>
+        </div>
+
+        <div class="step-item reveal-delay-3">
+          <div class="step-number">03</div>
+          <h4>Confirm & Produce</h4>
+          <p>
+            Approve the mock-up and we go into production.
+            Lead times shared at time of order.
+          </p>
+        </div>
+
+        <div class="step-item reveal-delay-4">
+          <div class="step-number">04</div>
+          <h4>Ship to You</h4>
+          <p>
+            Your finished Titan X robes — your colors, your name, your design —
+            shipped directly to you or your team.
+          </p>
+        </div>
+
+      </div>
+
+      <div style="text-align:center;margin-top:4rem;" class="reveal">
+        <p style="font-size:0.9rem;color:var(--gray);margin-bottom:2rem;max-width:540px;margin-left:auto;margin-right:auto;">
+          Team orders, club orders, and individual orders all welcome.
+          We accommodate custom quantities — reach out and we'll discuss what works for you.
+        </p>
+        <div class="btn-group" style="justify-content:center;">
+          <a href="contact.html" class="btn btn-gold">
+            <i class="fas fa-paper-plane"></i> Start Your Order
+          </a>
+          <a href="technology.html" class="btn btn-outline">
+            <i class="fas fa-atom"></i> Learn About the Technology
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ QUALITY NOTE ══════════════ -->
+  <section class="section">
+    <div class="container">
+      <div class="mission-box reveal" style="max-width:860px;margin:0 auto;">
+        <span class="section-label">Not Just a Robe with Your Name On It</span>
+        <div class="spacer-sm"></div>
+        <h2 style="margin-bottom:1.5rem;">The Custom Doesn't Change the Core</h2>
+        <p>
+          Every custom Titan X robe — regardless of color or back design — uses the same
+          three-layer electrospun nanofiber construction. The custom printing is applied
+          to the outer nylon shell without compromising the nanofiber membrane beneath it.
+          You get your colors and your identity, on a robe that is still the highest-performing
+          wrestling robe available.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ FOOTER ══════════════ -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <h3><img src="images/titanx-logo.jpg" alt="Titan X" style="height:32px;filter:invert(1);opacity:0.85;"></h3>
+          <p>The wrestling robe, reimagined. Electrospun nanofiber technology, built exclusively for wrestlers.</p>
+        </div>
+        <div class="footer-col">
+          <h5>Pages</h5>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="technology.html">Technology</a></li>
+            <li><a href="wear.html">How to Wear</a></li>
+            <li><a href="story.html">Our Story</a></li>
+        <li><a href="mo.html">Meet Mo</a></li>
+            <li><a href="custom.html">Custom</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Technology</h5>
+          <ul>
+            <li><a href="technology.html#nanofiber">Electrospun Nanofiber</a></li>
+            <li><a href="technology.html#pfas">No PFAS</a></li>
+            <li><a href="technology.html#layers">3-Layer System</a></li>
+            <li><a href="technology.html#tio2">TiO₂ (Coming Soon)</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Contact</h5>
+          <ul>
+            <li><a href="contact.html">Inquiries</a></li>
+            <li><a href="contact.html">Wholesale</a></li>
+            <li><a href="contact.html">Media &amp; Press</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 Titan X Wrestling Robe. All rights reserved.</p>
+        <div class="footer-pfas-note">
+          <i class="fas fa-shield-alt"></i>
+          PFAS-Free &amp; Fluoride-Free Certified Construction
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/script.js"></script>
+  <script>
+    // Color swatch interactivity
+    document.querySelectorAll('.swatch').forEach(swatch => {
+      swatch.addEventListener('click', () => {
+        document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+        swatch.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

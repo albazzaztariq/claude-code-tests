@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Technology — Titan X Wrestling Robe</title>
+  <meta name="description" content="The science behind the Titan X Wrestling Robe: electrospun nanofiber, capillary force, wettability gradient, and PFAS-free construction.">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- ══════════════ NAV ══════════════ -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo"><img src="images/titanx-logo.jpg" alt="Titan X" class="nav-logo-img"></a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="technology.html" class="active">Technology</a></li>
+        <li><a href="wear.html">How to Wear</a></li>
+        <li><a href="story.html">Our Story</a></li>
+        <li><a href="mo.html">Meet Mo</a></li>
+        <li><a href="custom.html">Custom</a></li>
+        <li><a href="contact.html" class="nav-cta">Contact</a></li>
+      </ul>
+      <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ══════════════ PAGE HERO ══════════════ -->
+  <section class="page-hero">
+    <div class="container">
+      <div class="page-hero-content">
+        <span class="section-label">Deep Dive</span>
+        <h1>The Science Behind the Robe</h1>
+        <p>
+          Fast drying isn't magic. It's physics — engineered into every fiber, every pore,
+          every layer. Here's how it works.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ WHAT IS NANOFIBER ══════════════ -->
+  <section class="section" id="nanofiber">
+    <div class="container">
+      <div class="grid-2">
+
+        <div class="reveal-left">
+          <span class="section-label">01 — Foundation</span>
+          <h2>What Is Electrospun Nanofiber?</h2>
+          <div class="divider"></div>
+          <p>
+            Electrospinning is a manufacturing process that uses a precisely controlled
+            electric field to stretch a polymer solution into fibers hundreds of times thinner
+            than a human hair — down to the sub-micron scale (0.1–1 μm in diameter).
+          </p>
+          <div class="spacer-sm"></div>
+          <p>
+            The result is a continuous, interlocking web of ultrafine fibers. This web is
+            not woven or knitted — it forms organically, creating a three-dimensional porous
+            structure with an extraordinarily high surface-area-to-volume ratio.
+          </p>
+          <div class="spacer-sm"></div>
+          <p>
+            That structure is the starting point for everything this robe does.
+          </p>
+        </div>
+
+        <div class="reveal-right">
+          <div class="tech-card" style="height:100%;min-height:280px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:1.5rem;">
+            <div style="font-size:5rem;opacity:0.12;"><i class="fas fa-spider"></i></div>
+            <div>
+              <div class="section-label" style="text-align:center;">Scale Reference</div>
+              <h3 style="font-size:2.8rem;color:var(--gold);">0.1–1 μm</h3>
+              <p style="margin-top:0.5rem;font-size:0.9rem;">Fiber diameter — 100× thinner than a human hair</p>
+            </div>
+            <!-- REPLACE: Add SEM/microscopy image of nanofiber here -->
+            <p style="font-size:0.72rem;font-family:var(--heading);letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);opacity:0.4;">[ Microscopy image placeholder ]</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ ELECTROSPINNING ANIMATION ══════════════ -->
+  <section class="section section-dark">
+    <div class="container">
+      <div class="section-heading text-center reveal">
+        <span class="section-label">Process</span>
+        <h2>How Electrospinning Works</h2>
+        <div class="divider divider-center"></div>
+        <p>A high-voltage electric field pulls a polymer solution into sub-micron fibers. Watch the process.</p>
+      </div>
+      <div class="reveal" style="margin-top:2.5rem;border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;position:relative;">
+        <canvas id="electroCanvas" style="display:block;width:100%;background:#050505;"></canvas>
+      </div>
+    </div>
+  </section>
+  <script>
+  (function(){
+    const canvas = document.getElementById('electroCanvas');
+    const ctx = canvas.getContext('2d');
+    let W, H, needleX, needleY, collectorY, animId;
+    let fibers = [], web = [], frame = 0;
+
+    function resize(){
+      const rect = canvas.parentElement.getBoundingClientRect();
+      W = Math.floor(rect.width);
+      H = Math.round(W * 0.52);
+      canvas.width  = W;
+      canvas.height = H;
+      needleX    = W / 2;
+      needleY    = Math.round(H * 0.10);
+      collectorY = Math.round(H * 0.88);
+      fibers = []; web = [];
+    }
+
+    function spawnFiber(){
+      fibers.push({
+        x: needleX, y: needleY + 22,
+        phase:      Math.random() * Math.PI * 2,
+        phaseSpd:   0.07 + Math.random() * 0.06,
+        amp:        2,
+        ampGrow:    0.18 + Math.random() * 0.12,
+        vy:         1.4 + Math.random() * 0.8,
+        trail:      [],
+        done:       false
+      });
+    }
+
+    function updateFibers(){
+      for(let i = fibers.length - 1; i >= 0; i--){
+        const f = fibers[i];
+        f.phase += f.phaseSpd;
+        f.amp    = Math.min(f.amp + f.ampGrow, W * 0.22);
+        const vx = Math.sin(f.phase) * f.amp * 0.09
+                 + Math.sin(f.phase * 2.3) * f.amp * 0.03;
+        f.x += vx;
+        f.y += f.vy + Math.sin(f.phase * 0.4) * 0.4;
+        f.x  = Math.max(30, Math.min(W - 30, f.x));
+        f.trail.push({x: f.x, y: f.y});
+        if(f.trail.length > 90) f.trail.shift();
+        if(f.y >= collectorY){
+          f.done = true;
+          if(f.trail.length > 8){
+            const seg = f.trail.slice(-40);
+            web.push({pts: seg, a: 0.18 + Math.random() * 0.22});
+            if(web.length > 70) web.shift();
+          }
+          fibers.splice(i, 1);
+        }
+      }
+    }
+
+    function drawScene(){
+      ctx.clearRect(0, 0, W, H);
+
+      // Field lines
+      ctx.save();
+      ctx.strokeStyle = 'rgba(201,162,39,0.06)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4, 14]);
+      const cols = 10;
+      for(let i = 0; i <= cols; i++){
+        const lx = 30 + (W - 60) * i / cols;
+        ctx.beginPath(); ctx.moveTo(lx, needleY + 30); ctx.lineTo(lx, collectorY); ctx.stroke();
+      }
+      ctx.restore();
+
+      // Settled web
+      for(const s of web){
+        if(s.pts.length < 2) continue;
+        ctx.beginPath();
+        ctx.moveTo(s.pts[0].x, s.pts[0].y);
+        for(let i = 1; i < s.pts.length; i++) ctx.lineTo(s.pts[i].x, s.pts[i].y);
+        ctx.strokeStyle = `rgba(220,200,140,${s.a})`;
+        ctx.lineWidth   = 0.6;
+        ctx.setLineDash([]);
+        ctx.stroke();
+      }
+
+      // Collector plate
+      const cg = ctx.createLinearGradient(0, collectorY, 0, collectorY + 18);
+      cg.addColorStop(0, 'rgba(201,162,39,0.7)');
+      cg.addColorStop(1, 'rgba(201,162,39,0.05)');
+      ctx.fillStyle = cg;
+      ctx.fillRect(30, collectorY, W - 60, 18);
+      ctx.strokeStyle = 'rgba(201,162,39,0.9)';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([]);
+      ctx.beginPath(); ctx.moveTo(30, collectorY); ctx.lineTo(W - 30, collectorY); ctx.stroke();
+
+      // Active fibers
+      for(const f of fibers){
+        if(f.trail.length < 3) continue;
+        ctx.beginPath();
+        ctx.moveTo(f.trail[0].x, f.trail[0].y);
+        for(let i = 1; i < f.trail.length; i++) ctx.lineTo(f.trail[i].x, f.trail[i].y);
+        const tg = ctx.createLinearGradient(f.trail[0].x, f.trail[0].y, f.x, f.y);
+        tg.addColorStop(0, 'rgba(255,255,255,0)');
+        tg.addColorStop(0.4, 'rgba(255,220,100,0.55)');
+        tg.addColorStop(1,   'rgba(255,255,255,0.95)');
+        ctx.strokeStyle = tg;
+        ctx.lineWidth   = 1;
+        ctx.stroke();
+      }
+
+      // Taylor cone glow
+      const pulse = 0.7 + Math.sin(frame * 0.06) * 0.3;
+      const tg2 = ctx.createRadialGradient(needleX, needleY + 18, 0, needleX, needleY + 18, 38 * pulse);
+      tg2.addColorStop(0,   'rgba(255,230,100,0.9)');
+      tg2.addColorStop(0.3, 'rgba(201,162,39,0.45)');
+      tg2.addColorStop(1,   'rgba(201,162,39,0)');
+      ctx.fillStyle = tg2;
+      ctx.beginPath();
+      ctx.arc(needleX, needleY + 18, 38 * pulse, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Needle body
+      const ng = ctx.createLinearGradient(needleX - 7, 0, needleX + 7, 0);
+      ng.addColorStop(0,   '#444'); ng.addColorStop(0.5, '#aaa'); ng.addColorStop(1, '#444');
+      ctx.fillStyle = ng;
+      ctx.fillRect(needleX - 6, needleY - 28, 12, 34);
+      ctx.beginPath();
+      ctx.moveTo(needleX - 6, needleY + 6);
+      ctx.lineTo(needleX + 6, needleY + 6);
+      ctx.lineTo(needleX, needleY + 22);
+      ctx.closePath(); ctx.fill();
+
+      // Voltage indicator
+      ctx.save();
+      ctx.font = `bold ${Math.round(W * 0.018)}px 'Oswald', sans-serif`;
+      ctx.fillStyle = 'rgba(201,162,39,0.7)';
+      ctx.textAlign = 'right';
+      ctx.fillText('HIGH VOLTAGE', needleX - 22, needleY + 4);
+      ctx.beginPath();
+      ctx.strokeStyle = 'rgba(201,162,39,0.45)';
+      ctx.lineWidth = 1; ctx.setLineDash([3, 5]);
+      ctx.moveTo(needleX - 22, needleY); ctx.lineTo(needleX - 8, needleY);
+      ctx.stroke();
+      ctx.restore();
+
+      // Labels
+      const labelSize = Math.round(W * 0.016);
+      ctx.font = `600 ${labelSize}px 'Oswald', sans-serif`;
+      ctx.setLineDash([]);
+
+      function label(text, x, y, align){
+        ctx.fillStyle = 'rgba(201,162,39,0.85)';
+        ctx.textAlign  = align || 'left';
+        ctx.fillText(text, x, y);
+      }
+      label('TAYLOR CONE',    needleX + 28, needleY + 24);
+      label('POLYMER JET',    needleX + 28, needleY + H * 0.25);
+      label('INSTABILITY /\nWHIPPING', W - 28, H * 0.55, 'right');
+      label('NANOFIBER WEB',  needleX + 28, collectorY - 12);
+      label('COLLECTOR',      needleX + 28, collectorY + 14);
+    }
+
+    function loop(){
+      frame++;
+      if(frame % 28 === 0) spawnFiber();
+      updateFibers();
+      drawScene();
+      animId = requestAnimationFrame(loop);
+    }
+
+    // Pause when off-screen
+    const observer = new IntersectionObserver(entries => {
+      entries[0].isIntersecting ? loop() : cancelAnimationFrame(animId);
+    }, {threshold: 0.1});
+
+    resize();
+    window.addEventListener('resize', () => { resize(); });
+    observer.observe(canvas);
+  })();
+  </script>
+
+  <!-- ══════════════ POROSITY + CAPILLARY ══════════════ -->
+  <section class="section section-dark">
+    <div class="container">
+      <div class="section-heading text-center reveal">
+        <span class="section-label">02 — The Mechanism</span>
+        <h2>Porosity and Capillary Force</h2>
+        <div class="divider divider-center"></div>
+        <p>Porosity isn't just empty space. In electrospun nanofiber, it's a network of precision-sized channels that actively move fluid.</p>
+      </div>
+
+      <div class="grid-3" style="margin-top:3rem;">
+        <div class="tech-card reveal reveal-delay-1">
+          <div class="tech-card-number">01</div>
+          <div class="tech-card-icon"><i class="fas fa-border-all"></i></div>
+          <h3>Controlled Porosity</h3>
+          <p>
+            The electrospun membrane contains billions of interconnected pores in the
+            nanometer-to-micron range. The pore size and density are tuned during manufacture —
+            not random, not accidental.
+          </p>
+        </div>
+        <div class="tech-card reveal reveal-delay-2">
+          <div class="tech-card-number">02</div>
+          <div class="tech-card-icon"><i class="fas fa-tint"></i></div>
+          <h3>Capillary Pressure</h3>
+          <p>
+            Smaller pores generate greater capillary pressure. This is the same force that
+            pulls water up a tree from its roots — or wicks paint up a brush. In the nanofiber
+            layer, this pressure actively draws sweat away from your skin.
+          </p>
+        </div>
+        <div class="tech-card reveal reveal-delay-3">
+          <div class="tech-card-number">03</div>
+          <div class="tech-card-icon"><i class="fas fa-wind"></i></div>
+          <h3>Vapor Transport</h3>
+          <p>
+            Once moisture is moved to the outer face of the membrane, the high surface area
+            of the nanofiber accelerates evaporation. More surface exposed to air means faster
+            drying — physically, not chemically.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ WETTABILITY GRADIENT ══════════════ -->
+  <section class="section">
+    <div class="container">
+      <div class="grid-2">
+
+        <div class="reveal-right" style="order:2;">
+          <span class="section-label">03 — Directional Flow</span>
+          <h2>The Wettability Gradient</h2>
+          <div class="divider"></div>
+          <p>
+            A wettability gradient means the inner surface of the robe wants to attract
+            moisture (hydrophilic), while the outer surface wants to repel it (hydrophobic).
+            This asymmetry creates a one-way directional pressure.
+          </p>
+          <div class="spacer-sm"></div>
+          <p>
+            Sweat from your skin enters the hydrophilic inner face and is pulled toward the
+            hydrophobic outer face by the energy gradient. Once at the outer surface, the
+            fabric pushes the moisture away. It cannot flow back inward against the gradient.
+          </p>
+          <div class="spacer-sm"></div>
+          <p>
+            The result: moisture is actively transported away from your body. Not absorbed.
+            Not stored. Moved.
+          </p>
+        </div>
+
+        <!-- Gradient Diagram -->
+        <div class="reveal-left" style="order:1;">
+          <div class="layer-diagram">
+            <div class="layer-row" style="grid-template-columns:140px 1fr;">
+              <div class="layer-swatch inner">
+                <div>
+                  <div class="layer-swatch-label">INNER</div>
+                  <div style="font-size:1.4rem;margin-top:0.5rem;text-align:center;opacity:0.5;">💧</div>
+                </div>
+              </div>
+              <div class="layer-detail">
+                <h4>Hydrophilic Zone</h4>
+                <p>Attracts and accepts moisture from skin. High surface energy — water wants to be here.</p>
+                <span class="layer-tag hydrophilic">Water-Attracting</span>
+              </div>
+            </div>
+            <div class="layer-row" style="grid-template-columns:140px 1fr;">
+              <div class="layer-swatch middle">
+                <div>
+                  <div class="layer-swatch-label">MIDDLE</div>
+                  <div style="font-size:1.2rem;margin-top:0.5rem;text-align:center;opacity:0.5;">→ →</div>
+                </div>
+              </div>
+              <div class="layer-detail">
+                <h4>Gradient Transition</h4>
+                <p>The nanofiber membrane bridges the wettability gap — driving moisture from in to out.</p>
+                <span class="layer-tag transport">Directional Transport</span>
+              </div>
+            </div>
+            <div class="layer-row" style="grid-template-columns:140px 1fr;">
+              <div class="layer-swatch outer">
+                <div>
+                  <div class="layer-swatch-label">OUTER</div>
+                  <div style="font-size:1.4rem;margin-top:0.5rem;text-align:center;opacity:0.5;">🌬️</div>
+                </div>
+              </div>
+              <div class="layer-detail">
+                <h4>Hydrophobic Zone</h4>
+                <p>Repels moisture and exposes it to air for rapid evaporation. Blocks back-flow.</p>
+                <span class="layer-tag hydrophobic">Water-Repelling</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ NO PFAS ══════════════ -->
+  <section class="section section-dark" id="pfas">
+    <div class="container">
+      <div class="grid-2">
+
+        <div class="reveal-left">
+          <span class="section-label">04 — Clean Chemistry</span>
+          <h2>No Fluoride. No PFAS. No Compromise.</h2>
+          <div class="divider"></div>
+          <p>
+            PFAS — Per- and Polyfluoroalkyl Substances — are a class of thousands of synthetic
+            chemicals used historically in textiles to create water resistance. They are called
+            "forever chemicals" because they do not break down in the environment or in the human body.
+          </p>
+          <div class="spacer-sm"></div>
+          <p>
+            They accumulate in soil, water, and living tissue. The EPA and regulatory bodies
+            worldwide are progressively restricting or banning them. And they were in the
+            coating of fabrics athletes wear against their skin.
+          </p>
+          <div class="spacer-sm"></div>
+          <p>
+            The Titan X robe achieves its moisture-management performance through physical
+            structure alone — the geometry of the nanofiber membrane and the wettability
+            gradient built into the layer system. <strong style="color:var(--white);">No fluorinated chemistry required.</strong>
+          </p>
+        </div>
+
+        <div class="reveal-right">
+          <div class="info-box" style="margin-bottom:1.5rem;">
+            <h4><i class="fas fa-flask" style="margin-right:0.5rem;"></i> What is PTFE?</h4>
+            <p>
+              PTFE (Polytetrafluoroethylene) is the best-known fluoropolymer — the same chemical
+              family as Teflon. When used in textiles, it creates a slippery, water-repellent
+              surface. It is chemically inert but environmentally persistent and increasingly
+              flagged as a health concern in prolonged skin contact applications.
+            </p>
+          </div>
+          <div class="info-box">
+            <h4><i class="fas fa-shield-alt" style="margin-right:0.5rem;"></i> Our Approach</h4>
+            <p>
+              We achieve hydrophobicity on the outer shell through nylon fiber geometry and
+              mechanical structure — not chemical coatings. The inner polyester layer's
+              hydrophilicity is an inherent property of the fiber, not added fluoride chemistry.
+              Clean performance at every layer.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ 3-LAYER SYSTEM ══════════════ -->
+  <section class="section" id="layers">
+    <div class="container">
+      <div class="section-heading text-center reveal">
+        <span class="section-label">05 — Construction</span>
+        <h2>The Three-Layer System</h2>
+        <div class="divider divider-center"></div>
+        <p>Each layer has a precise function. Together, they form a complete moisture management system.</p>
+      </div>
+
+      <div class="spacer"></div>
+
+      <div class="layer-diagram reveal">
+        <div class="layer-row">
+          <div class="layer-swatch inner" style="padding:2.5rem;">
+            <div>
+              <div class="layer-swatch-label">Layer 01</div>
+              <div style="font-size:2rem;margin-top:0.75rem;text-align:center;opacity:0.4;"><i class="fas fa-tshirt"></i></div>
+            </div>
+          </div>
+          <div class="layer-detail" style="padding:2.5rem;">
+            <h4>Dual-Layer Polyester Inner</h4>
+            <p>
+              The innermost layer sits directly against your skin. Dual-ply polyester
+              construction wicks initial moisture away from your body surface. Polyester
+              is inherently hydrophilic at the fiber level — it accepts sweat readily and
+              channels it outward toward the nanofiber membrane. Soft-hand finish for
+              direct skin comfort throughout competition.
+            </p>
+            <span class="layer-tag hydrophilic">Hydrophilic · Skin Contact Layer</span>
+          </div>
+        </div>
+        <div class="layer-row">
+          <div class="layer-swatch middle" style="padding:2.5rem;">
+            <div>
+              <div class="layer-swatch-label">Layer 02</div>
+              <div style="font-size:2rem;margin-top:0.75rem;text-align:center;opacity:0.4;"><i class="fas fa-atom"></i></div>
+            </div>
+          </div>
+          <div class="layer-detail" style="padding:2.5rem;">
+            <h4>Electrospun Nanofiber Membrane</h4>
+            <p>
+              The core technology. This membrane is where capillary action, porosity, and
+              the wettability gradient work in concert. Sub-micron fibers create billions
+              of pores that generate capillary pressure — actively drawing moisture from
+              the inner polyester layer and pushing it outward to the nylon shell. This
+              layer is what separates the Titan X robe from every cotton or polyester-only
+              product on the market.
+            </p>
+            <span class="layer-tag transport">Core Technology · Directional Transport</span>
+          </div>
+        </div>
+        <div class="layer-row">
+          <div class="layer-swatch outer" style="padding:2.5rem;">
+            <div>
+              <div class="layer-swatch-label">Layer 03</div>
+              <div style="font-size:2rem;margin-top:0.75rem;text-align:center;opacity:0.4;"><i class="fas fa-layer-group"></i></div>
+            </div>
+          </div>
+          <div class="layer-detail" style="padding:2.5rem;">
+            <h4>Nylon Outer Shell</h4>
+            <p>
+              The exterior layer protects the nanofiber membrane and provides a durable,
+              fast-drying surface. Nylon's natural hydrophobic tendency at this face
+              repels incoming moisture (rain, humidity) while allowing evaporation of
+              moisture that has been transported outward from inside the robe. The
+              structure is robust enough for the physical demands of tournament environments.
+            </p>
+            <span class="layer-tag hydrophobic">Hydrophobic · Protective Shell</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ TiO2 COMING SOON ══════════════ -->
+  <section class="section section-dark" id="tio2">
+    <div class="container">
+      <div class="grid-2">
+        <div class="reveal-left">
+          <span class="section-label">06 — What's Next</span>
+          <h2>TiO₂ Coating</h2>
+          <div class="divider"></div>
+          <p>
+            Titanium dioxide (TiO₂) is a photocatalytic material under active research
+            as a future enhancement to the Titan X robe. When exposed to UV light, TiO₂
+            catalyzes the breakdown of organic compounds — including bacteria and odor-causing
+            molecules — on the fabric surface.
+          </p>
+          <div class="spacer-sm"></div>
+          <p>
+            This would give the robe passive antimicrobial and self-cleaning properties
+            without the need for chemical sanitizers or fluorinated compounds. The coating
+            is fully compatible with the existing layer system and PFAS-free construction philosophy.
+          </p>
+          <div class="spacer-sm"></div>
+          <p>
+            We are evaluating application methods that preserve the nanofiber membrane's
+            pore structure. This feature is in the research phase and not yet in production.
+          </p>
+        </div>
+        <div class="reveal-right" style="display:flex;align-items:center;">
+          <div class="coming-soon-card" style="width:100%;">
+            <div class="coming-soon-badge">Coming in a Future Version</div>
+            <div style="font-size:4rem;margin:1.5rem 0;opacity:0.15;"><i class="fas fa-sun"></i></div>
+            <h3 style="margin-bottom:1rem;">TiO₂ Photocatalytic Coating</h3>
+            <p style="font-size:0.88rem;max-width:360px;margin:0 auto;">
+              UV-activated self-cleaning and antimicrobial surface treatment.
+              No additional chemicals. No fluorinated compounds.
+              Powered by light.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ FOOTER ══════════════ -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <h3><img src="images/titanx-logo.jpg" alt="Titan X" style="height:32px;filter:invert(1);opacity:0.85;"></h3>
+          <p>The wrestling robe, reimagined. Electrospun nanofiber technology, built exclusively for wrestlers.</p>
+        </div>
+        <div class="footer-col">
+          <h5>Pages</h5>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="technology.html">Technology</a></li>
+            <li><a href="wear.html">How to Wear</a></li>
+            <li><a href="story.html">Our Story</a></li>
+        <li><a href="mo.html">Meet Mo</a></li>
+            <li><a href="custom.html">Custom</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Technology</h5>
+          <ul>
+            <li><a href="#nanofiber">Electrospun Nanofiber</a></li>
+            <li><a href="#pfas">No PFAS</a></li>
+            <li><a href="#layers">3-Layer System</a></li>
+            <li><a href="#tio2">TiO₂ (Coming Soon)</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Contact</h5>
+          <ul>
+            <li><a href="contact.html">Inquiries</a></li>
+            <li><a href="contact.html">Wholesale</a></li>
+            <li><a href="contact.html">Media &amp; Press</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 Titan X Wrestling Robe. All rights reserved.</p>
+        <div class="footer-pfas-note">
+          <i class="fas fa-shield-alt"></i>
+          PFAS-Free &amp; Fluoride-Free Certified Construction
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
